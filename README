@@ -1,0 +1,14 @@
+How to use the basketball simulation:
+    1. Each possesion is determined by the number of minutes. 1 minute = 1 possesion
+    2. Touches Tendency: How often a player will have the ball per possesion. 
+    3. Shot Tendency: How often a player will shoot the ball if they have it
+    4. Assist Tendency: How often a player will pass the ball (and assist)
+    5. Three Point Tendency: How often a shot will be a three pointer
+
+    Note: Tendencies will effect eachother! For example, a high assist tendency and high shot tendency will not 
+    generate both high shots and high assists, it will generate less because of limited possesions. 
+
+
+    NBA Stat Search
+    1. This uses NBA_api to fetch real stats (career and most recent) for any NBA player on the database.
+    2. Please note that the api may be outdated and no longer work
