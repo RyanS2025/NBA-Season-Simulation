@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Basketball Simulator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #1e1e2f;
+            color: #cfd8dc;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1200px;
+            padding: 30px;
+            width: 100%;
+        }
+
+        .left {
+            flex: 2;
+            padding-right: 30px;
+        }
+
+        .right {
+            flex: 1;
+            background-color: #2c2c3e;
+            border-radius: 10px;
+            padding: 20px;
+            height: fit-content;
+        }
+
+        h1, h2, h3 {
+            color: #80d8ff;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input, select {
+            background-color: #333444;
+            color: #e0f7fa;
+            border: 1px solid #555;
+            border-radius: 4px;
+            padding: 8px;
+            width: 100%;
+        }
+
+        button {
+            margin-top: 10px;
+            background-color: #0277bd;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .result, .real-stats {
+            background-color: #263238;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+
+        .error {
+            color: #ef5350;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left">
+            <h1>Basketball Simulation</h1>
+
+            <form method="post">
+                <h2>Simulation</h2>
+                <input type="hidden" name="action" value="simulate">
+                <label>Player Name: <input name="name" required></label>
+                <label>Shot Tendency (1-100): <input name="shot_tendency" type="number" min="1" max="100" required></label>
+                <label>3PT Tendency (1-100): <input name="threeshot_tendency" type="number" min="1" max="100" required></label>
+                <label>Assist Tendency (1-100): <input name="assist_tendency" type="number" min="1" max="100" required></label>
+                <label>Touches Tendency (1-100): <input name="touches_tendency" type="number" min="1" max="100" required></label>
+                <label>Minutes per game: <input name="minutes" type="number" min="0" max="48" required></label>
+                <label>Simulation Type:
+                    <select name="sim_type">
+                        <option value="game">Single Game</option>
+                        <option value="season">Full Season</option>
+                    </select>
+                </label>
+                <button type="submit">Run Simulation</button>
+            </form>
+
+            {% if result %}
+                <div class="result">
+                    <h3>Simulation Results for {{ result.name }}</h3>
+                    {% if result.type == "game" %}
+                        <p>Points: {{ result.points }} | Assists: {{ result.assists }}</p>
+                        <p>FG%: {{ result.fg_pct }} ({{ result.fgm }}/{{ result.fga }})</p>
+                        <p>3P%: {{ result.three_pct }} ({{ result.three_made }}/{{ result.three_att }})</p>
+                    {% else %}
+                        <p>Minutes/Game: {{ result.avg_min }}</p>
+                        <p>PPG: {{ result.avg_pts }} | APG: {{ result.avg_ast }}</p>
+                        <p>FG%: {{ result.fg_pct }} ({{ result.fgm }}/{{ result.fga }})</p>
+                        <p>3P%: {{ result.three_pct }} ({{ result.three_made }}/{{ result.three_att }})</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <form method="post">
+                <h2>Search Real Player Stats</h2>
+                <input type="hidden" name="action" value="search">
+                <label>Player Name: <input name="search_name" required></label>
+                <label>Data Type:
+                    <select name="data_type">
+                        <option value="Recent">Recent</option>
+                        <option value="Career">Career</option>
+                    </select>
+                </label>
+                <button type="submit">Search</button>
+            </form>
+
+            {% if real_stats or real_stats_career %}
+                <div class="real-stats">
+                    {% if real_stats and real_stats.error %}
+                        <p class="error">{{ real_stats.error }}</p>
+                    {% elif data_type == "Recent" and real_stats %}
+                        <h3>Stats for {{ real_stats.name }} ({{ real_stats.season }})</h3>
+                        <p>MPG: {{ real_stats.mpg }} | PPG: {{ real_stats.ppg }} | APG: {{ real_stats.apg }}</p>
+                        <p>FG%: {{ real_stats.fg_pct }} ({{ real_stats.fgm_pg }}/{{ real_stats.fga_pg }})</p>
+                        <p>3P%: {{ real_stats.three_pct }} ({{ real_stats.three_fgm_pg }}/{{ real_stats.three_fga_pg }})</p>
+                    {% elif data_type == "Career" and real_stats_career %}
+                        <h3>Stats for {{ real_stats_career.name }} ({{ real_stats_career.season }})</h3>
+                        <p>MPG: {{ real_stats_career.mpg }} | PPG: {{ real_stats_career.ppg }} | APG: {{ real_stats_career.apg }}</p>
+                        <p>FG%: {{ real_stats_career.fg_pct }} ({{ real_stats_career.fgm_pg }}/{{ real_stats_career.fga_pg }})</p>
+                        <p>3P%: {{ real_stats_career.three_pct }} ({{ real_stats_career.three_fgm_pg }}/{{ real_stats_career.three_fga_pg }})</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="right">
+            <h2>Season History</h2>
+            {% if season_stats %}
+                <ul>
+                {% for season in season_stats %}
+                    <li>
+                        Season {{ loop.index }} - {{result.name}}: {{ season.avg_min }} MPG, {{ season.avg_pts }} PPG, {{ season.avg_ast }} APG,
+                        {{ season.fg_pct }} ({{ season.fgm }}/{{ season.fga }}),
+                        {{ season.three_pct }} ({{ season.three_made }}/{{ season.three_att }})
+                    </li>
+                {% endfor %}
+                </ul>
+                <form method="post" style="margin-top: 10px;">
+                    <input type="hidden" name="action" value="clear_history">
+                    <button type="submit" style="background-color:#c62828;">Clear History</button>
+                </form>
+            {% else %}
+                <p>No seasons simulated yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,85 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #0d1117;
+    color: #c9d1d9;
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+}
+
+.flex-container {
+    display: flex;
+    gap: 30px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.left-panel, .right-panel {
+    background-color: #161b22;
+    border-radius: 12px;
+    padding: 20px;
+    flex: 1;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+}
+
+h1, h2, h3 {
+    color: #58a6ff;
+}
+
+label {
+    margin: 10px 0 5px;
+    display: block;
+    font-weight: bold;
+}
+
+input, select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 15px;
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    color: #c9d1d9;
+}
+
+button {
+    background-color: #238636;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
+    background-color: #2ea043;
+}
+
+.result, .real-stats {
+    background-color: #21262d;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    border-left: 4px solid #58a6ff;
+}
+
+.error {
+    color: #f85149;
+}
+
+.right-panel {
+    max-width: 400px;
+    overflow-y: auto;
+    max-height: 800px;
+}
+
+.season-entry {
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    color: #c9d1d9;
+}
