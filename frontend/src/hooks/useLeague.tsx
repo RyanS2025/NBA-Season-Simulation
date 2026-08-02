@@ -183,6 +183,25 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
     [state, leagueId, refreshState, refreshTeams],
   )
 
+  const checkSeasonEnd = useCallback(async () => {
+    const db = dbRef.current
+    if (!db || !state) return
+
+    const remainingGames = await db.games
+      .where('date')
+      .aboveOrEqual(state.currentDate)
+      .filter(g => g.status === 'scheduled' && g.gameType === 'regular_season')
+      .count()
+
+    if (remainingGames === 0 && state.currentPhase === 'regular_season') {
+      await updateLeagueState(db, { currentPhase: 'playoffs' })
+      if (leagueId) {
+        await saveLeagueMeta(leagueId, { currentPhase: 'playoffs' })
+      }
+      await refreshState()
+    }
+  }, [state, leagueId, refreshState])
+
   const simDay = useCallback(async () => {
     const db = dbRef.current
     if (!db || !state || simming) return
@@ -261,25 +280,6 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
     },
     [state, simming, simGames, advanceDate],
   )
-
-  const checkSeasonEnd = useCallback(async () => {
-    const db = dbRef.current
-    if (!db || !state) return
-
-    const remainingGames = await db.games
-      .where('date')
-      .aboveOrEqual(state.currentDate)
-      .filter(g => g.status === 'scheduled' && g.gameType === 'regular_season')
-      .count()
-
-    if (remainingGames === 0 && state.currentPhase === 'regular_season') {
-      await updateLeagueState(db, { currentPhase: 'playoffs' })
-      if (leagueId) {
-        await saveLeagueMeta(leagueId, { currentPhase: 'playoffs' })
-      }
-      await refreshState()
-    }
-  }, [state, leagueId, refreshState])
 
   const simSeason = useCallback(async () => {
     const db = dbRef.current

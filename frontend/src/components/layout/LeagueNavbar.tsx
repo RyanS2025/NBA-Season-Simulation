@@ -6,6 +6,7 @@ const LEAGUE_LINKS = [
   { path: 'team', label: 'My Team' },
   { path: 'standings', label: 'Standings' },
   { path: 'schedule', label: 'Schedule' },
+  { path: 'scores', label: 'Scores' },
   { path: 'players', label: 'Players' },
   { path: 'trades', label: 'Trades' },
   { path: 'draft', label: 'Draft' },
