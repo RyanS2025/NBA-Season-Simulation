@@ -4,11 +4,12 @@ import DataTable from '../../components/common/DataTable'
 import GlassCard from '../../components/common/GlassCard'
 import ProgressBar from '../../components/common/ProgressBar'
 import { useLeague } from '../../hooks/useLeague'
+import { CBA_2026_27 } from '../../utils/cba-engine'
 import type { Player } from '../../types'
 
-const SALARY_CAP = 141_000_000
-const LUXURY_TAX = 171_000_000
-const FIRST_APRON = 178_000_000
+const SALARY_CAP = CBA_2026_27.salaryCap
+const LUXURY_TAX = CBA_2026_27.luxuryTaxThreshold
+const FIRST_APRON = CBA_2026_27.firstApron
 const MLE = 13_200_000
 const BAE = 4_700_000
 const TAXPAYER_MLE = 7_500_000
