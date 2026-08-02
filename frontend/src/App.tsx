@@ -9,6 +9,9 @@ import LeagueDashboard from './pages/league/LeagueDashboard'
 import StandingsPage from './pages/league/StandingsPage'
 import SchedulePage from './pages/league/SchedulePage'
 import ScoresPage from './pages/league/ScoresPage'
+import TradePage from './pages/league/TradePage'
+import PlayersPage from './pages/league/PlayersPage'
+import MyTeamPage from './pages/league/MyTeamPage'
 
 export default function App() {
   return (
@@ -26,6 +29,9 @@ export default function App() {
           <Route path="standings" element={<StandingsPage />} />
           <Route path="schedule" element={<SchedulePage />} />
           <Route path="scores" element={<ScoresPage />} />
+          <Route path="trades" element={<TradePage />} />
+          <Route path="players" element={<PlayersPage />} />
+          <Route path="team" element={<MyTeamPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -114,3 +114,25 @@ export interface TradeTeamPackage {
   salaryOut: number;
   salaryIn: number;
 }
+
+export interface Trade {
+  id: string;
+  date: string;
+  teams: TradeTeamPackage[];
+  description: string;
+  seasonYear: number;
+}
+
+export interface CapSheet {
+  salaryCap: number;
+  totalPayroll: number;
+  luxuryTaxThreshold: number;
+  firstApron: number;
+  secondApron: number;
+  capSpace: number;
+  midLevelException: number;
+  biAnnualException: number;
+  taxpayerMLE: number;
+  isOverCap: boolean;
+  isInLuxuryTax: boolean;
+}
