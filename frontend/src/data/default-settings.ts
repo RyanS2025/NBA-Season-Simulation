@@ -1,0 +1,32 @@
+import type { LeagueSettings } from '../types'
+
+export const DEFAULT_LEAGUE_SETTINGS: LeagueSettings = {
+  injuriesEnabled: true,
+  fatigueEnabled: true,
+  cbaRulesEnabled: true,
+  tradeDeadlineEnabled: true,
+  storylinesEnabled: true,
+  playerDevelopmentEnabled: true,
+  moraleEnabled: true,
+  allStarWeekendEnabled: true,
+  backgroundTradesEnabled: true,
+  draftLotteryEnabled: true,
+  simulationSpeed: 'fast',
+  difficulty: 'normal',
+  playoffFormat: 'play_in',
+  injuryFrequency: 'normal',
+  tradeFrequency: 'normal',
+  gamesPerSeason: 82,
+  salaryCapMultiplier: 1.0,
+  quarterLengthMinutes: 12,
+  draftRounds: 2,
+  autoStopPoints: {
+    extensionDeadline: true,
+    tradeDeadline: true,
+    allStarBreak: true,
+    playoffsStart: true,
+    draftLottery: true,
+    draftNight: true,
+    freeAgency: true,
+  },
+}

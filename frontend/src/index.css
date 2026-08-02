@@ -1,0 +1,20 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --color-accent: oklch(64.6% 0.222 41.116);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: #020617;
+  color: #e2e8f0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100dvh;
+}
