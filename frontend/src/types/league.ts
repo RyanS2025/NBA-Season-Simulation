@@ -108,6 +108,7 @@ export interface Transaction {
 
 export type TransactionType =
   | "trade"
+  | "draft"
   | "signing"
   | "waiver"
   | "release"

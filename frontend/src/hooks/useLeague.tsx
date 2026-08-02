@@ -29,7 +29,26 @@ import type { SeasonPhase } from '../types'
 import type { TradeValidationResult } from '../utils/cba-engine'
 import { generateBackgroundTrades } from '../utils/cpu-trade-ai'
 import { updateHotSeat, evaluateCoachesForFiring, generateCoachMarketplace, cpuHireCoaches } from '../utils/coaching-carousel'
+import {
+  loadDraftClassFromJSON,
+  generateDraftClass,
+  runDraftLottery,
+  buildDraftOrder,
+  cpuAutoPick,
+  convertProspectToPlayer,
+  getCpuPickAnalysis,
+} from '../utils/draft-engine'
+import type { DraftProspect, DraftPick, DraftLotteryResult } from '../utils/draft-engine'
 import type { HeadCoach, StaffRoster } from '../types/staff'
+
+export interface DraftState {
+  prospects: DraftProspect[]
+  draftOrder: DraftPick[]
+  lotteryResults: DraftLotteryResult[]
+  currentPickIndex: number
+  completedPicks: (DraftPick & { analysis?: string })[]
+  isActive: boolean
+}
 
 export interface LeagueContextValue {
   db: LeagueDB | null
@@ -40,6 +59,7 @@ export interface LeagueContextValue {
   error: string | null
   simming: boolean
   simProgress: string | null
+  draftState: DraftState | null
 
   simDay: () => Promise<void>
   simWeek: () => Promise<void>
@@ -60,6 +80,10 @@ export interface LeagueContextValue {
   ) => Promise<boolean>
   releasePlayer: (playerId: string) => Promise<boolean>
   advanceToNextSeason: () => Promise<boolean>
+  startDraft: () => Promise<void>
+  userDraftPick: (prospectId: string) => Promise<void>
+  advanceDraftPick: () => Promise<{ pick: DraftPick & { analysis?: string }; isUserNext: boolean } | null>
+  completeDraft: () => Promise<void>
 }
 
 const LeagueContext = createContext<LeagueContextValue | null>(null)
@@ -74,6 +98,12 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null)
   const [simming, setSimming] = useState(false)
   const [simProgress, setSimProgress] = useState<string | null>(null)
+  const [draftState, _setDraftState] = useState<DraftState | null>(null)
+  const draftStateRef = useRef<DraftState | null>(null)
+  const updateDraftState = useCallback((ds: DraftState | null) => {
+    draftStateRef.current = ds
+    _setDraftState(ds)
+  }, [])
 
   useEffect(() => {
     if (!leagueId) {
@@ -599,6 +629,172 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
     [players, teams, state, refreshTeams, refreshPlayers],
   )
 
+  const startDraft = useCallback(async () => {
+    const db = dbRef.current
+    if (!db || !state) return
+
+    setSimming(true)
+    setSimProgress('Loading draft class...')
+    try {
+      let prospects = await loadDraftClassFromJSON(state.currentSeason)
+      if (prospects.length === 0) {
+        prospects = generateDraftClass(state.currentSeason)
+      }
+
+      setSimProgress('Running draft lottery...')
+      const currentTeams = await getAllTeams(db)
+      const lotteryResults = runDraftLottery(currentTeams)
+      const draftOrder = buildDraftOrder(lotteryResults, currentTeams)
+
+      await updateLeagueState(db, { currentPhase: 'draft' })
+      if (leagueId) {
+        await saveLeagueMeta(leagueId, { currentPhase: 'draft' as SeasonPhase })
+      }
+      await refreshState()
+
+      updateDraftState({
+        prospects,
+        draftOrder,
+        lotteryResults,
+        currentPickIndex: 0,
+        completedPicks: [],
+        isActive: true,
+      })
+    } finally {
+      setSimming(false)
+      setSimProgress(null)
+    }
+  }, [state, leagueId, refreshState])
+
+  const executeDraftSelection = useCallback(
+    async (prospectId: string, isUser: boolean): Promise<{ pick: DraftPick & { analysis?: string }; isUserNext: boolean } | null> => {
+      const db = dbRef.current
+      const ds = draftStateRef.current
+      if (!db || !state || !ds || !ds.isActive) return null
+
+      const { prospects, draftOrder, currentPickIndex, completedPicks } = ds
+      if (currentPickIndex >= draftOrder.length) return null
+
+      const currentPick = draftOrder[currentPickIndex]
+      const prospect = prospects.find(p => p.id === prospectId)
+      if (!prospect) return null
+
+      const team = teams.find(t => t.id === currentPick.teamId)
+      const teamPlayers = players.filter(p => p.teamId === currentPick.teamId)
+
+      const analysis = isUser
+        ? undefined
+        : getCpuPickAnalysis(prospect, team!, teamPlayers)
+
+      const player = convertProspectToPlayer(
+        prospect,
+        currentPick.teamId,
+        currentPick.pickNumber,
+        currentPick.round,
+        state.currentSeason,
+      )
+
+      await db.transaction('rw', [db.players, db.teams, db.transactions], async () => {
+        await db.players.put(player)
+
+        const dbTeam = await db.teams.get(currentPick.teamId)
+        if (dbTeam) {
+          dbTeam.roster.push({
+            playerId: player.id,
+            rosterStatus: 'active',
+            lineupPosition: dbTeam.roster.length,
+          })
+          dbTeam.finances.totalPayroll += player.contract?.annualSalary ?? 0
+          await db.teams.put(dbTeam)
+        }
+
+        const tx: Transaction = {
+          id: uuid(),
+          date: state.currentDate,
+          type: 'draft' as Transaction['type'],
+          details: {
+            pickNumber: currentPick.pickNumber,
+            round: currentPick.round,
+            prospectName: `${prospect.firstName} ${prospect.lastName}`,
+            position: prospect.position,
+            school: prospect.school,
+          },
+          description: `${team?.info.city ?? ''} ${team?.info.name ?? ''} select ${prospect.firstName} ${prospect.lastName} (${prospect.position}, ${prospect.school}) with pick #${currentPick.pickNumber}`,
+          seasonYear: state.currentSeason,
+        }
+        await addTransaction(db, tx)
+      })
+
+      const completedPick: DraftPick & { analysis?: string } = {
+        ...currentPick,
+        prospectId: prospect.id,
+        prospectName: `${prospect.firstName} ${prospect.lastName}`,
+        analysis,
+      }
+
+      const newCompletedPicks = [...completedPicks, completedPick]
+      const remainingProspects = prospects.filter(p => p.id !== prospectId)
+      const nextPickIndex = currentPickIndex + 1
+      const isFinished = nextPickIndex >= draftOrder.length || remainingProspects.length === 0
+      const nextPick = isFinished ? null : draftOrder[nextPickIndex]
+      const isUserNext = nextPick ? nextPick.teamId === state.userTeamId : false
+
+      updateDraftState({
+        ...ds,
+        prospects: remainingProspects,
+        currentPickIndex: nextPickIndex,
+        completedPicks: newCompletedPicks,
+        isActive: !isFinished,
+      })
+
+      await refreshTeams()
+      await refreshPlayers()
+
+      return { pick: completedPick, isUserNext }
+    },
+    [state, teams, players, refreshTeams, refreshPlayers, updateDraftState],
+  )
+
+  const userDraftPick = useCallback(
+    async (prospectId: string) => {
+      await executeDraftSelection(prospectId, true)
+    },
+    [executeDraftSelection],
+  )
+
+  const advanceDraftPick = useCallback(async (): Promise<{ pick: DraftPick & { analysis?: string }; isUserNext: boolean } | null> => {
+    const ds = draftStateRef.current
+    if (!ds || !ds.isActive || !state) return null
+
+    const { draftOrder, currentPickIndex, prospects } = ds
+    if (currentPickIndex >= draftOrder.length) return null
+
+    const currentPick = draftOrder[currentPickIndex]
+    if (currentPick.teamId === state.userTeamId) return null
+
+    const team = teams.find(t => t.id === currentPick.teamId)
+    const teamPlayers = players.filter(p => p.teamId === currentPick.teamId)
+    const chosen = cpuAutoPick(prospects, team!, teamPlayers)
+    if (!chosen) return null
+
+    return executeDraftSelection(chosen.id, false)
+  }, [state, teams, players, executeDraftSelection])
+
+  const completeDraft = useCallback(async () => {
+    const db = dbRef.current
+    if (!db || !state) return
+
+    await updateLeagueState(db, { currentPhase: 'free_agency' })
+    if (leagueId) {
+      await saveLeagueMeta(leagueId, { currentPhase: 'free_agency' as SeasonPhase })
+    }
+
+    updateDraftState(null)
+    await refreshState()
+    await refreshTeams()
+    await refreshPlayers()
+  }, [state, leagueId, refreshState, refreshTeams, refreshPlayers])
+
   const advanceToNextSeason = useCallback(async (): Promise<boolean> => {
     const db = dbRef.current
     if (!db || !state) return false
@@ -753,6 +949,7 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
         error,
         simming,
         simProgress,
+        draftState,
         simDay,
         simWeek,
         simToDate,
@@ -763,6 +960,10 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
         signFreeAgent,
         releasePlayer,
         advanceToNextSeason,
+        startDraft,
+        userDraftPick,
+        advanceDraftPick,
+        completeDraft,
       }}
     >
       {children}
