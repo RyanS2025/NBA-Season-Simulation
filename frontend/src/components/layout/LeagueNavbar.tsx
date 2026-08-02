@@ -4,6 +4,7 @@ import { Link, useLocation, useParams } from 'react-router-dom'
 const LEAGUE_LINKS = [
   { path: '', label: 'Dashboard' },
   { path: 'team', label: 'My Team' },
+  { path: 'staff', label: 'Staff' },
   { path: 'standings', label: 'Standings' },
   { path: 'schedule', label: 'Schedule' },
   { path: 'scores', label: 'Scores' },
