@@ -1,48 +1,9 @@
-import { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import PageTransition from '../../components/layout/PageTransition'
 import GlassCard from '../../components/common/GlassCard'
 import Button from '../../components/common/Button'
-
-interface Settings {
-  // Gameplay
-  injuries: boolean
-  fatigue: boolean
-  difficulty: 'Rookie' | 'Pro' | 'All-Star' | 'Hall of Fame'
-  // Season
-  gamesPerSeason: 82 | 58 | 41 | 28
-  playoffFormat: '16-team' | '20-team-play-in'
-  quarterLength: 6 | 8 | 10 | 12
-  // Simulation
-  tradeFrequency: 'Low' | 'Normal' | 'High'
-  injuryFrequency: 'Low' | 'Normal' | 'High'
-  backgroundTrades: boolean
-  // Auto-Stop
-  stopBeforeDraft: boolean
-  stopBeforeFreeAgency: boolean
-  stopBeforePlayoffs: boolean
-  stopBeforeTradeDeadline: boolean
-  stopEndOfSeason: boolean
-  stopOnInjury: boolean
-}
-
-const DEFAULT_SETTINGS: Settings = {
-  injuries: true,
-  fatigue: true,
-  difficulty: 'Pro',
-  gamesPerSeason: 82,
-  playoffFormat: '16-team',
-  quarterLength: 12,
-  tradeFrequency: 'Normal',
-  injuryFrequency: 'Normal',
-  backgroundTrades: true,
-  stopBeforeDraft: true,
-  stopBeforeFreeAgency: true,
-  stopBeforePlayoffs: true,
-  stopBeforeTradeDeadline: false,
-  stopEndOfSeason: true,
-  stopOnInjury: false,
-}
+import { useLeague } from '../../hooks/useLeague'
+import type { LeagueSettings, AutoStopConfig } from '../../types/league'
 
 function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
   return (
@@ -62,7 +23,17 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
   )
 }
 
-function Selector<T extends string>({ options, value, onChange }: { options: T[]; value: T; onChange: (v: T) => void }) {
+function Selector<T extends string>({
+  options,
+  value,
+  onChange,
+  labels,
+}: {
+  options: T[]
+  value: T
+  onChange: (v: T) => void
+  labels?: Partial<Record<T, string>>
+}) {
   return (
     <div className="flex gap-1 flex-wrap">
       {options.map(opt => (
@@ -75,7 +46,7 @@ function Selector<T extends string>({ options, value, onChange }: { options: T[]
               : 'bg-white/[0.04] text-gray-500 border border-white/[0.06] hover:text-white'
           }`}
         >
-          {opt}
+          {labels?.[opt] ?? opt}
         </button>
       ))}
     </div>
@@ -113,12 +84,67 @@ function Checkbox({ checked, onChange, label }: { checked: boolean; onChange: (v
   )
 }
 
-export default function SettingsPage() {
-  const { id: _leagueId } = useParams()
-  const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS)
+const DIFFICULTY_LABELS: Record<LeagueSettings['difficulty'], string> = {
+  easy: 'Rookie',
+  normal: 'Pro',
+  hard: 'All-Star',
+  legendary: 'Hall of Fame',
+}
 
-  const update = <K extends keyof Settings>(key: K, value: Settings[K]) => {
-    setSettings(prev => ({ ...prev, [key]: value }))
+const TRADE_FREQ_LABELS: Record<LeagueSettings['tradeFrequency'], string> = {
+  rare: 'Low',
+  normal: 'Normal',
+  frequent: 'High',
+}
+
+const INJURY_FREQ_LABELS: Record<LeagueSettings['injuryFrequency'], string> = {
+  rare: 'Low',
+  normal: 'Normal',
+  frequent: 'High',
+  brutal: 'Brutal',
+}
+
+const PLAYOFF_FORMAT_LABELS: Record<LeagueSettings['playoffFormat'], string> = {
+  traditional_16: '16-team',
+  play_in: '20-team-play-in',
+}
+
+export default function SettingsPage() {
+  const { state, updateSettings } = useLeague()
+  const [localSettings, setLocalSettings] = useState<LeagueSettings | null>(null)
+  const [saved, setSaved] = useState(false)
+
+  useEffect(() => {
+    if (state?.settings && !localSettings) {
+      setLocalSettings({ ...state.settings })
+    }
+  }, [state, localSettings])
+
+  if (!localSettings) {
+    return (
+      <PageTransition>
+        <div className="text-gray-500">Loading settings...</div>
+      </PageTransition>
+    )
+  }
+
+  const update = <K extends keyof LeagueSettings>(key: K, value: LeagueSettings[K]) => {
+    setLocalSettings(prev => (prev ? { ...prev, [key]: value } : prev))
+    setSaved(false)
+  }
+
+  const updateAutoStop = <K extends keyof AutoStopConfig>(key: K, value: boolean) => {
+    setLocalSettings(prev =>
+      prev ? { ...prev, autoStopPoints: { ...prev.autoStopPoints, [key]: value } } : prev,
+    )
+    setSaved(false)
+  }
+
+  const handleSave = async () => {
+    if (!localSettings) return
+    await updateSettings(localSettings)
+    setSaved(true)
+    setTimeout(() => setSaved(false), 2000)
   }
 
   return (
@@ -132,16 +158,17 @@ export default function SettingsPage() {
             <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-4">Gameplay</h2>
             <div className="space-y-0">
               <SettingRow label="Injuries">
-                <Toggle checked={settings.injuries} onChange={(v) => update('injuries', v)} />
+                <Toggle checked={localSettings.injuriesEnabled} onChange={(v) => update('injuriesEnabled', v)} />
               </SettingRow>
               <SettingRow label="Fatigue">
-                <Toggle checked={settings.fatigue} onChange={(v) => update('fatigue', v)} />
+                <Toggle checked={localSettings.fatigueEnabled} onChange={(v) => update('fatigueEnabled', v)} />
               </SettingRow>
               <SettingRow label="Difficulty">
                 <Selector
-                  options={['Rookie', 'Pro', 'All-Star', 'Hall of Fame']}
-                  value={settings.difficulty}
+                  options={(['easy', 'normal', 'hard', 'legendary'] as const).slice()}
+                  value={localSettings.difficulty}
                   onChange={(v) => update('difficulty', v)}
+                  labels={DIFFICULTY_LABELS}
                 />
               </SettingRow>
             </div>
@@ -153,23 +180,24 @@ export default function SettingsPage() {
             <div className="space-y-0">
               <SettingRow label="Games Per Season">
                 <Selector
-                  options={['82', '58', '41', '28']}
-                  value={String(settings.gamesPerSeason)}
-                  onChange={(v) => update('gamesPerSeason', Number(v) as Settings['gamesPerSeason'])}
+                  options={['82', '72', '58']}
+                  value={String(localSettings.gamesPerSeason)}
+                  onChange={(v) => update('gamesPerSeason', Number(v) as LeagueSettings['gamesPerSeason'])}
                 />
               </SettingRow>
               <SettingRow label="Playoff Format">
                 <Selector
-                  options={['16-team', '20-team-play-in']}
-                  value={settings.playoffFormat}
+                  options={(['traditional_16', 'play_in'] as const).slice()}
+                  value={localSettings.playoffFormat}
                   onChange={(v) => update('playoffFormat', v)}
+                  labels={PLAYOFF_FORMAT_LABELS}
                 />
               </SettingRow>
               <SettingRow label="Quarter Length (min)">
                 <Selector
                   options={['6', '8', '10', '12']}
-                  value={String(settings.quarterLength)}
-                  onChange={(v) => update('quarterLength', Number(v) as Settings['quarterLength'])}
+                  value={String(localSettings.quarterLengthMinutes)}
+                  onChange={(v) => update('quarterLengthMinutes', Number(v))}
                 />
               </SettingRow>
             </div>
@@ -181,20 +209,22 @@ export default function SettingsPage() {
             <div className="space-y-0">
               <SettingRow label="Trade Frequency">
                 <Selector
-                  options={['Low', 'Normal', 'High']}
-                  value={settings.tradeFrequency}
+                  options={(['rare', 'normal', 'frequent'] as const).slice()}
+                  value={localSettings.tradeFrequency}
                   onChange={(v) => update('tradeFrequency', v)}
+                  labels={TRADE_FREQ_LABELS}
                 />
               </SettingRow>
               <SettingRow label="Injury Frequency">
                 <Selector
-                  options={['Low', 'Normal', 'High']}
-                  value={settings.injuryFrequency}
+                  options={(['rare', 'normal', 'frequent', 'brutal'] as const).slice()}
+                  value={localSettings.injuryFrequency}
                   onChange={(v) => update('injuryFrequency', v)}
+                  labels={INJURY_FREQ_LABELS}
                 />
               </SettingRow>
               <SettingRow label="Background Trades">
-                <Toggle checked={settings.backgroundTrades} onChange={(v) => update('backgroundTrades', v)} />
+                <Toggle checked={localSettings.backgroundTradesEnabled} onChange={(v) => update('backgroundTradesEnabled', v)} />
               </SettingRow>
             </div>
           </GlassCard>
@@ -204,42 +234,47 @@ export default function SettingsPage() {
             <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-4">Auto-Stop Points</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8">
               <Checkbox
-                checked={settings.stopBeforeDraft}
-                onChange={(v) => update('stopBeforeDraft', v)}
-                label="Before Draft"
+                checked={localSettings.autoStopPoints.extensionDeadline}
+                onChange={(v) => updateAutoStop('extensionDeadline', v)}
+                label="Extension Deadline"
               />
               <Checkbox
-                checked={settings.stopBeforeFreeAgency}
-                onChange={(v) => update('stopBeforeFreeAgency', v)}
-                label="Before Free Agency"
+                checked={localSettings.autoStopPoints.tradeDeadline}
+                onChange={(v) => updateAutoStop('tradeDeadline', v)}
+                label="Trade Deadline"
               />
               <Checkbox
-                checked={settings.stopBeforePlayoffs}
-                onChange={(v) => update('stopBeforePlayoffs', v)}
+                checked={localSettings.autoStopPoints.allStarBreak}
+                onChange={(v) => updateAutoStop('allStarBreak', v)}
+                label="All-Star Break"
+              />
+              <Checkbox
+                checked={localSettings.autoStopPoints.playoffsStart}
+                onChange={(v) => updateAutoStop('playoffsStart', v)}
                 label="Before Playoffs"
               />
               <Checkbox
-                checked={settings.stopBeforeTradeDeadline}
-                onChange={(v) => update('stopBeforeTradeDeadline', v)}
-                label="Before Trade Deadline"
+                checked={localSettings.autoStopPoints.draftLottery}
+                onChange={(v) => updateAutoStop('draftLottery', v)}
+                label="Draft Lottery"
               />
               <Checkbox
-                checked={settings.stopEndOfSeason}
-                onChange={(v) => update('stopEndOfSeason', v)}
-                label="End of Season"
+                checked={localSettings.autoStopPoints.draftNight}
+                onChange={(v) => updateAutoStop('draftNight', v)}
+                label="Draft Night"
               />
               <Checkbox
-                checked={settings.stopOnInjury}
-                onChange={(v) => update('stopOnInjury', v)}
-                label="On Star Injury"
+                checked={localSettings.autoStopPoints.freeAgency}
+                onChange={(v) => updateAutoStop('freeAgency', v)}
+                label="Free Agency"
               />
             </div>
           </GlassCard>
 
           {/* Save Button */}
           <div className="flex justify-end">
-            <Button variant="primary" size="md">
-              Save Settings
+            <Button variant="primary" size="md" onClick={handleSave}>
+              {saved ? 'Saved!' : 'Save Settings'}
             </Button>
           </div>
         </div>

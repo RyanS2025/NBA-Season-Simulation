@@ -25,7 +25,7 @@ import { validateTrade, computeTeamPayroll } from '../utils/cba-engine'
 import { runPlayerDevelopment } from '../utils/offseason-engine'
 import { generateSeasonSchedule } from '../utils/schedule-generator'
 import type { Team, Game, GameResult, Player, Transaction } from '../types'
-import type { SeasonPhase } from '../types'
+import type { SeasonPhase, LeagueSettings } from '../types'
 import type { TradeValidationResult } from '../utils/cba-engine'
 import { generateBackgroundTrades } from '../utils/cpu-trade-ai'
 import { updateHotSeat, evaluateCoachesForFiring, generateCoachMarketplace, cpuHireCoaches } from '../utils/coaching-carousel'
@@ -80,6 +80,7 @@ export interface LeagueContextValue {
   ) => Promise<boolean>
   releasePlayer: (playerId: string) => Promise<boolean>
   advanceToNextSeason: () => Promise<boolean>
+  updateSettings: (settings: LeagueSettings) => Promise<void>
   startDraft: () => Promise<void>
   userDraftPick: (prospectId: string) => Promise<void>
   advanceDraftPick: () => Promise<{ pick: DraftPick & { analysis?: string }; isUserNext: boolean } | null>
@@ -795,6 +796,13 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
     await refreshPlayers()
   }, [state, leagueId, refreshState, refreshTeams, refreshPlayers])
 
+  const updateSettings = useCallback(async (settings: LeagueSettings) => {
+    const db = dbRef.current
+    if (!db) return
+    await updateLeagueState(db, { settings })
+    await refreshState()
+  }, [refreshState])
+
   const advanceToNextSeason = useCallback(async (): Promise<boolean> => {
     const db = dbRef.current
     if (!db || !state) return false
@@ -960,6 +968,7 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
         signFreeAgent,
         releasePlayer,
         advanceToNextSeason,
+        updateSettings,
         startDraft,
         userDraftPick,
         advanceDraftPick,
