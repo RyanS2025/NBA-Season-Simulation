@@ -13,6 +13,8 @@ import TradePage from './pages/league/TradePage'
 import PlayersPage from './pages/league/PlayersPage'
 import MyTeamPage from './pages/league/MyTeamPage'
 import DraftPage from './pages/league/DraftPage'
+import FreeAgencyPage from './pages/league/FreeAgencyPage'
+import SettingsPage from './pages/league/SettingsPage'
 
 export default function App() {
   return (
@@ -34,6 +36,8 @@ export default function App() {
           <Route path="players" element={<PlayersPage />} />
           <Route path="team" element={<MyTeamPage />} />
           <Route path="draft" element={<DraftPage />} />
+          <Route path="free-agency" element={<FreeAgencyPage />} />
+          <Route path="settings" element={<SettingsPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
