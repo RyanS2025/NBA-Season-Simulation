@@ -21,6 +21,7 @@ import {
   addTransaction,
 } from '../db/league-manager'
 import { quickSimGame } from '../utils/quick-sim'
+import { simulateEntirePlayoffs, type PlayoffResults } from '../utils/playoff-sim'
 import { validateTrade, computeTeamPayroll } from '../utils/cba-engine'
 import { runPlayerDevelopment } from '../utils/offseason-engine'
 import { generateSeasonSchedule } from '../utils/schedule-generator'
@@ -61,10 +62,13 @@ export interface LeagueContextValue {
   simProgress: string | null
   draftState: DraftState | null
 
+  playoffResults: PlayoffResults | null
+
   simDay: () => Promise<void>
   simWeek: () => Promise<void>
   simToDate: (targetDate: string) => Promise<void>
   simSeason: () => Promise<void>
+  simPlayoffs: () => Promise<void>
   refreshState: () => Promise<void>
   refreshTeams: () => Promise<void>
   executeTrade: (
@@ -99,6 +103,12 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null)
   const [simming, setSimming] = useState(false)
   const [simProgress, setSimProgress] = useState<string | null>(null)
+  const [playoffResults, _setPlayoffResults] = useState<PlayoffResults | null>(null)
+  const playoffResultsRef = useRef<PlayoffResults | null>(null)
+  const updatePlayoffResults = useCallback((pr: PlayoffResults | null) => {
+    playoffResultsRef.current = pr
+    _setPlayoffResults(pr)
+  }, [])
   const [draftState, _setDraftState] = useState<DraftState | null>(null)
   const draftStateRef = useRef<DraftState | null>(null)
   const updateDraftState = useCallback((ds: DraftState | null) => {
@@ -124,6 +134,9 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
         setState(s)
         setTeams(t)
         setPlayers(p)
+        if (s?.playoffResults) {
+          updatePlayoffResults(s.playoffResults)
+        }
         setLoading(false)
       })
       .catch(err => {
@@ -456,6 +469,35 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
       setSimProgress(null)
     }
   }, [state, simming, simGames, advanceDate, checkSeasonEnd, executeBackgroundTrades])
+
+  const simPlayoffs = useCallback(async () => {
+    const db = dbRef.current
+    if (!db || !state || simming) return
+
+    setSimming(true)
+    setSimProgress('Simulating playoffs...')
+    try {
+      const currentTeams = await getAllTeams(db)
+      const currentPlayers = await getAllPlayers(db)
+      const seed = state.currentSeason * 31337 + currentTeams.reduce((s, t) => s + t.seasonRecord.wins, 0)
+
+      const results = simulateEntirePlayoffs(
+        currentTeams,
+        currentPlayers,
+        state.currentSeason,
+        state.currentDate,
+        seed,
+      )
+
+      updatePlayoffResults(results)
+
+      await updateLeagueState(db, { playoffResults: results })
+      await refreshState()
+    } finally {
+      setSimming(false)
+      setSimProgress(null)
+    }
+  }, [state, simming, refreshState, updatePlayoffResults])
 
   const executeTrade = useCallback(
     async (
@@ -822,13 +864,21 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
       setSimProgress('Updating player ratings...')
 
       setSimProgress('Recording season history...')
-      const sortedByWins = [...allTeams].sort((a, b) => {
-        const wpA = a.seasonRecord.wins / Math.max(1, a.seasonRecord.wins + a.seasonRecord.losses)
-        const wpB = b.seasonRecord.wins / Math.max(1, b.seasonRecord.wins + b.seasonRecord.losses)
-        return wpB - wpA
-      })
-      const championTeamId = sortedByWins[0]?.id ?? ''
-      const finalistTeamId = sortedByWins[1]?.id ?? ''
+      const pr = playoffResultsRef.current
+      let championTeamId: string
+      let finalistTeamId: string
+      if (pr?.championId) {
+        championTeamId = pr.championId
+        finalistTeamId = pr.finalsLoserId
+      } else {
+        const sortedByWins = [...allTeams].sort((a, b) => {
+          const wpA = a.seasonRecord.wins / Math.max(1, a.seasonRecord.wins + a.seasonRecord.losses)
+          const wpB = b.seasonRecord.wins / Math.max(1, b.seasonRecord.wins + b.seasonRecord.losses)
+          return wpB - wpA
+        })
+        championTeamId = sortedByWins[0]?.id ?? ''
+        finalistTeamId = sortedByWins[1]?.id ?? ''
+      }
 
       let mvpPlayerId = ''
       let topScorerPlayerId = ''
@@ -1009,6 +1059,7 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
           currentDate: startDate,
           seasonHistory: [...prevHistory, seasonSummary],
           currentPhase: 'regular_season',
+          playoffResults: null,
         })
       })
 
@@ -1019,6 +1070,8 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
         })
       }
 
+      updatePlayoffResults(null)
+
       await refreshState()
       await refreshTeams()
       await refreshPlayers()
@@ -1028,7 +1081,7 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
       setSimming(false)
       setSimProgress(null)
     }
-  }, [state, leagueId, refreshState, refreshTeams, refreshPlayers])
+  }, [state, leagueId, refreshState, refreshTeams, refreshPlayers, updatePlayoffResults])
 
   return (
     <LeagueContext.Provider
@@ -1042,10 +1095,12 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
         simming,
         simProgress,
         draftState,
+        playoffResults,
         simDay,
         simWeek,
         simToDate,
         simSeason,
+        simPlayoffs,
         refreshState,
         refreshTeams,
         executeTrade,

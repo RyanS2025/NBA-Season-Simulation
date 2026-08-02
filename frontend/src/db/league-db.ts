@@ -13,6 +13,7 @@ import type {
   StaffMarketEntry,
   AwardsSeasonState,
 } from '../types'
+import type { PlayoffResults } from '../utils/playoff-sim'
 
 export interface LeagueState {
   id: 'singleton'
@@ -24,6 +25,7 @@ export interface LeagueState {
   userTeamId: string
   settings: LeagueSettings
   seasonHistory: import('../types/league').SeasonSummary[]
+  playoffResults?: PlayoffResults | null
 }
 
 export interface PlayerSeasonStats {
