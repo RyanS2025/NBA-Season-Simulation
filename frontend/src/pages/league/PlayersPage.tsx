@@ -1,16 +1,17 @@
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
 import DataTable from '../../components/common/DataTable'
 import SearchInput from '../../components/common/SearchInput'
-import { loadPlayers } from '../../data/players'
+import { useLeague } from '../../hooks/useLeague'
 import type { Player, Position } from '../../types'
 
 interface PlayerRow {
   id: string
   name: string
   lastName: string
-  team: string
+  teamAbbr: string
+  teamName: string
   position: Position
   age: number
   overall: number
@@ -24,7 +25,9 @@ interface PlayerRow {
 const POSITION_FILTERS: (Position | 'ALL')[] = ['ALL', 'PG', 'SG', 'SF', 'PF', 'C']
 
 function formatSalary(salary: number): string {
-  return `$${(salary / 1_000_000).toFixed(1)}M`
+  if (salary >= 1_000_000) return `$${(salary / 1_000_000).toFixed(1)}M`
+  if (salary >= 1_000) return `$${(salary / 1_000).toFixed(0)}K`
+  return `$${salary}`
 }
 
 function latestStats(player: Player) {
@@ -34,46 +37,53 @@ function latestStats(player: Player) {
   return { ppg: last.ppg, rpg: last.rpg, apg: last.apg }
 }
 
-function playerToRow(player: Player): PlayerRow {
-  const { ppg, rpg, apg } = latestStats(player)
-  return {
-    id: player.id,
-    name: `${player.bio.firstName} ${player.bio.lastName}`,
-    lastName: player.bio.lastName,
-    team: player.bio.position,
-    position: player.bio.position,
-    age: player.bio.age,
-    overall: player.ratings.overall,
-    ppg, rpg, apg,
-    salary: player.contract?.annualSalary ?? 0,
-    headshotUrl: player.headshotUrl,
-  }
-}
-
 export default function PlayersPage() {
   const { id: leagueId } = useParams()
+  const { players, teams, loading } = useLeague()
   const [search, setSearch] = useState('')
   const [posFilter, setPosFilter] = useState<Position | 'ALL'>('ALL')
-  const [players, setPlayers] = useState<PlayerRow[]>([])
-  const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    loadPlayers().then(all => {
-      setPlayers(all.map(playerToRow))
-      setLoading(false)
-    })
-  }, [])
+  const teamMap = useMemo(() => {
+    const map = new Map<string, { abbr: string; name: string }>()
+    for (const t of teams) {
+      map.set(t.id, { abbr: t.id, name: `${t.info.city} ${t.info.name}` })
+    }
+    return map
+  }, [teams])
 
-  const filtered = players.filter(p => {
-    const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase())
-    const matchesPos = posFilter === 'ALL' || p.position === posFilter
-    return matchesSearch && matchesPos
-  })
+  const rows: PlayerRow[] = useMemo(() =>
+    players.map(p => {
+      const { ppg, rpg, apg } = latestStats(p)
+      const team = teamMap.get(p.teamId)
+      return {
+        id: p.id,
+        name: `${p.bio.firstName} ${p.bio.lastName}`,
+        lastName: p.bio.lastName,
+        teamAbbr: team?.abbr ?? '—',
+        teamName: team?.name ?? 'Free Agent',
+        position: p.bio.position,
+        age: p.bio.age,
+        overall: p.ratings.overall,
+        ppg, rpg, apg,
+        salary: p.contract?.annualSalary ?? 0,
+        headshotUrl: p.headshotUrl,
+      }
+    }),
+  [players, teamMap])
+
+  const filtered = useMemo(() =>
+    rows.filter(p => {
+      const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase())
+      const matchesPos = posFilter === 'ALL' || p.position === posFilter
+      return matchesSearch && matchesPos
+    }),
+  [rows, search, posFilter])
 
   const columns: {
     key: string
     label: string
     sortable?: boolean
+    sortKey?: string
     align?: 'left' | 'center' | 'right'
     render?: (row: PlayerRow) => React.ReactNode
   }[] = [
@@ -96,6 +106,13 @@ export default function PlayersPage() {
           {row.name}
         </Link>
       ),
+    },
+    {
+      key: 'teamAbbr',
+      label: 'Team',
+      align: 'center',
+      sortable: true,
+      render: (row) => <span className="text-gray-400 text-xs font-mono">{row.teamAbbr}</span>,
     },
     {
       key: 'position',
@@ -140,7 +157,8 @@ export default function PlayersPage() {
   return (
     <PageTransition>
       <div>
-        <h1 className="font-display text-4xl tracking-wide text-white mb-6">Player Database</h1>
+        <h1 className="font-display text-4xl tracking-wide text-white mb-1">Player Database</h1>
+        <p className="text-gray-500 text-sm mb-6">{players.length} players across 30 teams</p>
 
         <div className="flex flex-col sm:flex-row gap-3 mb-5">
           <SearchInput

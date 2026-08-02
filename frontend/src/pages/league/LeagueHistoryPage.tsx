@@ -1,367 +1,88 @@
-import { useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
 import GlassCard from '../../components/common/GlassCard'
-import DataTable from '../../components/common/DataTable'
-
-type Season = '2024-25' | '2023-24'
-
-interface Champion {
-  team: string
-  record: string
-  seriesResult: string
-  opponent: string
-  finalsMvp: { name: string; playerId: string; statLine: string }
-}
-
-interface AwardWinner {
-  award: string
-  name: string
-  playerId?: string
-  team: string
-}
-
-interface StatLeader {
-  id: string
-  playerId: string
-  rank: number
-  name: string
-  team: string
-  value: number
-}
-
-interface HofInductee {
-  name: string
-  career: string
-  highlights: string
-}
-
-interface SeasonData {
-  champion: Champion
-  awards: AwardWinner[]
-  statLeaders: {
-    ppg: StatLeader[]
-    rpg: StatLeader[]
-    apg: StatLeader[]
-    spg: StatLeader[]
-    bpg: StatLeader[]
-  }
-  hallOfFame: HofInductee[]
-}
-
-const SEASON_DATA: Record<Season, SeasonData> = {
-  '2024-25': {
-    champion: {
-      team: 'Chicago Storm',
-      record: '58-24',
-      seriesResult: '4-2',
-      opponent: 'Denver Altitude',
-      finalsMvp: { name: 'Damian Rhodes', playerId: 'fa1', statLine: '31.4 PPG / 6.2 RPG / 9.8 APG' },
-    },
-    awards: [
-      { award: 'MVP', name: 'Damian Rhodes', playerId: 'fa1', team: 'CHI' },
-      { award: 'DPOY', name: 'Tobias Adebayo', playerId: 'd3', team: 'MIA' },
-      { award: 'ROY', name: 'Jalen Crawford', playerId: 'd1', team: 'MIN' },
-      { award: '6MOY', name: 'Gary Trent IV', playerId: 'fa14', team: 'PHI' },
-      { award: 'MIP', name: 'Darnell Brooks', playerId: 'd13', team: 'DAL' },
-      { award: 'COTY', name: 'Marcus Thompson', team: 'CHI' },
-      { award: 'Clutch', name: 'Nikolai Petrovic', playerId: 'd4', team: 'DAL' },
-      { award: 'EOTY', name: 'Rachel Kim', team: 'MIN' },
-    ],
-    statLeaders: {
-      ppg: [
-        { id: 'pp1', playerId: 'fa1', rank: 1, name: 'Damian Rhodes', team: 'CHI', value: 28.4 },
-        { id: 'pp2', playerId: 'fa3', rank: 2, name: 'Jayson Williams', team: 'BOS', value: 26.8 },
-        { id: 'pp3', playerId: 'fa2', rank: 3, name: 'Karl-Anthony Reed', team: 'MIL', value: 25.1 },
-        { id: 'pp4', playerId: 'd2', rank: 4, name: 'Marcus Webb', team: 'PHI', value: 24.2 },
-        { id: 'pp5', playerId: 'd4', rank: 5, name: 'Nikolai Petrovic', team: 'DAL', value: 23.9 },
-      ],
-      rpg: [
-        { id: 'rp1', playerId: 'fa2', rank: 1, name: 'Karl-Anthony Reed', team: 'MIL', value: 12.4 },
-        { id: 'rp2', playerId: 'd3', rank: 2, name: 'Tobias Adebayo', team: 'MIA', value: 12.1 },
-        { id: 'rp3', playerId: 'd9', rank: 3, name: 'Tyrell Jackson', team: 'ATL', value: 11.2 },
-        { id: 'rp4', playerId: 'fa8', rank: 4, name: 'Wendell Carter IV', team: 'MIL', value: 10.2 },
-        { id: 'rp5', playerId: 'fa5', rank: 5, name: 'Pascal Okafor', team: 'TOR', value: 9.4 },
-      ],
-      apg: [
-        { id: 'ap1', playerId: 'fa1', rank: 1, name: 'Damian Rhodes', team: 'CHI', value: 10.2 },
-        { id: 'ap2', playerId: 'd12', rank: 2, name: 'Santiago Reyes', team: 'CLE', value: 9.1 },
-        { id: 'ap3', playerId: 'd6', rank: 3, name: 'Jaylen Watkins', team: 'DEN', value: 8.4 },
-        { id: 'ap4', playerId: 'fa6', rank: 4, name: 'Jalen Suggs Jr.', team: 'GSW', value: 7.6 },
-        { id: 'ap5', playerId: 'd1', rank: 5, name: 'Jalen Crawford', team: 'MIN', value: 7.1 },
-      ],
-      spg: [
-        { id: 'sp1', playerId: 'd5', rank: 1, name: 'Devin Okafor', team: 'CLE', value: 1.9 },
-        { id: 'sp2', playerId: 'fa7', rank: 2, name: 'Marcus Smart II', team: 'BOS', value: 1.8 },
-        { id: 'sp3', playerId: 'fa9', rank: 3, name: 'Kentavious Pope', team: 'PHX', value: 1.6 },
-        { id: 'sp4', playerId: 'd10', rank: 4, name: 'Zion Palmer', team: 'GSW', value: 1.6 },
-        { id: 'sp5', playerId: 'd12', rank: 5, name: 'Santiago Reyes', team: 'CLE', value: 1.4 },
-      ],
-      bpg: [
-        { id: 'bp1', playerId: 'd3', rank: 1, name: 'Tobias Adebayo', team: 'MIA', value: 2.8 },
-        { id: 'bp2', playerId: 'd9', rank: 2, name: 'Tyrell Jackson', team: 'ATL', value: 2.4 },
-        { id: 'bp3', playerId: 'fa2', rank: 3, name: 'Karl-Anthony Reed', team: 'MIL', value: 2.2 },
-        { id: 'bp4', playerId: 'd10', rank: 4, name: 'Zion Palmer', team: 'GSW', value: 2.1 },
-        { id: 'bp5', playerId: 'd7', rank: 5, name: 'Andre Baptiste', team: 'DEN', value: 1.8 },
-      ],
-    },
-    hallOfFame: [
-      { name: 'Terrence Davis Sr.', career: '18 seasons (2006-2024)', highlights: '5x All-Star, 2x Champion, 22,450 career points' },
-      { name: 'Marcus Aldridge', career: '16 seasons (2008-2024)', highlights: '7x All-Star, 3x All-NBA, 19,800 career points' },
-    ],
-  },
-  '2023-24': {
-    champion: {
-      team: 'Denver Altitude',
-      record: '55-27',
-      seriesResult: '4-3',
-      opponent: 'Boston Ballers',
-      finalsMvp: { name: 'Jaylen Watkins', playerId: 'd6', statLine: '27.8 PPG / 4.1 RPG / 8.6 APG' },
-    },
-    awards: [
-      { award: 'MVP', name: 'Karl-Anthony Reed', playerId: 'fa2', team: 'MIL' },
-      { award: 'DPOY', name: 'Zion Palmer', playerId: 'd10', team: 'GSW' },
-      { award: 'ROY', name: 'Darnell Brooks', playerId: 'd13', team: 'DAL' },
-      { award: '6MOY', name: 'Jaylen Morris', playerId: 'd26', team: 'PHX' },
-      { award: 'MIP', name: 'Santiago Reyes', playerId: 'd12', team: 'CLE' },
-      { award: 'COTY', name: 'David Park', team: 'MIN' },
-      { award: 'Clutch', name: 'Damian Rhodes', playerId: 'fa1', team: 'CHI' },
-      { award: 'EOTY', name: 'Michael Torres', team: 'MIA' },
-    ],
-    statLeaders: {
-      ppg: [
-        { id: 'pp1b', playerId: 'fa2', rank: 1, name: 'Karl-Anthony Reed', team: 'MIL', value: 27.2 },
-        { id: 'pp2b', playerId: 'fa1', rank: 2, name: 'Damian Rhodes', team: 'CHI', value: 26.1 },
-        { id: 'pp3b', playerId: 'fa3', rank: 3, name: 'Jayson Williams', team: 'BOS', value: 25.4 },
-        { id: 'pp4b', playerId: 'd4', rank: 4, name: 'Nikolai Petrovic', team: 'DAL', value: 22.8 },
-        { id: 'pp5b', playerId: 'd2', rank: 5, name: 'Marcus Webb', team: 'PHI', value: 22.1 },
-      ],
-      rpg: [
-        { id: 'rp1b', playerId: 'fa2', rank: 1, name: 'Karl-Anthony Reed', team: 'MIL', value: 13.1 },
-        { id: 'rp2b', playerId: 'd3', rank: 2, name: 'Tobias Adebayo', team: 'MIA', value: 11.8 },
-        { id: 'rp3b', playerId: 'd9', rank: 3, name: 'Tyrell Jackson', team: 'ATL', value: 10.9 },
-        { id: 'rp4b', playerId: 'fa5', rank: 4, name: 'Pascal Okafor', team: 'TOR', value: 10.2 },
-        { id: 'rp5b', playerId: 'd7', rank: 5, name: 'Andre Baptiste', team: 'DEN', value: 9.8 },
-      ],
-      apg: [
-        { id: 'ap1b', playerId: 'fa1', rank: 1, name: 'Damian Rhodes', team: 'CHI', value: 9.6 },
-        { id: 'ap2b', playerId: 'd6', rank: 2, name: 'Jaylen Watkins', team: 'DEN', value: 8.8 },
-        { id: 'ap3b', playerId: 'd12', rank: 3, name: 'Santiago Reyes', team: 'CLE', value: 7.9 },
-        { id: 'ap4b', playerId: 'fa6', rank: 4, name: 'Jalen Suggs Jr.', team: 'GSW', value: 7.4 },
-        { id: 'ap5b', playerId: 'fa7', rank: 5, name: 'Marcus Smart II', team: 'BOS', value: 6.2 },
-      ],
-      spg: [
-        { id: 'sp1b', playerId: 'd5', rank: 1, name: 'Devin Okafor', team: 'CLE', value: 2.1 },
-        { id: 'sp2b', playerId: 'fa7', rank: 2, name: 'Marcus Smart II', team: 'BOS', value: 1.9 },
-        { id: 'sp3b', playerId: 'd10', rank: 3, name: 'Zion Palmer', team: 'GSW', value: 1.7 },
-        { id: 'sp4b', playerId: 'd12', rank: 4, name: 'Santiago Reyes', team: 'CLE', value: 1.5 },
-        { id: 'sp5b', playerId: 'fa9', rank: 5, name: 'Kentavious Pope', team: 'PHX', value: 1.4 },
-      ],
-      bpg: [
-        { id: 'bp1b', playerId: 'd10', rank: 1, name: 'Zion Palmer', team: 'GSW', value: 2.6 },
-        { id: 'bp2b', playerId: 'd3', rank: 2, name: 'Tobias Adebayo', team: 'MIA', value: 2.4 },
-        { id: 'bp3b', playerId: 'fa2', rank: 3, name: 'Karl-Anthony Reed', team: 'MIL', value: 2.0 },
-        { id: 'bp4b', playerId: 'd7', rank: 4, name: 'Andre Baptiste', team: 'DEN', value: 1.9 },
-        { id: 'bp5b', playerId: 'd9', rank: 5, name: 'Tyrell Jackson', team: 'ATL', value: 1.8 },
-      ],
-    },
-    hallOfFame: [
-      { name: 'Jason Mitchell', career: '20 seasons (2004-2024)', highlights: '10x All-Star, 3x Champion, Finals MVP, 28,100 career points' },
-      { name: 'Andre Wallace', career: '15 seasons (2009-2024)', highlights: '4x All-Star, 2x DPOY, 9,400 career rebounds' },
-      { name: 'Coach Bill Henderson', career: '30 seasons (1994-2024)', highlights: '2x Champion, 3x COTY, 1,200+ career wins' },
-    ],
-  },
-}
-
-const SEASONS: Season[] = ['2024-25', '2023-24']
-
-const STAT_CATEGORIES = [
-  { key: 'ppg' as const, label: 'Points Per Game' },
-  { key: 'rpg' as const, label: 'Rebounds Per Game' },
-  { key: 'apg' as const, label: 'Assists Per Game' },
-  { key: 'spg' as const, label: 'Steals Per Game' },
-  { key: 'bpg' as const, label: 'Blocks Per Game' },
-]
+import { useLeague } from '../../hooks/useLeague'
 
 export default function LeagueHistoryPage() {
-  const { id: leagueId } = useParams()
-  const [selectedSeason, setSelectedSeason] = useState<Season>('2024-25')
-  const [expandedStat, setExpandedStat] = useState<string | null>('ppg')
+  const { state, teams, loading } = useLeague()
 
-  const data = SEASON_DATA[selectedSeason]
+  if (loading || !state) {
+    return (
+      <PageTransition>
+        <div className="text-gray-400 text-center py-20">Loading history...</div>
+      </PageTransition>
+    )
+  }
 
-  const leaderColumns: {
-    key: string
-    label: string
-    sortable?: boolean
-    align?: 'left' | 'center' | 'right'
-    render?: (row: StatLeader) => React.ReactNode
-  }[] = [
-    {
-      key: 'rank',
-      label: '#',
-      align: 'center',
-      render: (row) => <span className="text-gray-500">{row.rank}</span>,
-    },
-    {
-      key: 'name',
-      label: 'Player',
-      render: (row) => (
-        <Link
-          to={`/league/${leagueId}/players/${row.playerId}`}
-          className="text-white font-medium hover:text-[oklch(64.6%_0.222_41.116)] transition-colors"
-        >
-          {row.name}
-        </Link>
-      ),
-    },
-    {
-      key: 'team',
-      label: 'Team',
-      align: 'center',
-      render: (row) => <span className="text-gray-400">{row.team}</span>,
-    },
-    {
-      key: 'value',
-      label: 'Stat',
-      sortable: true,
-      align: 'right',
-      render: (row) => (
-        <span className={row.rank === 1 ? 'text-[oklch(64.6%_0.222_41.116)] font-semibold' : 'text-gray-300'}>
-          {row.value.toFixed(1)}
-        </span>
-      ),
-    },
-  ]
+  const allSorted = [...teams].sort((a, b) => b.seasonRecord.wins - a.seasonRecord.wins)
+  const gamesPlayed = allSorted[0] ? allSorted[0].seasonRecord.wins + allSorted[0].seasonRecord.losses : 0
 
   return (
     <PageTransition>
       <div>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-          <h1 className="font-display text-4xl tracking-wide text-white">League History</h1>
+        <h1 className="font-display text-4xl tracking-wide text-white mb-6">League History</h1>
 
-          {/* Season Selector */}
-          <div className="relative">
-            <select
-              value={selectedSeason}
-              onChange={(e) => setSelectedSeason(e.target.value as Season)}
-              className="appearance-none bg-white/[0.04] border border-white/[0.08] rounded-lg px-4 py-2 pr-8 text-sm text-white outline-none focus:border-white/[0.15] transition-colors cursor-pointer"
-            >
-              {SEASONS.map(s => (
-                <option key={s} value={s} className="bg-slate-900 text-white">{s} Season</option>
-              ))}
-            </select>
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500 text-xs">
-              &#9662;
-            </div>
-          </div>
-        </div>
-
-        {/* Champions Section */}
-        <div className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Champions</div>
-        <GlassCard className="mb-8 overflow-hidden" variant="medium">
-          {/* Gold champion border */}
-          <div className="h-0.5 bg-gradient-to-r from-amber-500/60 via-yellow-400/80 to-amber-500/60" />
-          <div className="p-6">
-            <div className="flex flex-col md:flex-row md:items-center gap-6">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center justify-center w-14 h-14 rounded-xl bg-amber-500/10 border border-amber-500/20">
-                  <span className="text-amber-400 text-2xl">&#9733;</span>
-                </div>
-                <div>
-                  <div className="text-2xl font-display tracking-wide text-white">{data.champion.team}</div>
-                  <div className="text-sm text-gray-400">{data.champion.record} ({selectedSeason})</div>
-                </div>
+        <GlassCard className="p-8 mb-8">
+          <div className="text-center">
+            <h2 className="text-xl font-display tracking-wide text-white mb-3">Season 1 In Progress</h2>
+            <p className="text-gray-500 text-sm max-w-md mx-auto mb-6">
+              This is the inaugural season of the league. History will be recorded as the season progresses
+              and future seasons are completed.
+            </p>
+            <div className="flex justify-center gap-8">
+              <div className="text-center">
+                <div className="text-3xl font-semibold text-[oklch(64.6%_0.222_41.116)]">{state.currentSeason}</div>
+                <div className="text-[10px] uppercase tracking-[2px] text-gray-600 mt-1">Season</div>
               </div>
-              <div className="md:ml-auto flex flex-col sm:flex-row gap-6">
-                <div>
-                  <div className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-1">Finals Result</div>
-                  <div className="text-white font-medium">
-                    {data.champion.seriesResult} vs {data.champion.opponent}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-1">Finals MVP</div>
-                  <Link to={`/league/${leagueId}/players/${data.champion.finalsMvp.playerId}`} className="text-amber-400 font-medium hover:text-[oklch(64.6%_0.222_41.116)] transition-colors">{data.champion.finalsMvp.name}</Link>
-                  <div className="text-xs text-gray-500">{data.champion.finalsMvp.statLine}</div>
-                </div>
+              <div className="text-center">
+                <div className="text-3xl font-semibold text-white">{gamesPlayed}</div>
+                <div className="text-[10px] uppercase tracking-[2px] text-gray-600 mt-1">Games Played</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-semibold text-white">0</div>
+                <div className="text-[10px] uppercase tracking-[2px] text-gray-600 mt-1">Champions</div>
               </div>
             </div>
           </div>
         </GlassCard>
 
-        {/* Award Winners Section */}
-        <div className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Award Winners</div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-8">
-          {data.awards.map(a => (
-            <GlassCard key={a.award} className="p-4">
-              <div className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-2">{a.award}</div>
-              {a.playerId ? (
-                <Link to={`/league/${leagueId}/players/${a.playerId}`} className="text-sm font-medium text-white hover:text-[oklch(64.6%_0.222_41.116)] transition-colors">{a.name}</Link>
-              ) : (
-                <div className="text-sm font-medium text-white">{a.name}</div>
-              )}
-              <div className="text-xs text-gray-500 mt-0.5">{a.team}</div>
-            </GlassCard>
-          ))}
-        </div>
-
-        {/* Stat Leaders Section */}
-        <div className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Stat Leaders</div>
-        <div className="mb-8">
-          {/* Category Pills */}
-          <div className="flex gap-1 flex-wrap mb-4">
-            {STAT_CATEGORIES.map(cat => (
-              <button
-                key={cat.key}
-                onClick={() => setExpandedStat(expandedStat === cat.key ? null : cat.key)}
-                className={`px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
-                  expandedStat === cat.key
-                    ? 'text-[oklch(64.6%_0.222_41.116)] bg-[oklch(64.6%_0.222_41.116)]/10'
-                    : 'text-gray-500 hover:text-white hover:bg-white/[0.04]'
-                }`}
-              >
-                {cat.key.toUpperCase()}
-              </button>
-            ))}
-          </div>
-
-          {/* Leaders Table */}
-          {expandedStat && (() => {
-            const cat = STAT_CATEGORIES.find(c => c.key === expandedStat)
-            if (!cat) return null
-            const leaders = data.statLeaders[cat.key]
-            return (
-              <div>
-                <div className="text-xs text-gray-500 mb-2">{cat.label}</div>
-                <DataTable
-                  columns={leaderColumns}
-                  data={leaders}
-                  keyExtractor={(row) => row.id}
-                  emptyMessage="No stat leaders available"
-                />
-              </div>
-            )
-          })()}
-        </div>
-
-        {/* Hall of Fame Section */}
-        <div className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Hall of Fame Inductees</div>
-        <div className="space-y-3">
-          {data.hallOfFame.map(inductee => (
-            <GlassCard key={inductee.name} className="p-5" variant="medium">
-              <div className="flex items-start gap-4">
-                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/20 shrink-0 mt-0.5">
-                  <span className="text-amber-400 text-lg">&#9733;</span>
+        <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Current Season Snapshot</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <GlassCard className="p-5">
+            <h3 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Top Teams</h3>
+            <div className="space-y-1">
+              {allSorted.slice(0, 10).map((t, i) => (
+                <div key={t.id} className={`flex items-center justify-between px-3 py-2 rounded-lg ${
+                  t.id === state.userTeamId ? 'bg-accent/5' : 'hover:bg-white/[0.02]'
+                }`}>
+                  <div className="flex items-center gap-3">
+                    <span className="text-gray-500 w-5 text-center text-xs">{i + 1}</span>
+                    <span className={t.id === state.userTeamId ? 'text-accent text-sm font-medium' : 'text-white text-sm'}>
+                      {t.info.city} {t.info.name}
+                    </span>
+                  </div>
+                  <span className="text-gray-400 text-xs">{t.seasonRecord.wins}-{t.seasonRecord.losses}</span>
                 </div>
-                <div>
-                  <div className="text-lg font-display tracking-wide text-white">{inductee.name}</div>
-                  <div className="text-xs text-gray-500 mt-0.5">{inductee.career}</div>
-                  <div className="text-sm text-gray-400 mt-1">{inductee.highlights}</div>
-                </div>
+              ))}
+            </div>
+          </GlassCard>
+
+          <GlassCard className="p-5">
+            <h3 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">League Milestones</h3>
+            <div className="space-y-3">
+              <div className="px-3 py-3 bg-white/[0.02] rounded-lg">
+                <div className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-1">First Game</div>
+                <div className="text-sm text-white">October 22, {state.currentSeason}</div>
               </div>
-            </GlassCard>
-          ))}
+              <div className="px-3 py-3 bg-white/[0.02] rounded-lg">
+                <div className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-1">Current Date</div>
+                <div className="text-sm text-white">{state.currentDate}</div>
+              </div>
+              <div className="px-3 py-3 bg-white/[0.02] rounded-lg">
+                <div className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-1">Total Players</div>
+                <div className="text-sm text-white">530 across 30 teams</div>
+              </div>
+            </div>
+          </GlassCard>
         </div>
       </div>
     </PageTransition>

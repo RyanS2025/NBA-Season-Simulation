@@ -3,8 +3,30 @@ import PageTransition from '../../components/layout/PageTransition'
 import DataTable from '../../components/common/DataTable'
 import GlassCard from '../../components/common/GlassCard'
 import ProgressBar from '../../components/common/ProgressBar'
+import { useLeague } from '../../hooks/useLeague'
+import type { Player } from '../../types'
 
-interface RosterPlayer {
+const SALARY_CAP = 141_000_000
+const LUXURY_TAX = 171_000_000
+const FIRST_APRON = 178_000_000
+const MLE = 13_200_000
+const BAE = 4_700_000
+const TAXPAYER_MLE = 7_500_000
+
+function formatSalary(salary: number): string {
+  if (salary >= 1_000_000) return `$${(salary / 1_000_000).toFixed(1)}M`
+  if (salary >= 1_000) return `$${(salary / 1_000).toFixed(0)}K`
+  return `$${salary}`
+}
+
+function latestStats(player: Player) {
+  const stats = player.careerStats
+  if (!stats || stats.length === 0) return { ppg: 0, rpg: 0, apg: 0 }
+  const last = stats[stats.length - 1]
+  return { ppg: last.ppg, rpg: last.rpg, apg: last.apg }
+}
+
+interface RosterRow {
   id: string
   name: string
   position: string
@@ -17,64 +39,59 @@ interface RosterPlayer {
   contractYears: number
 }
 
-interface DraftPick {
-  year: number
-  round: 1 | 2
-  originalTeam: string
-  via: string | null
-}
-
-const MOCK_ROSTER: RosterPlayer[] = [
-  { id: 'p1', name: 'Marcus Cole', position: 'PG', age: 27, overall: 93, ppg: 28.4, rpg: 5.1, apg: 9.2, salary: 42500000, contractYears: 3 },
-  { id: 'p2', name: 'DeAndre Washington', position: 'SG', age: 25, overall: 87, ppg: 22.1, rpg: 4.8, apg: 3.5, salary: 32000000, contractYears: 4 },
-  { id: 'p3', name: 'Jaylen Foster', position: 'SF', age: 24, overall: 84, ppg: 18.7, rpg: 6.3, apg: 2.9, salary: 28000000, contractYears: 3 },
-  { id: 'p4', name: 'Tobias Green', position: 'PF', age: 30, overall: 82, ppg: 16.5, rpg: 8.2, apg: 2.1, salary: 25000000, contractYears: 2 },
-  { id: 'p5', name: 'Andre Drummond Jr.', position: 'C', age: 26, overall: 85, ppg: 14.2, rpg: 11.4, apg: 1.8, salary: 22000000, contractYears: 3 },
-  { id: 'p21', name: 'Xavier Bell', position: 'SG', age: 28, overall: 78, ppg: 12.4, rpg: 3.2, apg: 2.8, salary: 14000000, contractYears: 2 },
-  { id: 'p22', name: 'Jerome Watson', position: 'PF', age: 32, overall: 76, ppg: 9.8, rpg: 6.5, apg: 1.4, salary: 8000000, contractYears: 1 },
-  { id: 'p23', name: 'Corey James', position: 'C', age: 23, overall: 73, ppg: 7.2, rpg: 5.8, apg: 0.9, salary: 4890000, contractYears: 3 },
-  { id: 'p24', name: 'Miles Porter', position: 'PG', age: 30, overall: 75, ppg: 8.5, rpg: 2.1, apg: 5.4, salary: 6000000, contractYears: 1 },
-  { id: 'p25', name: 'Travis Hart', position: 'SF', age: 22, overall: 71, ppg: 6.1, rpg: 3.4, apg: 1.2, salary: 3240000, contractYears: 2 },
-  { id: 'p26', name: 'Ricky Owens', position: 'PG', age: 24, overall: 70, ppg: 5.3, rpg: 1.8, apg: 4.1, salary: 2100000, contractYears: 2 },
-  { id: 'p27', name: 'Derek Lane', position: 'PF', age: 26, overall: 72, ppg: 6.8, rpg: 5.2, apg: 0.8, salary: 3800000, contractYears: 1 },
-  { id: 'p28', name: 'Sam Adebayo', position: 'C', age: 21, overall: 68, ppg: 4.1, rpg: 4.6, apg: 0.5, salary: 1900000, contractYears: 3 },
-]
-
-const MOCK_PICKS: DraftPick[] = [
-  { year: 2026, round: 1, originalTeam: 'PHI', via: null },
-  { year: 2026, round: 2, originalTeam: 'PHI', via: null },
-  { year: 2026, round: 2, originalTeam: 'ORL', via: 'ORL' },
-  { year: 2027, round: 1, originalTeam: 'PHI', via: null },
-  { year: 2027, round: 2, originalTeam: 'PHI', via: null },
-  { year: 2028, round: 1, originalTeam: 'PHI', via: null },
-  { year: 2028, round: 2, originalTeam: 'PHI', via: null },
-]
-
-const SALARY_CAP = 141_000_000
-const LUXURY_TAX = 171_000_000
-const FIRST_APRON = 178_000_000
-const MLE = 13_200_000
-const BAE = 4_700_000
-const TAXPAYER_MLE = 7_500_000
-
-function formatSalary(salary: number): string {
-  return `$${(salary / 1_000_000).toFixed(1)}M`
+function playerToRow(p: Player): RosterRow {
+  const { ppg, rpg, apg } = latestStats(p)
+  return {
+    id: p.id,
+    name: `${p.bio.firstName} ${p.bio.lastName}`,
+    position: p.bio.position,
+    age: p.bio.age,
+    overall: p.ratings.overall,
+    ppg, rpg, apg,
+    salary: p.contract?.annualSalary ?? 0,
+    contractYears: p.contract?.yearsRemaining ?? 0,
+  }
 }
 
 export default function MyTeamPage() {
   const { id: leagueId } = useParams()
+  const { teams, players, state, loading } = useLeague()
 
-  const totalPayroll = MOCK_ROSTER.reduce((sum, p) => sum + p.salary, 0)
+  if (loading || !state) {
+    return (
+      <PageTransition>
+        <div className="text-gray-400 text-center py-20">Loading team...</div>
+      </PageTransition>
+    )
+  }
+
+  const userTeam = teams.find(t => t.id === state.userTeamId)
+  const teamPlayers = players
+    .filter(p => p.teamId === state.userTeamId)
+    .sort((a, b) => b.ratings.overall - a.ratings.overall)
+
+  const roster = teamPlayers.map(playerToRow)
+
+  const totalPayroll = roster.reduce((sum, p) => sum + p.salary, 0)
   const capSpace = Math.max(0, SALARY_CAP - totalPayroll)
   const isOverCap = totalPayroll > SALARY_CAP
   const isInTax = totalPayroll > LUXURY_TAX
+
+  const r = userTeam?.seasonRecord
+  const wins = r?.wins ?? 0
+  const losses = r?.losses ?? 0
+
+  const confTeams = teams
+    .filter(t => t.info.conference === userTeam?.info.conference)
+    .sort((a, b) => b.seasonRecord.wins - a.seasonRecord.wins)
+  const confSeed = confTeams.findIndex(t => t.id === state.userTeamId) + 1
 
   const rosterColumns: {
     key: string
     label: string
     sortable?: boolean
     align?: 'left' | 'center' | 'right'
-    render?: (row: RosterPlayer) => React.ReactNode
+    render?: (row: RosterRow) => React.ReactNode
   }[] = [
     {
       key: 'name',
@@ -123,40 +140,43 @@ export default function MyTeamPage() {
   return (
     <PageTransition>
       <div>
-        {/* Team Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-4">
           <div>
             <h1 className="font-display text-4xl tracking-wide text-white">
-              Philadelphia <span className="text-[oklch(64.6%_0.222_41.116)]">Ironworks</span>
+              {userTeam ? `${userTeam.info.city} ` : ''}
+              <span className="text-[oklch(64.6%_0.222_41.116)]">{userTeam?.info.name}</span>
             </h1>
-            <p className="text-gray-500 text-sm mt-1">Eastern Conference -- Atlantic Division</p>
+            <p className="text-gray-500 text-sm mt-1">
+              {userTeam?.info.conference} Conference — {userTeam?.info.division} Division
+            </p>
           </div>
           <div className="flex gap-6">
             <div className="text-center">
-              <div className="text-2xl font-semibold text-white">44 — 26</div>
+              <div className="text-2xl font-semibold text-white">{wins} — {losses}</div>
               <div className="text-[10px] uppercase tracking-[2px] text-gray-600">Record</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-semibold text-[oklch(64.6%_0.222_41.116)]">4th</div>
-              <div className="text-[10px] uppercase tracking-[2px] text-gray-600">East Seed</div>
+              <div className="text-2xl font-semibold text-[oklch(64.6%_0.222_41.116)]">
+                {confSeed > 0 ? `${confSeed}${ordSuffix(confSeed)}` : '—'}
+              </div>
+              <div className="text-[10px] uppercase tracking-[2px] text-gray-600">
+                {userTeam?.info.conference?.slice(0, 4)} Seed
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Roster */}
-        <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Roster</h2>
+        <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Roster ({roster.length} players)</h2>
         <DataTable
           columns={rosterColumns}
-          data={MOCK_ROSTER}
+          data={roster}
           keyExtractor={(row) => row.id}
           className="mb-8"
         />
 
-        {/* Cap Sheet */}
         <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Cap Sheet</h2>
         <GlassCard className="p-6 mb-8">
           <div className="space-y-5">
-            {/* Payroll Bar */}
             <div>
               <div className="flex justify-between text-sm mb-2">
                 <span className="text-gray-400">Total Payroll</span>
@@ -169,13 +189,11 @@ export default function MyTeamPage() {
                   color={isInTax ? '#ef4444' : isOverCap ? '#f59e0b' : 'oklch(64.6% 0.222 41.116)'}
                   height="h-3"
                 />
-                {/* Cap line marker */}
                 <div
                   className="absolute top-0 h-3 w-px bg-white/60"
                   style={{ left: `${(SALARY_CAP / FIRST_APRON) * 100}%` }}
                   title="Salary Cap"
                 />
-                {/* Tax line marker */}
                 <div
                   className="absolute top-0 h-3 w-px bg-red-400/60"
                   style={{ left: `${(LUXURY_TAX / FIRST_APRON) * 100}%` }}
@@ -189,7 +207,6 @@ export default function MyTeamPage() {
               </div>
             </div>
 
-            {/* Cap Info Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="bg-white/[0.03] rounded-lg p-3">
                 <div className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-1">Cap Space</div>
@@ -205,17 +222,16 @@ export default function MyTeamPage() {
               </div>
               <div className="bg-white/[0.03] rounded-lg p-3">
                 <div className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-1">Roster Spots</div>
-                <div className="text-lg font-semibold text-white">{MOCK_ROSTER.length}/15</div>
+                <div className="text-lg font-semibold text-white">{roster.length}/15</div>
               </div>
               <div className="bg-white/[0.03] rounded-lg p-3">
                 <div className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-1">Avg Age</div>
                 <div className="text-lg font-semibold text-white">
-                  {(MOCK_ROSTER.reduce((s, p) => s + p.age, 0) / MOCK_ROSTER.length).toFixed(1)}
+                  {roster.length > 0 ? (roster.reduce((s, p) => s + p.age, 0) / roster.length).toFixed(1) : '—'}
                 </div>
               </div>
             </div>
 
-            {/* Exceptions */}
             <div>
               <div className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-2">Available Exceptions</div>
               <div className="space-y-2">
@@ -239,28 +255,57 @@ export default function MyTeamPage() {
           </div>
         </GlassCard>
 
-        {/* Draft Picks */}
-        <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Draft Picks</h2>
+        <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Depth Chart</h2>
         <GlassCard className="p-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {MOCK_PICKS.map((pick, i) => (
-              <div
-                key={`${pick.year}-${pick.round}-${i}`}
-                className="flex items-center justify-between px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.04]"
-              >
-                <div>
-                  <span className="text-white font-medium">{pick.year}</span>
-                  <span className="text-gray-500 mx-2">--</span>
-                  <span className="text-gray-300">Round {pick.round}</span>
+          <div className="space-y-4">
+            {(['PG', 'SG', 'SF', 'PF', 'C'] as const).map(pos => {
+              const posPlayers = teamPlayers
+                .filter(p => p.bio.position === pos || p.bio.secondaryPosition === pos)
+                .sort((a, b) => b.ratings.overall - a.ratings.overall)
+                .slice(0, 3)
+
+              return (
+                <div key={pos} className="flex items-start gap-4">
+                  <div className="w-10 text-center pt-2">
+                    <span className="text-[10px] uppercase tracking-[2px] text-gray-600 font-medium">{pos}</span>
+                  </div>
+                  <div className="flex-1 flex gap-2 flex-wrap">
+                    {posPlayers.map((p, i) => (
+                      <Link
+                        key={p.id}
+                        to={`/league/${leagueId}/players/${p.id}`}
+                        className={`px-3 py-2 rounded-lg text-sm transition-colors ${
+                          i === 0
+                            ? 'bg-[oklch(64.6%_0.222_41.116)]/10 border border-[oklch(64.6%_0.222_41.116)]/30 text-white hover:bg-[oklch(64.6%_0.222_41.116)]/20'
+                            : 'bg-white/[0.03] border border-white/[0.06] text-gray-300 hover:bg-white/[0.06]'
+                        }`}
+                      >
+                        <span className="font-medium">{p.bio.firstName.charAt(0)}. {p.bio.lastName}</span>
+                        <span className={`ml-2 text-xs ${p.ratings.overall >= 85 ? 'text-[oklch(64.6%_0.222_41.116)]' : 'text-gray-500'}`}>
+                          {p.ratings.overall}
+                        </span>
+                      </Link>
+                    ))}
+                    {posPlayers.length === 0 && (
+                      <span className="text-gray-600 text-sm italic py-2">No players</span>
+                    )}
+                  </div>
                 </div>
-                <span className="text-[10px] uppercase tracking-wider text-gray-500">
-                  {pick.via ? `via ${pick.via}` : 'Own'}
-                </span>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </GlassCard>
       </div>
     </PageTransition>
   )
+}
+
+function ordSuffix(n: number): string {
+  if (n % 100 >= 11 && n % 100 <= 13) return 'th'
+  switch (n % 10) {
+    case 1: return 'st'
+    case 2: return 'nd'
+    case 3: return 'rd'
+    default: return 'th'
+  }
 }
