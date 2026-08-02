@@ -1,111 +1,155 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import PageTransition from '../../components/layout/PageTransition'
 import GlassCard from '../../components/common/GlassCard'
+import { useLeague } from '../../hooks/useLeague'
+import type { Game } from '../../types'
 
-interface GameResult {
-  away: string
-  home: string
-  awayScore: number
-  homeScore: number
+function addDays(date: string, days: number): string {
+  const d = new Date(date + 'T12:00:00')
+  d.setDate(d.getDate() + days)
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
 }
 
-const MOCK_SCORES: Record<string, GameResult[]> = {
-  '2025-01-05': [
-    { away: 'LA Vipers', home: 'Denver Altitude', awayScore: 118, homeScore: 112 },
-    { away: 'New York Titans', home: 'Toronto Raptors', awayScore: 104, homeScore: 97 },
-  ],
-  '2025-01-06': [
-    { away: 'Boston Ballers', home: 'Philly Force', awayScore: 98, homeScore: 105 },
-    { away: 'LA Vipers', home: 'Phoenix Flames', awayScore: 112, homeScore: 108 },
-    { away: 'Chicago Storm', home: 'Cleveland Kings', awayScore: 89, homeScore: 94 },
-    { away: 'Dallas Mavericks', home: 'Sacramento Kings', awayScore: 110, homeScore: 103 },
-  ],
-  '2025-01-07': [
-    { away: 'Miami Aces', home: 'Atlanta Hawks', awayScore: 106, homeScore: 101 },
-    { away: 'Golden State Warriors', home: 'Portland Trail Blazers', awayScore: 121, homeScore: 115 },
-  ],
-  '2025-01-08': [
-    { away: 'Philly Force', home: 'Miami Aces', awayScore: 101, homeScore: 99 },
-    { away: 'Denver Altitude', home: 'Dallas Mavericks', awayScore: 95, homeScore: 102 },
-  ],
+function formatDisplayDate(date: string): string {
+  const d = new Date(date + 'T12:00:00')
+  return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
 }
 
-const ORDERED_DATES = Object.keys(MOCK_SCORES).sort()
-
-function formatDisplayDate(dateStr: string) {
-  const [y, m, d] = dateStr.split('-').map(Number)
-  const date = new Date(y, m - 1, d)
-  return date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })
+function teamDisplay(teamId: string, teams: { id: string; info: { city: string; name: string } }[]): string {
+  const t = teams.find(x => x.id === teamId)
+  return t ? `${t.info.city} ${t.info.name}` : teamId
 }
 
 export default function ScoresPage() {
-  const [dateIndex, setDateIndex] = useState(ORDERED_DATES.length - 1)
-  const currentDate = ORDERED_DATES[dateIndex]
-  const games = currentDate ? MOCK_SCORES[currentDate] ?? [] : []
+  const { db, state, teams, loading } = useLeague()
+  const [viewDate, setViewDate] = useState('')
+  const [dateGames, setDateGames] = useState<Game[]>([])
 
-  const goPrev = () => setDateIndex(i => Math.max(0, i - 1))
-  const goNext = () => setDateIndex(i => Math.min(ORDERED_DATES.length - 1, i + 1))
-  const goToday = () => {
-    const todayIdx = ORDERED_DATES.findIndex(d => d === '2025-01-08')
-    if (todayIdx !== -1) setDateIndex(todayIdx)
+  useEffect(() => {
+    if (state) {
+      setViewDate(addDays(state.currentDate, -1))
+    }
+  }, [state])
+
+  const loadGames = useCallback(async () => {
+    if (!db || !viewDate) return
+    const games = await db.games.where('date').equals(viewDate).toArray()
+    setDateGames(games)
+  }, [db, viewDate])
+
+  useEffect(() => {
+    loadGames()
+  }, [loadGames])
+
+  if (loading || !state) {
+    return (
+      <PageTransition>
+        <div className="text-gray-400 text-center py-20">Loading scores...</div>
+      </PageTransition>
+    )
   }
+
+  const userTeamId = state.userTeamId
+  const completedGames = dateGames.filter(g => g.result)
+  const upcomingGames = dateGames.filter(g => !g.result)
 
   return (
     <PageTransition>
       <div>
         <h1 className="font-display text-4xl tracking-wide text-white mb-6">Scores</h1>
 
-        <div className="flex items-center justify-center gap-4 mb-8">
+        <div className="flex items-center gap-4 mb-6">
           <button
-            onClick={goPrev}
-            disabled={dateIndex === 0}
-            className="text-gray-400 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed text-sm"
+            onClick={() => setViewDate(addDays(viewDate, -1))}
+            className="text-gray-400 hover:text-white transition-colors text-lg px-2"
           >
-            &larr; Previous Day
+            &lt;
           </button>
+          <h2 className="font-display text-xl tracking-wide text-white">
+            {formatDisplayDate(viewDate)}
+          </h2>
           <button
-            onClick={goToday}
-            className="text-[oklch(64.6%_0.222_41.116)] hover:brightness-110 transition-all text-sm font-medium px-3 py-1 rounded-lg bg-[oklch(64.6%_0.222_41.116)]/10"
+            onClick={() => setViewDate(addDays(viewDate, 1))}
+            className="text-gray-400 hover:text-white transition-colors text-lg px-2"
           >
-            Today
-          </button>
-          <button
-            onClick={goNext}
-            disabled={dateIndex === ORDERED_DATES.length - 1}
-            className="text-gray-400 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed text-sm"
-          >
-            Next Day &rarr;
+            &gt;
           </button>
         </div>
 
-        <h2 className="text-center text-white font-display text-xl tracking-wide mb-6">
-          {currentDate ? formatDisplayDate(currentDate) : 'No Date Selected'}
-        </h2>
-
-        {games.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-gray-500 text-sm">No games scheduled</p>
-          </div>
+        {dateGames.length === 0 ? (
+          <GlassCard>
+            <p className="text-gray-500 text-sm text-center py-8">No games on this date</p>
+          </GlassCard>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {games.map((g, i) => {
-              const awayWon = g.awayScore > g.homeScore
+            {completedGames.map(g => {
+              const r = g.result!
+              const isUserGame = g.homeTeamId === userTeamId || g.awayTeamId === userTeamId
+              const homeWon = r.winningTeamId === g.homeTeamId
+              const awayWon = r.winningTeamId === g.awayTeamId
+
               return (
-                <GlassCard key={i} hover className="p-5">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] uppercase tracking-[2px] text-gray-600">Final</span>
-                    <span className="text-[10px] uppercase tracking-[2px] text-[oklch(64.6%_0.222_41.116)] cursor-pointer hover:brightness-125">
-                      Box Score
-                    </span>
-                  </div>
-                  <div className="space-y-2">
+                <GlassCard key={g.id} variant={isUserGame ? 'medium' : 'subtle'}>
+                  <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className={`text-sm ${awayWon ? 'text-white font-semibold' : 'text-gray-400'}`}>{g.away}</span>
-                      <span className={`text-lg tabular-nums ${awayWon ? 'text-white font-semibold' : 'text-gray-500'}`}>{g.awayScore}</span>
+                      <div className="flex items-center gap-2">
+                        <span className={`text-sm font-mono ${g.awayTeamId === userTeamId ? 'text-accent' : 'text-gray-400'}`}>
+                          {g.awayTeamId}
+                        </span>
+                        <span className={awayWon ? 'text-white font-medium' : 'text-gray-400'}>
+                          {teamDisplay(g.awayTeamId, teams)}
+                        </span>
+                      </div>
+                      <span className={`text-lg font-display tracking-wider ${awayWon ? 'text-white' : 'text-gray-500'}`}>
+                        {r.awayScore}
+                      </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className={`text-sm ${!awayWon ? 'text-white font-semibold' : 'text-gray-400'}`}>{g.home}</span>
-                      <span className={`text-lg tabular-nums ${!awayWon ? 'text-white font-semibold' : 'text-gray-500'}`}>{g.homeScore}</span>
+                      <div className="flex items-center gap-2">
+                        <span className={`text-sm font-mono ${g.homeTeamId === userTeamId ? 'text-accent' : 'text-gray-400'}`}>
+                          {g.homeTeamId}
+                        </span>
+                        <span className={homeWon ? 'text-white font-medium' : 'text-gray-400'}>
+                          {teamDisplay(g.homeTeamId, teams)}
+                        </span>
+                      </div>
+                      <span className={`text-lg font-display tracking-wider ${homeWon ? 'text-white' : 'text-gray-500'}`}>
+                        {r.homeScore}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
+                      <span className="text-[10px] uppercase tracking-[2px] text-gray-600">
+                        Final{r.overtime > 0 ? ` (${r.overtime}OT)` : ''}
+                      </span>
+                      <span className="text-[10px] text-gray-600">
+                        {r.quarterScores.away.join(' | ')} — {r.quarterScores.home.join(' | ')}
+                      </span>
+                    </div>
+                  </div>
+                </GlassCard>
+              )
+            })}
+
+            {upcomingGames.map(g => {
+              const isUserGame = g.homeTeamId === userTeamId || g.awayTeamId === userTeamId
+              return (
+                <GlassCard key={g.id} variant="subtle">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className={isUserGame && g.awayTeamId === userTeamId ? 'text-accent' : 'text-gray-400'}>
+                        {teamDisplay(g.awayTeamId, teams)}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className={isUserGame && g.homeTeamId === userTeamId ? 'text-accent' : 'text-white'}>
+                        {teamDisplay(g.homeTeamId, teams)}
+                      </span>
+                    </div>
+                    <div className="text-[10px] uppercase tracking-[2px] text-gray-600 pt-2 border-t border-white/[0.06]">
+                      Scheduled
                     </div>
                   </div>
                 </GlassCard>
