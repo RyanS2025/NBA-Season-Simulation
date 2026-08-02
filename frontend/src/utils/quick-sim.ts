@@ -1,5 +1,38 @@
 import type { Game, GameResult, PlayerGameStats, TeamBoxScore, TeamGameStats } from '../types'
 import type { Player } from '../types/player'
+import type { StaffRoster } from '../types/staff'
+
+export interface CoachingContext {
+  homeStaff: StaffRoster | null
+  awayStaff: StaffRoster | null
+}
+
+function coachingBonus(staff: StaffRoster | null, players: Player[]): number {
+  if (!staff) return 0
+  const hc = staff.headCoach
+  const offBonus = (hc.offenseRating - 50) / 100 * 2.0
+  const defBonus = (hc.defenseRating - 50) / 100 * 2.0
+  const adaptBonus = (hc.adaptability - 50) / 100 * 0.5
+  let assistBonus = 0
+  for (const ac of staff.assistantCoaches) {
+    assistBonus += (ac.generalRating - 50) / 100 * 0.3
+  }
+
+  let chemistryMod = 0
+  if (players.length > 0) {
+    const temperament = hc.personality.temperament
+    let conflicts = 0
+    for (const p of players) {
+      const ego = p.character.ego ?? 50
+      const coachability = p.character.coachability ?? 50
+      if (temperament < 30 && ego > 80 && coachability < 40) conflicts++
+      else if (temperament > 70 && coachability > 70) chemistryMod += 0.1
+    }
+    chemistryMod -= conflicts * 0.4
+  }
+
+  return offBonus + defBonus + adaptBonus + assistBonus + chemistryMod
+}
 
 function clamp(v: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, v))
@@ -148,9 +181,10 @@ export function quickSimGame(
   game: Game,
   homePlayers: Player[],
   awayPlayers: Player[],
+  coaching?: CoachingContext,
 ): GameResult {
-  const homeStr = teamStrength(homePlayers)
-  const awayStr = teamStrength(awayPlayers)
+  const homeStr = teamStrength(homePlayers) + coachingBonus(coaching?.homeStaff ?? null, homePlayers)
+  const awayStr = teamStrength(awayPlayers) + coachingBonus(coaching?.awayStaff ?? null, awayPlayers)
 
   const homeAdv = 3.0
   const diff = homeStr - awayStr + homeAdv
@@ -161,6 +195,17 @@ export function quickSimGame(
 
   let homeScore = Math.round(basePPG + spread / 2 + gauss() * 5)
   let awayScore = Math.round(basePPG - spread / 2 + gauss() * 5)
+
+  homeScore = Math.max(75, homeScore)
+  awayScore = Math.max(75, awayScore)
+
+  if (Math.abs(homeScore - awayScore) <= 5 && coaching) {
+    const homeClutch = coaching.homeStaff?.headCoach.personality.clutchCoaching ?? 50
+    const awayClutch = coaching.awayStaff?.headCoach.personality.clutchCoaching ?? 50
+    const clutchDiff = (homeClutch - awayClutch) / 100 * 3
+    homeScore += Math.round(clutchDiff + gauss() * 0.5)
+    awayScore -= Math.round(clutchDiff * 0.5)
+  }
 
   homeScore = Math.max(75, homeScore)
   awayScore = Math.max(75, awayScore)

@@ -146,7 +146,12 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
         const homePlayers = getTeamPlayers(game.homeTeamId)
         const awayPlayers = getTeamPlayers(game.awayTeamId)
 
-        const result = quickSimGame(game, homePlayers, awayPlayers)
+        const homeTeamData = teamMap.get(game.homeTeamId)
+        const awayTeamData = teamMap.get(game.awayTeamId)
+        const result = quickSimGame(game, homePlayers, awayPlayers, {
+          homeStaff: homeTeamData?.staff ?? null,
+          awayStaff: awayTeamData?.staff ?? null,
+        })
 
         await addGameResult(db, game.id, game.date, state.currentSeason, result)
 
@@ -593,7 +598,12 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
 
     try {
       const currentPlayers = await getAllPlayers(db)
-      const { updatedPlayers, retiredPlayerIds } = runPlayerDevelopment(currentPlayers)
+      const allTeams = await db.teams.toArray()
+      const staffMap = new Map<string, import('../types/staff').StaffRoster>()
+      for (const t of allTeams) {
+        if (t.staff) staffMap.set(t.id, t.staff)
+      }
+      const { updatedPlayers, retiredPlayerIds } = runPlayerDevelopment(currentPlayers, staffMap)
 
       setSimProgress('Updating player ratings...')
 

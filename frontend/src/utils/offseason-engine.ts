@@ -1,4 +1,5 @@
 import type { Player, Team } from '../types'
+import type { StaffRoster, CoachSpecialty } from '../types/staff'
 
 export interface OffseasonChanges {
   updatedPlayers: Player[]
@@ -7,42 +8,96 @@ export interface OffseasonChanges {
   developmentLog: { playerId: string; name: string; change: number; reason: string }[]
 }
 
-export function runPlayerDevelopment(players: Player[]): OffseasonChanges {
+const SPECIALTY_RATINGS: Record<CoachSpecialty, string[]> = {
+  shooting: ['threePoint', 'midRange', 'freeThrow'],
+  offense: ['finishing', 'closeRange', 'ballHandling', 'passingVision'],
+  defense: ['perimeterDefense', 'interiorDefense'],
+  playerDevelopment: [],
+  bigMen: ['rebounding', 'interiorDefense', 'finishing', 'closeRange'],
+  guards: ['ballHandling', 'passingVision', 'speed', 'threePoint'],
+}
+
+const PHYSICAL_RATINGS = new Set(['speed', 'acceleration', 'vertical'])
+
+function getStaffModifiers(teamId: string, staffMap: Map<string, StaffRoster>) {
+  const staff = staffMap.get(teamId)
+  if (!staff) return { coachMult: 1.0, motivationBoost: 0, specialtyBonuses: new Map<string, number>(), trainerDecayReduction: 0, devFocusMult: 1.0 }
+
+  const hc = staff.headCoach
+  const coachMult = 0.7 + (hc.playerDevelopment / 100) * 0.6
+  const motivationBoost = (hc.motivation / 100) * 0.3
+
+  const specialtyBonuses = new Map<string, number>()
+  let devCoachBonus = 0
+  for (const ac of staff.assistantCoaches) {
+    if (ac.specialty === 'playerDevelopment') {
+      devCoachBonus += ac.specialtyRating / 100 * 0.3
+      continue
+    }
+    const targetRatings = SPECIALTY_RATINGS[ac.specialty] ?? []
+    const bonus = (ac.specialtyRating / 100) * 1.2
+    for (const r of targetRatings) {
+      specialtyBonuses.set(r, (specialtyBonuses.get(r) ?? 0) + bonus)
+    }
+  }
+
+  const avgTrainerConditioning = staff.trainers.length > 0
+    ? staff.trainers.reduce((s, t) => s + t.skills.strengthConditioning, 0) / staff.trainers.length
+    : 50
+  const trainerDecayReduction = (avgTrainerConditioning / 100) * 0.8
+
+  const devFocusMult = 1.0 + devCoachBonus + ((staff.generalManager?.skills.playerDevelopmentFocus ?? 50) / 100) * 0.15
+
+  return { coachMult, motivationBoost, specialtyBonuses, trainerDecayReduction, devFocusMult }
+}
+
+export function runPlayerDevelopment(players: Player[], staffMap?: Map<string, StaffRoster>): OffseasonChanges {
   const updatedPlayers: Player[] = []
   const retiredPlayerIds: string[] = []
   const freeAgentIds: string[] = []
   const developmentLog: OffseasonChanges['developmentLog'] = []
+  const resolvedStaffMap = staffMap ?? new Map()
 
   for (const p of players) {
     const updated = { ...p, ratings: { ...p.ratings } }
     const age = p.bio.age
     const peakAge = p.ratings.peakAge || 28
     const workEthic = p.character.workEthic
+    const mods = getStaffModifiers(p.teamId, resolvedStaffMap)
+
+    const effectiveWorkEthic = Math.min(100, workEthic + mods.motivationBoost * 100)
 
     let change = 0
     let reason = ''
 
     if (age <= 22) {
-      change = Math.round(2 + (workEthic / 100) * 2 + (Math.random() - 0.3) * 2)
+      change = 2 + (effectiveWorkEthic / 100) * 2 + (Math.random() - 0.3) * 2
       reason = 'Young player growth'
     } else if (age <= 25) {
-      change = Math.round(1 + (workEthic / 100) * 1.5 + (Math.random() - 0.4) * 1.5)
+      change = 1 + (effectiveWorkEthic / 100) * 1.5 + (Math.random() - 0.4) * 1.5
       reason = 'Development years'
     } else if (age <= peakAge) {
-      change = Math.round((Math.random() - 0.3) * 1)
+      change = (Math.random() - 0.3) * 1
       reason = 'Peak years'
     } else if (age <= 32) {
-      change = Math.round(-1 + (Math.random() - 0.5) * 1)
+      change = -1 + (Math.random() - 0.5) * 1
       reason = 'Early decline'
     } else if (age <= 35) {
-      change = Math.round(-2 + (Math.random() - 0.5) * 1)
+      change = -2 + (Math.random() - 0.5) * 1
       reason = 'Declining'
     } else {
-      change = Math.round(-3 + (Math.random() - 0.5) * 1.5)
+      change = -3 + (Math.random() - 0.5) * 1.5
       reason = 'Late career decline'
     }
 
-    // Apply change to key ratings
+    if (change > 0) {
+      change *= mods.coachMult * mods.devFocusMult
+    } else if (change < 0) {
+      change *= Math.max(0.5, 1.0 - mods.trainerDecayReduction * 0.3)
+    }
+
+    change = Math.round(change)
+
     const ratingKeys: (keyof typeof updated.ratings)[] = [
       'finishing', 'closeRange', 'midRange', 'threePoint', 'freeThrow',
       'ballHandling', 'passingVision', 'speed', 'acceleration', 'vertical',
@@ -51,7 +106,19 @@ export function runPlayerDevelopment(players: Player[]): OffseasonChanges {
 
     for (const key of ratingKeys) {
       const current = updated.ratings[key] as number
-      const newVal = Math.min(99, Math.max(40, current + change + Math.round((Math.random() - 0.5) * 2)))
+      let delta = change + Math.round((Math.random() - 0.5) * 2)
+
+      const specialtyBonus = mods.specialtyBonuses.get(key) ?? 0
+      if (specialtyBonus > 0 && change >= 0) {
+        delta += Math.round(specialtyBonus)
+      }
+
+      if (PHYSICAL_RATINGS.has(key) && age > 30) {
+        const physicalReduction = mods.trainerDecayReduction * 0.5
+        delta = Math.round(delta + physicalReduction)
+      }
+
+      const newVal = Math.min(99, Math.max(40, current + delta))
       ;(updated.ratings as Record<string, number>)[key] = newVal
     }
 
