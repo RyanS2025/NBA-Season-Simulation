@@ -19,6 +19,7 @@ import TransactionsPage from './pages/league/TransactionsPage'
 import LeagueHistoryPage from './pages/league/LeagueHistoryPage'
 import SettingsPage from './pages/league/SettingsPage'
 import PlayerDetailPage from './pages/league/PlayerDetailPage'
+import PlayoffsPage from './pages/league/PlayoffsPage'
 
 export default function App() {
   return (
@@ -44,6 +45,7 @@ export default function App() {
           <Route path="free-agency" element={<FreeAgencyPage />} />
           <Route path="transactions" element={<TransactionsPage />} />
           <Route path="awards" element={<AwardsPage />} />
+          <Route path="playoffs" element={<PlayoffsPage />} />
           <Route path="history" element={<LeagueHistoryPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
