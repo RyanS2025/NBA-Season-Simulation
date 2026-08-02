@@ -6,6 +6,7 @@ import Button from '../../components/common/Button'
 import StarRating from '../../components/common/StarRating'
 import { useLeague } from '../../hooks/useLeague'
 import { calculatePlayerValue, type TradeContext, type PlayerValuation } from '../../utils/trade-value-engine'
+import { evaluateTradeOffer, predictTradeResponse, generateCounterOffer, generateCPUTradeProposal, type TradeLikelihood, type CounterOffer } from '../../utils/cpu-trade-ai'
 import type { Player } from '../../types'
 
 function formatSalary(salary: number): string {
@@ -25,8 +26,11 @@ export default function TradePage() {
   const [partnerTeamId, setPartnerTeamId] = useState<string>('')
   const [selectedUserPlayers, setSelectedUserPlayers] = useState<Set<string>>(new Set())
   const [selectedPartnerPlayers, setSelectedPartnerPlayers] = useState<Set<string>>(new Set())
-  const [tradeStatus, setTradeStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
+  const [tradeStatus, setTradeStatus] = useState<{ type: 'success' | 'error' | 'counter'; message: string } | null>(null)
+  const [counterOffer, setCounterOffer] = useState<CounterOffer | null>(null)
   const [executing, setExecuting] = useState(false)
+  const [tradeSuggestions, setTradeSuggestions] = useState<{ headline: string; team1Players: string[]; team2Players: string[]; team2Id: string }[]>([])
+  const [findingTrades, setFindingTrades] = useState(false)
 
   const userTeamId = state?.userTeamId ?? ''
 
@@ -128,6 +132,14 @@ export default function TradePage() {
     return { valid: true, reason: '' }
   }, [hasAssets, selectedUserPlayers, selectedPartnerPlayers, outgoingSalary, incomingSalary])
 
+  const tradePrediction = useMemo((): TradeLikelihood | null => {
+    if (!validation.valid || !partnerTeam || !state) return null
+    const incoming = userPlayers.filter(p => selectedUserPlayers.has(p.id))
+    const outgoing = partnerPlayers.filter(p => selectedPartnerPlayers.has(p.id))
+    if (incoming.length === 0 || outgoing.length === 0) return null
+    return predictTradeResponse(incoming, outgoing, [], [], partnerTeam, players, teams, state.currentSeason, state.currentDate)
+  }, [validation.valid, partnerTeam, state, userPlayers, partnerPlayers, selectedUserPlayers, selectedPartnerPlayers, players, teams])
+
   if (loading || !state) {
     return (
       <PageTransition>
@@ -149,31 +161,77 @@ export default function TradePage() {
     setPartnerTeamId(newTeamId)
     setSelectedPartnerPlayers(new Set())
     setTradeStatus(null)
+    setCounterOffer(null)
   }
 
   const handleProposeTrade = async () => {
-    if (!validation.valid || executing) return
+    if (!validation.valid || executing || !partnerTeam || !userTeam) return
     setExecuting(true)
     setTradeStatus(null)
-    try {
-      const result = await executeTrade(
-        Array.from(selectedUserPlayers),
-        Array.from(selectedPartnerPlayers),
-        partnerTeamId,
-      )
-      if (result.executed) {
-        setTradeStatus({ type: 'success', message: 'Trade completed successfully!' })
-        setSelectedUserPlayers(new Set())
-        setSelectedPartnerPlayers(new Set())
-        setPartnerTeamId('')
-      } else {
-        setTradeStatus({ type: 'error', message: result.errors.join('. ') })
+    setCounterOffer(null)
+
+    const incoming = userPlayers.filter(p => selectedUserPlayers.has(p.id))
+    const outgoing = partnerPlayers.filter(p => selectedPartnerPlayers.has(p.id))
+
+    const cpuEval = evaluateTradeOffer(
+      incoming, outgoing, [], [],
+      partnerTeam, players, teams, state!.currentSeason, state!.currentDate,
+    )
+
+    if (cpuEval.verdict === 'strong_accept' || cpuEval.verdict === 'accept') {
+      try {
+        const result = await executeTrade(
+          Array.from(selectedUserPlayers),
+          Array.from(selectedPartnerPlayers),
+          partnerTeamId,
+        )
+        if (result.executed) {
+          setTradeStatus({ type: 'success', message: 'Trade accepted and completed!' })
+          setSelectedUserPlayers(new Set())
+          setSelectedPartnerPlayers(new Set())
+          setPartnerTeamId('')
+        } else {
+          setTradeStatus({ type: 'error', message: result.errors.join('. ') })
+        }
+      } catch {
+        setTradeStatus({ type: 'error', message: 'Trade failed unexpectedly' })
       }
-    } catch {
-      setTradeStatus({ type: 'error', message: 'Trade failed unexpectedly' })
-    } finally {
-      setExecuting(false)
+    } else if (cpuEval.verdict === 'borderline') {
+      const counter = generateCounterOffer(
+        incoming, outgoing, [], [],
+        partnerTeam, userTeam, players, teams, state!.currentSeason, state!.currentDate,
+      )
+      if (counter && counter.addPlayers.length > 0) {
+        setCounterOffer(counter)
+        setTradeStatus({ type: 'counter', message: counter.message })
+      } else {
+        setTradeStatus({ type: 'error', message: cpuEval.reasoning })
+      }
+    } else {
+      setTradeStatus({ type: 'error', message: cpuEval.reasoning })
     }
+    setExecuting(false)
+  }
+
+  const handleFindTrades = () => {
+    if (!userTeam || !state || findingTrades) return
+    setFindingTrades(true)
+    const suggestions: typeof tradeSuggestions = []
+    for (let i = 0; i < 8 && suggestions.length < 5; i++) {
+      const proposal = generateCPUTradeProposal(
+        userTeam, teams, players, [], state.currentSeason, state.currentDate,
+      )
+      if (proposal && !suggestions.some(s => s.team2Id === proposal.team2Id)) {
+        suggestions.push({
+          headline: proposal.headline,
+          team1Players: proposal.team1Players,
+          team2Players: proposal.team2Players,
+          team2Id: proposal.team2Id,
+        })
+      }
+    }
+    setTradeSuggestions(suggestions)
+    setFindingTrades(false)
   }
 
   return (
@@ -294,10 +352,75 @@ export default function TradePage() {
           <div className={`px-4 py-3 rounded-xl mb-4 text-sm font-medium ${
             tradeStatus.type === 'success'
               ? 'bg-green-500/10 border border-green-500/20 text-green-400'
+              : tradeStatus.type === 'counter'
+              ? 'bg-yellow-500/10 border border-yellow-500/20 text-yellow-400'
               : 'bg-red-500/10 border border-red-500/20 text-red-400'
           }`}>
             {tradeStatus.message}
           </div>
+        )}
+
+        {counterOffer && (
+          <GlassCard className="p-5 mb-4 border-yellow-500/20">
+            <h3 className="text-sm font-semibold text-yellow-400 mb-3">Counter-Offer</h3>
+            <p className="text-gray-400 text-xs mb-3">
+              {partnerTeam ? `${partnerTeam.info.city} ${partnerTeam.info.name}` : 'Trade partner'} wants you to also include:
+            </p>
+            <div className="space-y-1 mb-4">
+              {counterOffer.addPlayers.map(pid => {
+                const p = players.find(pl => pl.id === pid)
+                if (!p) return null
+                const val = playerStars.get(p.id)
+                return (
+                  <div key={pid} className="flex items-center gap-3 px-3 py-2 bg-yellow-500/5 rounded-lg">
+                    <span className="text-white text-sm font-medium">{playerLabel(p)}</span>
+                    <span className="text-gray-500 text-xs">{p.bio.position}</span>
+                    {val && <StarRating stars={val.stars} size={12} />}
+                    <span className="text-gray-400 text-xs ml-auto">{formatSalary(p.contract?.annualSalary ?? 0)}</span>
+                  </div>
+                )
+              })}
+            </div>
+            <div className="flex gap-3">
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={async () => {
+                  for (const pid of counterOffer.addPlayers) {
+                    selectedUserPlayers.add(pid)
+                  }
+                  setSelectedUserPlayers(new Set(selectedUserPlayers))
+                  setCounterOffer(null)
+                  setTradeStatus(null)
+                  const result = await executeTrade(
+                    [...Array.from(selectedUserPlayers), ...counterOffer.addPlayers],
+                    Array.from(selectedPartnerPlayers),
+                    partnerTeamId,
+                  )
+                  if (result.executed) {
+                    setTradeStatus({ type: 'success', message: 'Counter-offer accepted! Trade completed.' })
+                    setSelectedUserPlayers(new Set())
+                    setSelectedPartnerPlayers(new Set())
+                    setPartnerTeamId('')
+                  } else {
+                    setTradeStatus({ type: 'error', message: result.errors.join('. ') })
+                  }
+                }}
+              >
+                Accept Counter
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  setCounterOffer(null)
+                  setTradeStatus({ type: 'error', message: 'Counter-offer declined.' })
+                }}
+              >
+                Decline
+              </Button>
+            </div>
+          </GlassCard>
         )}
 
         <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Trade Summary</h2>
@@ -403,6 +526,17 @@ export default function TradePage() {
                       {validation.reason}
                     </span>
                   )}
+                  {tradePrediction && (
+                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                      tradePrediction === 'Likely Accept' ? 'bg-green-500/15 text-green-400' :
+                      tradePrediction === 'Possible' ? 'bg-emerald-500/15 text-emerald-400' :
+                      tradePrediction === 'Likely Counter' ? 'bg-yellow-500/15 text-yellow-400' :
+                      tradePrediction === 'Likely Reject' ? 'bg-orange-500/15 text-orange-400' :
+                      'bg-red-500/15 text-red-400'
+                    }`}>
+                      {tradePrediction}
+                    </span>
+                  )}
                   <Button variant="primary" size="sm" disabled={!validation.valid || executing} onClick={handleProposeTrade}>
                     {executing ? 'Processing...' : 'Propose Trade'}
                   </Button>
@@ -411,6 +545,56 @@ export default function TradePage() {
             </div>
           )}
         </GlassCard>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600">Trade Finder</h2>
+          <Button variant="secondary" size="sm" disabled={findingTrades || !userTeam} onClick={handleFindTrades}>
+            {findingTrades ? 'Searching...' : 'Find Trades'}
+          </Button>
+        </div>
+        {tradeSuggestions.length > 0 && (
+          <div className="space-y-3 mb-8">
+            {tradeSuggestions.map((s, i) => {
+              const partner = teams.find(t => t.id === s.team2Id)
+              const resolveName = (pid: string) => {
+                const p = players.find(pl => pl.id === pid)
+                return p ? playerLabel(p) : pid
+              }
+              return (
+                <GlassCard key={i} className="p-4">
+                  <p className="text-white text-sm font-medium mb-2">{s.headline}</p>
+                  <div className="grid grid-cols-2 gap-4 text-xs">
+                    <div>
+                      <span className="text-gray-500">You send:</span>
+                      <div className="mt-1 space-y-0.5">
+                        {s.team1Players.map((pid, j) => (
+                          <div key={j} className="text-[oklch(64.6%_0.222_41.116)]">{resolveName(pid)}</div>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-gray-500">You receive:</span>
+                      <div className="mt-1 space-y-0.5">
+                        {s.team2Players.map((pid, j) => (
+                          <div key={j} className="text-blue-400">{resolveName(pid)}</div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-2 text-[10px] text-gray-600">
+                    With: {partner ? `${partner.info.city} ${partner.info.name}` : s.team2Id}
+                  </div>
+                </GlassCard>
+              )
+            })}
+          </div>
+        )}
+        {tradeSuggestions.length === 0 && !findingTrades && userTeam && (
+          <GlassCard className="p-5 mb-8">
+            <p className="text-gray-600 text-sm text-center py-2">
+              Click "Find Trades" to discover deals other teams would accept
+            </p>
+          </GlassCard>
+        )}
       </div>
     </PageTransition>
   )
