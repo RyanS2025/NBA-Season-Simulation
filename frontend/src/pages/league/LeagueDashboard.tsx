@@ -17,7 +17,7 @@ function formatShortDate(date: string): string {
 
 export default function LeagueDashboard() {
   const { id: leagueId } = useParams()
-  const { db, state, teams, simming, simProgress, simDay, simWeek, loading } = useLeague()
+  const { db, state, teams, simming, simProgress, simDay, simWeek, simSeason, loading } = useLeague()
   const [recentGames, setRecentGames] = useState<Game[]>([])
   const [upcomingGames, setUpcomingGames] = useState<Game[]>([])
 
@@ -103,6 +103,9 @@ export default function LeagueDashboard() {
               </Button>
               <Button variant="primary" size="sm" onClick={simWeek} disabled={simming}>
                 Sim Week
+              </Button>
+              <Button variant="secondary" size="sm" onClick={simSeason} disabled={simming}>
+                Sim Season
               </Button>
               <Link to={`/league/${leagueId}/schedule`}>
                 <Button variant="secondary" size="sm">Full Schedule</Button>

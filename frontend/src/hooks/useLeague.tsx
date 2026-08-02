@@ -39,6 +39,7 @@ export interface LeagueContextValue {
   simDay: () => Promise<void>
   simWeek: () => Promise<void>
   simToDate: (targetDate: string) => Promise<void>
+  simSeason: () => Promise<void>
   refreshState: () => Promise<void>
   refreshTeams: () => Promise<void>
   executeTrade: (
@@ -198,11 +199,12 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
 
       const nextDate = getNextDate(currentDate)
       await advanceDate(nextDate)
+      await checkSeasonEnd()
     } finally {
       setSimming(false)
       setSimProgress(null)
     }
-  }, [state, simming, simGames, advanceDate])
+  }, [state, simming, simGames, advanceDate, checkSeasonEnd])
 
   const simWeek = useCallback(async () => {
     const db = dbRef.current
@@ -224,11 +226,12 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
       }
 
       await advanceDate(endDate)
+      await checkSeasonEnd()
     } finally {
       setSimming(false)
       setSimProgress(null)
     }
-  }, [state, simming, simGames, advanceDate])
+  }, [state, simming, simGames, advanceDate, checkSeasonEnd])
 
   const simToDate = useCallback(
     async (targetDate: string) => {
@@ -255,6 +258,58 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
     },
     [state, simming, simGames, advanceDate],
   )
+
+  const checkSeasonEnd = useCallback(async () => {
+    const db = dbRef.current
+    if (!db || !state) return
+
+    const remainingGames = await db.games
+      .where('date')
+      .aboveOrEqual(state.currentDate)
+      .filter(g => g.status === 'scheduled' && g.gameType === 'regular_season')
+      .count()
+
+    if (remainingGames === 0 && state.currentPhase === 'regular_season') {
+      await updateLeagueState(db, { currentPhase: 'playoffs' })
+      if (leagueId) {
+        await saveLeagueMeta(leagueId, { currentPhase: 'playoffs' })
+      }
+      await refreshState()
+    }
+  }, [state, leagueId, refreshState])
+
+  const simSeason = useCallback(async () => {
+    const db = dbRef.current
+    if (!db || !state || simming) return
+
+    setSimming(true)
+    try {
+      const allGames = await db.games
+        .where('date')
+        .aboveOrEqual(state.currentDate)
+        .toArray()
+
+      const unplayed = allGames
+        .filter(g => g.status === 'scheduled' && g.gameType === 'regular_season')
+        .sort((a, b) => a.date.localeCompare(b.date))
+
+      if (unplayed.length > 0) {
+        for (let i = 0; i < unplayed.length; i += 15) {
+          const batch = unplayed.slice(i, i + 15)
+          setSimProgress(`Game ${i + 1}/${unplayed.length}`)
+          await simGames(batch)
+        }
+
+        const lastDate = unplayed[unplayed.length - 1].date
+        await advanceDate(addDays(lastDate, 1))
+      }
+
+      await checkSeasonEnd()
+    } finally {
+      setSimming(false)
+      setSimProgress(null)
+    }
+  }, [state, simming, simGames, advanceDate, checkSeasonEnd])
 
   const executeTrade = useCallback(
     async (
@@ -443,6 +498,7 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
         simDay,
         simWeek,
         simToDate,
+        simSeason,
         refreshState,
         refreshTeams,
         executeTrade,
