@@ -1,13 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import PageTransition from '../components/layout/PageTransition'
 import { listLeagues, deleteLeague } from '../db'
+import { importLeague } from '../utils/save-io'
 import type { LeagueMeta } from '../types'
 
 export default function HomePage() {
   const navigate = useNavigate()
   const [leagues, setLeagues] = useState<LeagueMeta[]>([])
   const [loading, setLoading] = useState(true)
+  const [importing, setImporting] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const loadLeagues = async () => {
     const list = await listLeagues()
@@ -40,6 +43,34 @@ export default function HomePage() {
           >
             New League
           </Link>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json"
+            className="hidden"
+            onChange={async (e) => {
+              const file = e.target.files?.[0]
+              if (!file) return
+              setImporting(true)
+              try {
+                const newId = await importLeague(file)
+                navigate(`/league/${newId}`)
+              } catch (err) {
+                alert(`Import failed: ${err instanceof Error ? err.message : 'Unknown error'}`)
+              } finally {
+                setImporting(false)
+                if (fileInputRef.current) fileInputRef.current.value = ''
+              }
+            }}
+          />
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={importing}
+            className="block w-full px-8 py-4 rounded-xl bg-white/[0.06] border border-white/[0.10] text-gray-300 font-semibold text-center hover:bg-white/[0.10] transition-all disabled:opacity-50"
+          >
+            {importing ? 'Importing...' : 'Import Save'}
+          </button>
 
           <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl p-6">
             <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-4">Saved Leagues</h2>

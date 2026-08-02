@@ -75,12 +75,17 @@ export interface RetiredPlayer {
   accolades: string[]
 }
 
+export interface AllStarGameScore {
+  eastScore: number
+  westScore: number
+  mvpId: string | null
+}
+
 export interface AllStarRecord {
   seasonYear: number
   starters: { east: string[]; west: string[] }
   reserves: { east: string[]; west: string[] }
-  gameResult: GameResult | null
-  gameMvpId: string | null
+  gameScore: AllStarGameScore | null
   contestWinners: Record<string, string>
 }
 

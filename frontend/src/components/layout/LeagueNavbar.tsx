@@ -13,6 +13,7 @@ const LEAGUE_LINKS = [
   { path: 'draft', label: 'Draft' },
   { path: 'free-agency', label: 'Free Agency' },
   { path: 'playoffs', label: 'Playoffs' },
+  { path: 'all-star', label: 'All-Star' },
   { path: 'transactions', label: 'Transactions' },
   { path: 'awards', label: 'Awards' },
   { path: 'history', label: 'History' },

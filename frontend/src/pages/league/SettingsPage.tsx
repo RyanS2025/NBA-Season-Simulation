@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
 import GlassCard from '../../components/common/GlassCard'
 import Button from '../../components/common/Button'
 import { useLeague } from '../../hooks/useLeague'
+import { exportLeague } from '../../utils/save-io'
 import type { LeagueSettings, AutoStopConfig } from '../../types/league'
 
 function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
@@ -110,9 +112,11 @@ const PLAYOFF_FORMAT_LABELS: Record<LeagueSettings['playoffFormat'], string> = {
 }
 
 export default function SettingsPage() {
+  const { id: leagueId } = useParams<{ id: string }>()
   const { state, updateSettings } = useLeague()
   const [localSettings, setLocalSettings] = useState<LeagueSettings | null>(null)
   const [saved, setSaved] = useState(false)
+  const [exporting, setExporting] = useState(false)
 
   useEffect(() => {
     if (state?.settings && !localSettings) {
@@ -268,6 +272,32 @@ export default function SettingsPage() {
                 onChange={(v) => updateAutoStop('freeAgency', v)}
                 label="Free Agency"
               />
+            </div>
+          </GlassCard>
+
+          {/* Data Management */}
+          <GlassCard className="p-6">
+            <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-4">Data</h2>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm text-gray-300">Export Save</div>
+                <div className="text-xs text-gray-600">Download this league as a JSON file</div>
+              </div>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={async () => {
+                  if (!leagueId) return
+                  setExporting(true)
+                  try {
+                    await exportLeague(leagueId)
+                  } finally {
+                    setExporting(false)
+                  }
+                }}
+              >
+                {exporting ? 'Exporting...' : 'Export'}
+              </Button>
             </div>
           </GlassCard>
 

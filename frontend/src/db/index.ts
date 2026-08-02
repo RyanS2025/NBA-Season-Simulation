@@ -1,6 +1,6 @@
 export { metaDB } from './meta-db'
 export { openLeagueDB, deleteLeagueDB } from './league-db'
-export type { LeagueDB, LeagueState, PlayerSeasonStats, StoredGameResult, AwardRecord, HallOfFameEntry, RetiredPlayer, AllStarRecord, PreseasonProjection } from './league-db'
+export type { LeagueDB, LeagueState, PlayerSeasonStats, StoredGameResult, AwardRecord, HallOfFameEntry, RetiredPlayer, AllStarRecord, AllStarGameScore, PreseasonProjection } from './league-db'
 export {
   listLeagues,
   getLeagueCount,

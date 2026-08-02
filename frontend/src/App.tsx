@@ -21,6 +21,7 @@ import SettingsPage from './pages/league/SettingsPage'
 import PlayerDetailPage from './pages/league/PlayerDetailPage'
 import PlayoffsPage from './pages/league/PlayoffsPage'
 import StaffPage from './pages/league/StaffPage'
+import AllStarPage from './pages/league/AllStarPage'
 
 export default function App() {
   return (
@@ -48,6 +49,7 @@ export default function App() {
           <Route path="transactions" element={<TransactionsPage />} />
           <Route path="awards" element={<AwardsPage />} />
           <Route path="playoffs" element={<PlayoffsPage />} />
+          <Route path="all-star" element={<AllStarPage />} />
           <Route path="history" element={<LeagueHistoryPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>

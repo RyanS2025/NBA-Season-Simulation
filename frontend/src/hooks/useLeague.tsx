@@ -905,6 +905,37 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
           }
           if (team.staff) {
             team.staff.headCoach.hotSeatLevel = 0
+
+            team.staff.headCoach.age += 1
+            team.staff.headCoach.contract.yearsRemaining = Math.max(0, team.staff.headCoach.contract.yearsRemaining - 1)
+            team.staff.headCoach.experience += 1
+
+            if (team.staff.generalManager) {
+              team.staff.generalManager.age += 1
+              team.staff.generalManager.yearsAsGM += 1
+              team.staff.generalManager.contract.yearsRemaining = Math.max(0, team.staff.generalManager.contract.yearsRemaining - 1)
+              if (team.staff.generalManager.age >= 75) {
+                team.staff.generalManager = null
+              }
+            }
+
+            for (const ac of team.staff.assistantCoaches) {
+              ac.age += 1
+              ac.contract.yearsRemaining = Math.max(0, ac.contract.yearsRemaining - 1)
+            }
+            team.staff.assistantCoaches = team.staff.assistantCoaches.filter(ac => ac.age < 72)
+
+            for (const scout of team.staff.scouts) {
+              scout.age += 1
+              scout.contract.yearsRemaining = Math.max(0, scout.contract.yearsRemaining - 1)
+            }
+            team.staff.scouts = team.staff.scouts.filter(s => s.age < 72)
+
+            for (const trainer of team.staff.trainers) {
+              trainer.age += 1
+              trainer.contract.yearsRemaining = Math.max(0, trainer.contract.yearsRemaining - 1)
+            }
+            team.staff.trainers = team.staff.trainers.filter(t => t.age < 72)
           }
           await db.teams.put(team)
         }
