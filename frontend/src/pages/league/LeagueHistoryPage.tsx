@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
 import GlassCard from '../../components/common/GlassCard'
 import DataTable from '../../components/common/DataTable'
@@ -11,17 +11,19 @@ interface Champion {
   record: string
   seriesResult: string
   opponent: string
-  finalsMvp: { name: string; statLine: string }
+  finalsMvp: { name: string; playerId: string; statLine: string }
 }
 
 interface AwardWinner {
   award: string
   name: string
+  playerId?: string
   team: string
 }
 
 interface StatLeader {
   id: string
+  playerId: string
   rank: number
   name: string
   team: string
@@ -54,53 +56,53 @@ const SEASON_DATA: Record<Season, SeasonData> = {
       record: '58-24',
       seriesResult: '4-2',
       opponent: 'Denver Altitude',
-      finalsMvp: { name: 'Damian Rhodes', statLine: '31.4 PPG / 6.2 RPG / 9.8 APG' },
+      finalsMvp: { name: 'Damian Rhodes', playerId: 'fa1', statLine: '31.4 PPG / 6.2 RPG / 9.8 APG' },
     },
     awards: [
-      { award: 'MVP', name: 'Damian Rhodes', team: 'CHI' },
-      { award: 'DPOY', name: 'Tobias Adebayo', team: 'MIA' },
-      { award: 'ROY', name: 'Jalen Crawford', team: 'MIN' },
-      { award: '6MOY', name: 'Gary Trent IV', team: 'PHI' },
-      { award: 'MIP', name: 'Darnell Brooks', team: 'DAL' },
+      { award: 'MVP', name: 'Damian Rhodes', playerId: 'fa1', team: 'CHI' },
+      { award: 'DPOY', name: 'Tobias Adebayo', playerId: 'd3', team: 'MIA' },
+      { award: 'ROY', name: 'Jalen Crawford', playerId: 'd1', team: 'MIN' },
+      { award: '6MOY', name: 'Gary Trent IV', playerId: 'fa14', team: 'PHI' },
+      { award: 'MIP', name: 'Darnell Brooks', playerId: 'd13', team: 'DAL' },
       { award: 'COTY', name: 'Marcus Thompson', team: 'CHI' },
-      { award: 'Clutch', name: 'Nikolai Petrovic', team: 'DAL' },
+      { award: 'Clutch', name: 'Nikolai Petrovic', playerId: 'd4', team: 'DAL' },
       { award: 'EOTY', name: 'Rachel Kim', team: 'MIN' },
     ],
     statLeaders: {
       ppg: [
-        { id: 'pp1', rank: 1, name: 'Damian Rhodes', team: 'CHI', value: 28.4 },
-        { id: 'pp2', rank: 2, name: 'Jayson Williams', team: 'BOS', value: 26.8 },
-        { id: 'pp3', rank: 3, name: 'Karl-Anthony Reed', team: 'MIL', value: 25.1 },
-        { id: 'pp4', rank: 4, name: 'Marcus Webb', team: 'PHI', value: 24.2 },
-        { id: 'pp5', rank: 5, name: 'Nikolai Petrovic', team: 'DAL', value: 23.9 },
+        { id: 'pp1', playerId: 'fa1', rank: 1, name: 'Damian Rhodes', team: 'CHI', value: 28.4 },
+        { id: 'pp2', playerId: 'fa3', rank: 2, name: 'Jayson Williams', team: 'BOS', value: 26.8 },
+        { id: 'pp3', playerId: 'fa2', rank: 3, name: 'Karl-Anthony Reed', team: 'MIL', value: 25.1 },
+        { id: 'pp4', playerId: 'd2', rank: 4, name: 'Marcus Webb', team: 'PHI', value: 24.2 },
+        { id: 'pp5', playerId: 'd4', rank: 5, name: 'Nikolai Petrovic', team: 'DAL', value: 23.9 },
       ],
       rpg: [
-        { id: 'rp1', rank: 1, name: 'Karl-Anthony Reed', team: 'MIL', value: 12.4 },
-        { id: 'rp2', rank: 2, name: 'Tobias Adebayo', team: 'MIA', value: 12.1 },
-        { id: 'rp3', rank: 3, name: 'Tyrell Jackson', team: 'ATL', value: 11.2 },
-        { id: 'rp4', rank: 4, name: 'Wendell Carter IV', team: 'MIL', value: 10.2 },
-        { id: 'rp5', rank: 5, name: 'Pascal Okafor', team: 'TOR', value: 9.4 },
+        { id: 'rp1', playerId: 'fa2', rank: 1, name: 'Karl-Anthony Reed', team: 'MIL', value: 12.4 },
+        { id: 'rp2', playerId: 'd3', rank: 2, name: 'Tobias Adebayo', team: 'MIA', value: 12.1 },
+        { id: 'rp3', playerId: 'd9', rank: 3, name: 'Tyrell Jackson', team: 'ATL', value: 11.2 },
+        { id: 'rp4', playerId: 'fa8', rank: 4, name: 'Wendell Carter IV', team: 'MIL', value: 10.2 },
+        { id: 'rp5', playerId: 'fa5', rank: 5, name: 'Pascal Okafor', team: 'TOR', value: 9.4 },
       ],
       apg: [
-        { id: 'ap1', rank: 1, name: 'Damian Rhodes', team: 'CHI', value: 10.2 },
-        { id: 'ap2', rank: 2, name: 'Santiago Reyes', team: 'CLE', value: 9.1 },
-        { id: 'ap3', rank: 3, name: 'Jaylen Watkins', team: 'DEN', value: 8.4 },
-        { id: 'ap4', rank: 4, name: 'Jalen Suggs Jr.', team: 'GSW', value: 7.6 },
-        { id: 'ap5', rank: 5, name: 'Jalen Crawford', team: 'MIN', value: 7.1 },
+        { id: 'ap1', playerId: 'fa1', rank: 1, name: 'Damian Rhodes', team: 'CHI', value: 10.2 },
+        { id: 'ap2', playerId: 'd12', rank: 2, name: 'Santiago Reyes', team: 'CLE', value: 9.1 },
+        { id: 'ap3', playerId: 'd6', rank: 3, name: 'Jaylen Watkins', team: 'DEN', value: 8.4 },
+        { id: 'ap4', playerId: 'fa6', rank: 4, name: 'Jalen Suggs Jr.', team: 'GSW', value: 7.6 },
+        { id: 'ap5', playerId: 'd1', rank: 5, name: 'Jalen Crawford', team: 'MIN', value: 7.1 },
       ],
       spg: [
-        { id: 'sp1', rank: 1, name: 'Devin Okafor', team: 'CLE', value: 1.9 },
-        { id: 'sp2', rank: 2, name: 'Marcus Smart II', team: 'BOS', value: 1.8 },
-        { id: 'sp3', rank: 3, name: 'Kentavious Pope', team: 'PHX', value: 1.6 },
-        { id: 'sp4', rank: 4, name: 'Zion Palmer', team: 'GSW', value: 1.6 },
-        { id: 'sp5', rank: 5, name: 'Santiago Reyes', team: 'CLE', value: 1.4 },
+        { id: 'sp1', playerId: 'd5', rank: 1, name: 'Devin Okafor', team: 'CLE', value: 1.9 },
+        { id: 'sp2', playerId: 'fa7', rank: 2, name: 'Marcus Smart II', team: 'BOS', value: 1.8 },
+        { id: 'sp3', playerId: 'fa9', rank: 3, name: 'Kentavious Pope', team: 'PHX', value: 1.6 },
+        { id: 'sp4', playerId: 'd10', rank: 4, name: 'Zion Palmer', team: 'GSW', value: 1.6 },
+        { id: 'sp5', playerId: 'd12', rank: 5, name: 'Santiago Reyes', team: 'CLE', value: 1.4 },
       ],
       bpg: [
-        { id: 'bp1', rank: 1, name: 'Tobias Adebayo', team: 'MIA', value: 2.8 },
-        { id: 'bp2', rank: 2, name: 'Tyrell Jackson', team: 'ATL', value: 2.4 },
-        { id: 'bp3', rank: 3, name: 'Karl-Anthony Reed', team: 'MIL', value: 2.2 },
-        { id: 'bp4', rank: 4, name: 'Zion Palmer', team: 'GSW', value: 2.1 },
-        { id: 'bp5', rank: 5, name: 'Andre Baptiste', team: 'DEN', value: 1.8 },
+        { id: 'bp1', playerId: 'd3', rank: 1, name: 'Tobias Adebayo', team: 'MIA', value: 2.8 },
+        { id: 'bp2', playerId: 'd9', rank: 2, name: 'Tyrell Jackson', team: 'ATL', value: 2.4 },
+        { id: 'bp3', playerId: 'fa2', rank: 3, name: 'Karl-Anthony Reed', team: 'MIL', value: 2.2 },
+        { id: 'bp4', playerId: 'd10', rank: 4, name: 'Zion Palmer', team: 'GSW', value: 2.1 },
+        { id: 'bp5', playerId: 'd7', rank: 5, name: 'Andre Baptiste', team: 'DEN', value: 1.8 },
       ],
     },
     hallOfFame: [
@@ -114,53 +116,53 @@ const SEASON_DATA: Record<Season, SeasonData> = {
       record: '55-27',
       seriesResult: '4-3',
       opponent: 'Boston Ballers',
-      finalsMvp: { name: 'Jaylen Watkins', statLine: '27.8 PPG / 4.1 RPG / 8.6 APG' },
+      finalsMvp: { name: 'Jaylen Watkins', playerId: 'd6', statLine: '27.8 PPG / 4.1 RPG / 8.6 APG' },
     },
     awards: [
-      { award: 'MVP', name: 'Karl-Anthony Reed', team: 'MIL' },
-      { award: 'DPOY', name: 'Zion Palmer', team: 'GSW' },
-      { award: 'ROY', name: 'Darnell Brooks', team: 'DAL' },
-      { award: '6MOY', name: 'Jaylen Morris', team: 'PHX' },
-      { award: 'MIP', name: 'Santiago Reyes', team: 'CLE' },
+      { award: 'MVP', name: 'Karl-Anthony Reed', playerId: 'fa2', team: 'MIL' },
+      { award: 'DPOY', name: 'Zion Palmer', playerId: 'd10', team: 'GSW' },
+      { award: 'ROY', name: 'Darnell Brooks', playerId: 'd13', team: 'DAL' },
+      { award: '6MOY', name: 'Jaylen Morris', playerId: 'd26', team: 'PHX' },
+      { award: 'MIP', name: 'Santiago Reyes', playerId: 'd12', team: 'CLE' },
       { award: 'COTY', name: 'David Park', team: 'MIN' },
-      { award: 'Clutch', name: 'Damian Rhodes', team: 'CHI' },
+      { award: 'Clutch', name: 'Damian Rhodes', playerId: 'fa1', team: 'CHI' },
       { award: 'EOTY', name: 'Michael Torres', team: 'MIA' },
     ],
     statLeaders: {
       ppg: [
-        { id: 'pp1b', rank: 1, name: 'Karl-Anthony Reed', team: 'MIL', value: 27.2 },
-        { id: 'pp2b', rank: 2, name: 'Damian Rhodes', team: 'CHI', value: 26.1 },
-        { id: 'pp3b', rank: 3, name: 'Jayson Williams', team: 'BOS', value: 25.4 },
-        { id: 'pp4b', rank: 4, name: 'Nikolai Petrovic', team: 'DAL', value: 22.8 },
-        { id: 'pp5b', rank: 5, name: 'Marcus Webb', team: 'PHI', value: 22.1 },
+        { id: 'pp1b', playerId: 'fa2', rank: 1, name: 'Karl-Anthony Reed', team: 'MIL', value: 27.2 },
+        { id: 'pp2b', playerId: 'fa1', rank: 2, name: 'Damian Rhodes', team: 'CHI', value: 26.1 },
+        { id: 'pp3b', playerId: 'fa3', rank: 3, name: 'Jayson Williams', team: 'BOS', value: 25.4 },
+        { id: 'pp4b', playerId: 'd4', rank: 4, name: 'Nikolai Petrovic', team: 'DAL', value: 22.8 },
+        { id: 'pp5b', playerId: 'd2', rank: 5, name: 'Marcus Webb', team: 'PHI', value: 22.1 },
       ],
       rpg: [
-        { id: 'rp1b', rank: 1, name: 'Karl-Anthony Reed', team: 'MIL', value: 13.1 },
-        { id: 'rp2b', rank: 2, name: 'Tobias Adebayo', team: 'MIA', value: 11.8 },
-        { id: 'rp3b', rank: 3, name: 'Tyrell Jackson', team: 'ATL', value: 10.9 },
-        { id: 'rp4b', rank: 4, name: 'Pascal Okafor', team: 'TOR', value: 10.2 },
-        { id: 'rp5b', rank: 5, name: 'Andre Baptiste', team: 'DEN', value: 9.8 },
+        { id: 'rp1b', playerId: 'fa2', rank: 1, name: 'Karl-Anthony Reed', team: 'MIL', value: 13.1 },
+        { id: 'rp2b', playerId: 'd3', rank: 2, name: 'Tobias Adebayo', team: 'MIA', value: 11.8 },
+        { id: 'rp3b', playerId: 'd9', rank: 3, name: 'Tyrell Jackson', team: 'ATL', value: 10.9 },
+        { id: 'rp4b', playerId: 'fa5', rank: 4, name: 'Pascal Okafor', team: 'TOR', value: 10.2 },
+        { id: 'rp5b', playerId: 'd7', rank: 5, name: 'Andre Baptiste', team: 'DEN', value: 9.8 },
       ],
       apg: [
-        { id: 'ap1b', rank: 1, name: 'Damian Rhodes', team: 'CHI', value: 9.6 },
-        { id: 'ap2b', rank: 2, name: 'Jaylen Watkins', team: 'DEN', value: 8.8 },
-        { id: 'ap3b', rank: 3, name: 'Santiago Reyes', team: 'CLE', value: 7.9 },
-        { id: 'ap4b', rank: 4, name: 'Jalen Suggs Jr.', team: 'GSW', value: 7.4 },
-        { id: 'ap5b', rank: 5, name: 'Marcus Smart II', team: 'BOS', value: 6.2 },
+        { id: 'ap1b', playerId: 'fa1', rank: 1, name: 'Damian Rhodes', team: 'CHI', value: 9.6 },
+        { id: 'ap2b', playerId: 'd6', rank: 2, name: 'Jaylen Watkins', team: 'DEN', value: 8.8 },
+        { id: 'ap3b', playerId: 'd12', rank: 3, name: 'Santiago Reyes', team: 'CLE', value: 7.9 },
+        { id: 'ap4b', playerId: 'fa6', rank: 4, name: 'Jalen Suggs Jr.', team: 'GSW', value: 7.4 },
+        { id: 'ap5b', playerId: 'fa7', rank: 5, name: 'Marcus Smart II', team: 'BOS', value: 6.2 },
       ],
       spg: [
-        { id: 'sp1b', rank: 1, name: 'Devin Okafor', team: 'CLE', value: 2.1 },
-        { id: 'sp2b', rank: 2, name: 'Marcus Smart II', team: 'BOS', value: 1.9 },
-        { id: 'sp3b', rank: 3, name: 'Zion Palmer', team: 'GSW', value: 1.7 },
-        { id: 'sp4b', rank: 4, name: 'Santiago Reyes', team: 'CLE', value: 1.5 },
-        { id: 'sp5b', rank: 5, name: 'Kentavious Pope', team: 'PHX', value: 1.4 },
+        { id: 'sp1b', playerId: 'd5', rank: 1, name: 'Devin Okafor', team: 'CLE', value: 2.1 },
+        { id: 'sp2b', playerId: 'fa7', rank: 2, name: 'Marcus Smart II', team: 'BOS', value: 1.9 },
+        { id: 'sp3b', playerId: 'd10', rank: 3, name: 'Zion Palmer', team: 'GSW', value: 1.7 },
+        { id: 'sp4b', playerId: 'd12', rank: 4, name: 'Santiago Reyes', team: 'CLE', value: 1.5 },
+        { id: 'sp5b', playerId: 'fa9', rank: 5, name: 'Kentavious Pope', team: 'PHX', value: 1.4 },
       ],
       bpg: [
-        { id: 'bp1b', rank: 1, name: 'Zion Palmer', team: 'GSW', value: 2.6 },
-        { id: 'bp2b', rank: 2, name: 'Tobias Adebayo', team: 'MIA', value: 2.4 },
-        { id: 'bp3b', rank: 3, name: 'Karl-Anthony Reed', team: 'MIL', value: 2.0 },
-        { id: 'bp4b', rank: 4, name: 'Andre Baptiste', team: 'DEN', value: 1.9 },
-        { id: 'bp5b', rank: 5, name: 'Tyrell Jackson', team: 'ATL', value: 1.8 },
+        { id: 'bp1b', playerId: 'd10', rank: 1, name: 'Zion Palmer', team: 'GSW', value: 2.6 },
+        { id: 'bp2b', playerId: 'd3', rank: 2, name: 'Tobias Adebayo', team: 'MIA', value: 2.4 },
+        { id: 'bp3b', playerId: 'fa2', rank: 3, name: 'Karl-Anthony Reed', team: 'MIL', value: 2.0 },
+        { id: 'bp4b', playerId: 'd7', rank: 4, name: 'Andre Baptiste', team: 'DEN', value: 1.9 },
+        { id: 'bp5b', playerId: 'd9', rank: 5, name: 'Tyrell Jackson', team: 'ATL', value: 1.8 },
       ],
     },
     hallOfFame: [
@@ -182,7 +184,7 @@ const STAT_CATEGORIES = [
 ]
 
 export default function LeagueHistoryPage() {
-  const { id: _leagueId } = useParams()
+  const { id: leagueId } = useParams()
   const [selectedSeason, setSelectedSeason] = useState<Season>('2024-25')
   const [expandedStat, setExpandedStat] = useState<string | null>('ppg')
 
@@ -204,7 +206,14 @@ export default function LeagueHistoryPage() {
     {
       key: 'name',
       label: 'Player',
-      render: (row) => <span className="text-white font-medium">{row.name}</span>,
+      render: (row) => (
+        <Link
+          to={`/league/${leagueId}/players/${row.playerId}`}
+          className="text-white font-medium hover:text-[oklch(64.6%_0.222_41.116)] transition-colors"
+        >
+          {row.name}
+        </Link>
+      ),
     },
     {
       key: 'team',
@@ -273,7 +282,7 @@ export default function LeagueHistoryPage() {
                 </div>
                 <div>
                   <div className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-1">Finals MVP</div>
-                  <div className="text-amber-400 font-medium">{data.champion.finalsMvp.name}</div>
+                  <Link to={`/league/${leagueId}/players/${data.champion.finalsMvp.playerId}`} className="text-amber-400 font-medium hover:text-[oklch(64.6%_0.222_41.116)] transition-colors">{data.champion.finalsMvp.name}</Link>
                   <div className="text-xs text-gray-500">{data.champion.finalsMvp.statLine}</div>
                 </div>
               </div>
@@ -287,7 +296,11 @@ export default function LeagueHistoryPage() {
           {data.awards.map(a => (
             <GlassCard key={a.award} className="p-4">
               <div className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-2">{a.award}</div>
-              <div className="text-sm font-medium text-white">{a.name}</div>
+              {a.playerId ? (
+                <Link to={`/league/${leagueId}/players/${a.playerId}`} className="text-sm font-medium text-white hover:text-[oklch(64.6%_0.222_41.116)] transition-colors">{a.name}</Link>
+              ) : (
+                <div className="text-sm font-medium text-white">{a.name}</div>
+              )}
               <div className="text-xs text-gray-500 mt-0.5">{a.team}</div>
             </GlassCard>
           ))}

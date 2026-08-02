@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
 import GlassCard from '../../components/common/GlassCard'
 import DataTable from '../../components/common/DataTable'
@@ -99,7 +99,7 @@ function tierBadge(tier: 'lottery' | 'first' | 'second'): string {
 }
 
 export default function DraftPage() {
-  const { id: _leagueId } = useParams()
+  const { id: leagueId } = useParams()
   const [activeTab, setActiveTab] = useState<DraftTab>('prospects')
   const [search, setSearch] = useState('')
   const [posFilter, setPosFilter] = useState<PositionFilter>('ALL')
@@ -145,7 +145,14 @@ export default function DraftPage() {
       sortable: true,
       render: (row) => {
         const tier = getTier(row.projectedOverall[0], row.projectedOverall[1])
-        return <span className={`font-medium ${tierColor(tier)}`}>{row.name}</span>
+        return (
+          <Link
+            to={`/league/${leagueId}/players/${row.id}`}
+            className={`font-medium ${tierColor(tier)} hover:text-[oklch(64.6%_0.222_41.116)] transition-colors`}
+          >
+            {row.name}
+          </Link>
+        )
       },
     },
     {
@@ -292,9 +299,12 @@ export default function DraftPage() {
                     {/* Left: Header + Comparison */}
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-4">
-                        <h3 className={`text-xl font-display tracking-wide ${tierColor(tier)}`}>
+                        <Link
+                          to={`/league/${leagueId}/players/${prospect.id}`}
+                          className={`text-xl font-display tracking-wide ${tierColor(tier)} hover:text-[oklch(64.6%_0.222_41.116)] transition-colors`}
+                        >
                           {prospect.name}
-                        </h3>
+                        </Link>
                         <span className={`px-2 py-0.5 rounded text-xs border ${tierBadge(tier)}`}>
                           {tier === 'lottery' ? 'Lottery' : tier === 'first' ? '1st Round' : '2nd Round'}
                         </span>
@@ -395,7 +405,12 @@ export default function DraftPage() {
                       {prospect && (
                         <div className="flex items-center gap-3 text-right">
                           <div>
-                            <div className="text-sm text-gray-300">{prospect.name}</div>
+                            <Link
+                              to={`/league/${leagueId}/players/${prospect.id}`}
+                              className="text-sm text-gray-300 font-medium hover:text-[oklch(64.6%_0.222_41.116)] transition-colors"
+                            >
+                              {prospect.name}
+                            </Link>
                             <div className="text-xs text-gray-500">{prospect.position} -- {prospect.school}</div>
                           </div>
                           <span className={`px-2 py-0.5 rounded text-xs border ${tierBadge(getTier(prospect.projectedOverall[0], prospect.projectedOverall[1]))}`}>
@@ -456,7 +471,12 @@ export default function DraftPage() {
                       <GlassCard key={prospect.id} className="px-5 py-3">
                         <div className="flex items-center gap-4">
                           <div className="flex-1 min-w-0">
-                            <div className={`text-sm font-medium ${tierColor(tier)}`}>{prospect.name}</div>
+                            <Link
+                              to={`/league/${leagueId}/players/${prospect.id}`}
+                              className={`text-sm font-medium ${tierColor(tier)} hover:text-[oklch(64.6%_0.222_41.116)] transition-colors`}
+                            >
+                              {prospect.name}
+                            </Link>
                             <div className="text-xs text-gray-500">{prospect.position} -- {prospect.school}</div>
                           </div>
                           <span className={`px-2 py-0.5 rounded text-xs border ${tierBadge(tier)}`}>
@@ -493,7 +513,12 @@ export default function DraftPage() {
                     <div className="flex-1">
                       <div className="text-white font-medium">
                         {lastPick.team} selects{' '}
-                        <span className="text-[oklch(64.6%_0.222_41.116)]">{lastPick.prospect.name}</span>
+                        <Link
+                          to={`/league/${leagueId}/players/${lastPick.prospect.id}`}
+                          className="text-[oklch(64.6%_0.222_41.116)] font-medium hover:brightness-125 transition-colors"
+                        >
+                          {lastPick.prospect.name}
+                        </Link>
                       </div>
                       <div className="text-xs text-gray-500">
                         {lastPick.prospect.position} from {lastPick.prospect.school} -- Projected {lastPick.prospect.projectedOverall[0]}--{lastPick.prospect.projectedOverall[1]} OVR
@@ -532,7 +557,12 @@ export default function DraftPage() {
                             </div>
                           </div>
                           <div className="text-right">
-                            <div className={`text-sm font-medium ${tierColor(tier)}`}>{entry.prospect.name}</div>
+                            <Link
+                              to={`/league/${leagueId}/players/${entry.prospect.id}`}
+                              className={`text-sm font-medium ${tierColor(tier)} hover:text-[oklch(64.6%_0.222_41.116)] transition-colors`}
+                            >
+                              {entry.prospect.name}
+                            </Link>
                             <div className="text-xs text-gray-500">
                               {entry.prospect.position} -- {entry.prospect.school}
                             </div>

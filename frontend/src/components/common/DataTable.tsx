@@ -5,6 +5,7 @@ interface Column<T> {
   label: string
   render?: (row: T, index: number) => ReactNode
   sortable?: boolean
+  sortKey?: string
   align?: 'left' | 'center' | 'right'
   width?: string
 }
@@ -16,11 +17,13 @@ interface DataTableProps<T> {
   onRowClick?: (row: T) => void
   emptyMessage?: string
   className?: string
+  defaultSortKey?: string
+  defaultSortAsc?: boolean
 }
 
-export default function DataTable<T>({ columns, data, keyExtractor, onRowClick, emptyMessage = 'No data', className = '' }: DataTableProps<T>) {
-  const [sortKey, setSortKey] = useState<string | null>(null)
-  const [sortAsc, setSortAsc] = useState(true)
+export default function DataTable<T>({ columns, data, keyExtractor, onRowClick, emptyMessage = 'No data', className = '', defaultSortKey, defaultSortAsc }: DataTableProps<T>) {
+  const [sortKey, setSortKey] = useState<string | null>(defaultSortKey ?? null)
+  const [sortAsc, setSortAsc] = useState(defaultSortAsc ?? true)
 
   const handleSort = (key: string) => {
     if (sortKey === key) {
@@ -33,8 +36,10 @@ export default function DataTable<T>({ columns, data, keyExtractor, onRowClick, 
 
   const sorted = sortKey
     ? [...data].sort((a, b) => {
-        const aVal = (a as Record<string, unknown>)[sortKey]
-        const bVal = (b as Record<string, unknown>)[sortKey]
+        const col = columns.find(c => c.key === sortKey)
+        const resolvedKey = col?.sortKey ?? sortKey
+        const aVal = (a as Record<string, unknown>)[resolvedKey]
+        const bVal = (b as Record<string, unknown>)[resolvedKey]
         if (typeof aVal === 'number' && typeof bVal === 'number') {
           return sortAsc ? aVal - bVal : bVal - aVal
         }

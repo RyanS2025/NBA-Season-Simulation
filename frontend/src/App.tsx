@@ -18,6 +18,7 @@ import AwardsPage from './pages/league/AwardsPage'
 import TransactionsPage from './pages/league/TransactionsPage'
 import LeagueHistoryPage from './pages/league/LeagueHistoryPage'
 import SettingsPage from './pages/league/SettingsPage'
+import PlayerDetailPage from './pages/league/PlayerDetailPage'
 
 export default function App() {
   return (
@@ -37,6 +38,7 @@ export default function App() {
           <Route path="scores" element={<ScoresPage />} />
           <Route path="trades" element={<TradePage />} />
           <Route path="players" element={<PlayersPage />} />
+          <Route path="players/:playerId" element={<PlayerDetailPage />} />
           <Route path="team" element={<MyTeamPage />} />
           <Route path="draft" element={<DraftPage />} />
           <Route path="free-agency" element={<FreeAgencyPage />} />

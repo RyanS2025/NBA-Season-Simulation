@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
 import GlassCard from '../../components/common/GlassCard'
 import DataTable from '../../components/common/DataTable'
@@ -35,6 +35,7 @@ interface FreeAgent {
 
 interface MyOffer {
   id: string
+  playerId: string
   playerName: string
   overall: number
   years: number
@@ -92,9 +93,9 @@ const MOCK_FREE_AGENTS: FreeAgent[] = [
 ]
 
 const MOCK_OFFERS: MyOffer[] = [
-  { id: 'o1', playerName: 'Larry Nance IV', overall: 75, years: 2, salary: 9000000, status: 'Pending' },
-  { id: 'o2', playerName: 'Kentavious Pope', overall: 76, years: 1, salary: 5500000, status: 'Declined' },
-  { id: 'o3', playerName: 'Frank Mason IV', overall: 66, years: 1, salary: 2100000, status: 'Accepted' },
+  { id: 'o1', playerId: 'fa10', playerName: 'Larry Nance IV', overall: 75, years: 2, salary: 9000000, status: 'Pending' },
+  { id: 'o2', playerId: 'fa9', playerName: 'Kentavious Pope', overall: 76, years: 1, salary: 5500000, status: 'Declined' },
+  { id: 'o3', playerId: 'fa20', playerName: 'Frank Mason IV', overall: 66, years: 1, salary: 2100000, status: 'Accepted' },
 ]
 
 function waveColor(wave: 1 | 2 | 3 | 4): string {
@@ -128,7 +129,7 @@ function formatSalary(salary: number): string {
 }
 
 export default function FreeAgencyPage() {
-  const { id: _leagueId } = useParams()
+  const { id: leagueId } = useParams()
   const [activeTab, setActiveTab] = useState<FATab>('available')
   const [waveFilter, setWaveFilter] = useState<WaveFilter>('ALL')
   const [posFilter, setPosFilter] = useState<PositionFilter>('ALL')
@@ -157,7 +158,14 @@ export default function FreeAgencyPage() {
       key: 'name',
       label: 'Player',
       sortable: true,
-      render: (row) => <span className={`font-medium ${waveColor(row.wave)}`}>{row.name}</span>,
+      render: (row) => (
+        <Link
+          to={`/league/${leagueId}/players/${row.id}`}
+          className={`font-medium ${waveColor(row.wave)} hover:text-[oklch(64.6%_0.222_41.116)] transition-colors`}
+        >
+          {row.name}
+        </Link>
+      ),
     },
     {
       key: 'position',
@@ -280,9 +288,12 @@ export default function FreeAgencyPage() {
                     {/* Left: Player Info + Preferences */}
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-4">
-                        <h3 className={`text-xl font-display tracking-wide ${waveColor(player.wave)}`}>
+                        <Link
+                          to={`/league/${leagueId}/players/${player.id}`}
+                          className={`text-xl font-display tracking-wide ${waveColor(player.wave)} hover:text-[oklch(64.6%_0.222_41.116)] transition-colors`}
+                        >
                           {player.name}
-                        </h3>
+                        </Link>
                         <span className={`px-2 py-0.5 rounded text-xs border ${waveBadge(player.wave)}`}>
                           Wave {player.wave}
                         </span>
@@ -412,7 +423,12 @@ export default function FreeAgencyPage() {
                     <div className="flex items-center gap-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-3 mb-1">
-                          <span className="text-white font-medium">{offer.playerName}</span>
+                          <Link
+                            to={`/league/${leagueId}/players/${offer.playerId}`}
+                            className="text-white font-medium hover:text-[oklch(64.6%_0.222_41.116)] transition-colors"
+                          >
+                            {offer.playerName}
+                          </Link>
                           <span className={`px-2 py-0.5 rounded text-xs border ${offerStatusBadge(offer.status)}`}>
                             {offer.status}
                           </span>

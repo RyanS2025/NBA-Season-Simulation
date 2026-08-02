@@ -83,7 +83,7 @@ export interface PlayerRatings {
   interiorDefense: number;
   shotBlocking: number;
   stealing: number;
-  defensiveIQ: number;
+  defensiveIq: number;
   defensiveConsistency: number;
   speed: number;
   acceleration: number;
@@ -91,11 +91,12 @@ export interface PlayerRatings {
   vertical: number;
   strength: number;
   stamina: number;
-  basketballIQ: number;
-  offensiveIQ: number;
+  basketballIq: number;
+  offensiveIq: number;
   rebounding: number;
   offensiveRebounding: number;
   hustle: number;
+  intangibles: number;
   overall: number;
   potential: number;
   peakAge: number;
@@ -189,14 +190,56 @@ export interface PlayerStatus {
   teamId: string | null;
 }
 
+export interface SeasonStats {
+  season: string;
+  team: string;
+  gp: number;
+  gs: number;
+  mpg: number;
+  ppg: number;
+  rpg: number;
+  apg: number;
+  spg: number;
+  bpg: number;
+  topg: number;
+  fgm: number;
+  fga: number;
+  fg_pct: number;
+  three_pm: number;
+  three_pa: number;
+  three_pct: number;
+  ftm: number;
+  fta: number;
+  ft_pct: number;
+  orpg: number;
+  drpg: number;
+  pfpg: number;
+}
+
+export interface PlayerContract {
+  annualSalary: number;
+  yearsRemaining: number;
+  totalYears: number;
+  contractType: string;
+  noTradeClause: boolean;
+  playerOption: boolean;
+  teamOption: boolean;
+  guaranteed: boolean;
+}
+
 export interface Player {
   id: string;
+  nbaId: number;
+  headshotUrl: string;
+  teamId: string;
   bio: PlayerBio;
   ratings: PlayerRatings;
   shotChart: ShotChartProfile;
   tendencies: PlayerTendencies;
   character: CharacterTraits;
   durability: DurabilityProfile;
-  contract: ContractInfo | null;
+  contract: PlayerContract | null;
   status: PlayerStatus;
+  careerStats: SeasonStats[];
+  awards: string[];
 }

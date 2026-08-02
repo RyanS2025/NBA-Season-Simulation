@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
 import GlassCard from '../../components/common/GlassCard'
 import Button from '../../components/common/Button'
@@ -122,7 +122,7 @@ function formatSalary(salary: number): string {
 }
 
 export default function TradePage() {
-  const { id: _leagueId } = useParams()
+  const { id: leagueId } = useParams()
   const userTeamId = 'PHI'
 
   const [partnerTeamId, setPartnerTeamId] = useState<string>('')
@@ -229,7 +229,13 @@ export default function TradePage() {
                     onChange={() => togglePlayer(selectedUserPlayers, setSelectedUserPlayers, p.id)}
                     className="accent-[oklch(64.6%_0.222_41.116)]"
                   />
-                  <span className="text-white text-sm flex-1">{p.name}</span>
+                  <Link
+                    to={`/league/${leagueId}/players/${p.id}`}
+                    onClick={(e) => e.stopPropagation()}
+                    className="text-white text-sm flex-1 font-medium hover:text-[oklch(64.6%_0.222_41.116)] transition-colors"
+                  >
+                    {p.name}
+                  </Link>
                   <span className="text-gray-500 text-xs">{p.position}</span>
                   <span className="text-gray-400 text-xs w-8 text-center">{p.overall}</span>
                   <span className="text-gray-400 text-xs w-16 text-right">{formatSalary(p.salary)}</span>
@@ -299,7 +305,13 @@ export default function TradePage() {
                           onChange={() => togglePlayer(selectedPartnerPlayers, setSelectedPartnerPlayers, p.id)}
                           className="accent-blue-400"
                         />
-                        <span className="text-white text-sm flex-1">{p.name}</span>
+                        <Link
+                          to={`/league/${leagueId}/players/${p.id}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-white text-sm flex-1 font-medium hover:text-[oklch(64.6%_0.222_41.116)] transition-colors"
+                        >
+                          {p.name}
+                        </Link>
                         <span className="text-gray-500 text-xs">{p.position}</span>
                         <span className="text-gray-400 text-xs w-8 text-center">{p.overall}</span>
                         <span className="text-gray-400 text-xs w-16 text-right">{formatSalary(p.salary)}</span>
@@ -355,7 +367,7 @@ export default function TradePage() {
                   <div className="space-y-1">
                     {userPlayers.filter(p => selectedUserPlayers.has(p.id)).map(p => (
                       <div key={p.id} className="flex justify-between px-3 py-1.5 text-sm bg-white/[0.02] rounded-lg">
-                        <span className="text-[oklch(64.6%_0.222_41.116)]">{p.name} <span className="text-gray-500">({p.position})</span></span>
+                        <span><Link to={`/league/${leagueId}/players/${p.id}`} className="text-[oklch(64.6%_0.222_41.116)] font-medium hover:brightness-125 transition-colors">{p.name}</Link> <span className="text-gray-500">({p.position})</span></span>
                         <span className="text-gray-400">{formatSalary(p.salary)}</span>
                       </div>
                     ))}
@@ -374,7 +386,7 @@ export default function TradePage() {
                   <div className="space-y-1">
                     {partnerPlayers.filter(p => selectedPartnerPlayers.has(p.id)).map(p => (
                       <div key={p.id} className="flex justify-between px-3 py-1.5 text-sm bg-white/[0.02] rounded-lg">
-                        <span className="text-blue-400">{p.name} <span className="text-gray-500">({p.position})</span></span>
+                        <span><Link to={`/league/${leagueId}/players/${p.id}`} className="text-blue-400 font-medium hover:text-[oklch(64.6%_0.222_41.116)] transition-colors">{p.name}</Link> <span className="text-gray-500">({p.position})</span></span>
                         <span className="text-gray-400">{formatSalary(p.salary)}</span>
                       </div>
                     ))}

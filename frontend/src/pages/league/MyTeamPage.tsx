@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
 import DataTable from '../../components/common/DataTable'
 import GlassCard from '../../components/common/GlassCard'
@@ -62,7 +62,7 @@ function formatSalary(salary: number): string {
 }
 
 export default function MyTeamPage() {
-  const { id: _leagueId } = useParams()
+  const { id: leagueId } = useParams()
 
   const totalPayroll = MOCK_ROSTER.reduce((sum, p) => sum + p.salary, 0)
   const capSpace = Math.max(0, SALARY_CAP - totalPayroll)
@@ -80,7 +80,14 @@ export default function MyTeamPage() {
       key: 'name',
       label: 'Player',
       sortable: true,
-      render: (row) => <span className="text-white font-medium">{row.name}</span>,
+      render: (row) => (
+        <Link
+          to={`/league/${leagueId}/players/${row.id}`}
+          className="text-white font-medium hover:text-[oklch(64.6%_0.222_41.116)] transition-colors"
+        >
+          {row.name}
+        </Link>
+      ),
     },
     { key: 'position', label: 'Pos', align: 'center' },
     { key: 'age', label: 'Age', sortable: true, align: 'center' },
