@@ -28,6 +28,8 @@ import type { Team, Game, GameResult, Player, Transaction } from '../types'
 import type { SeasonPhase } from '../types'
 import type { TradeValidationResult } from '../utils/cba-engine'
 import { generateBackgroundTrades } from '../utils/cpu-trade-ai'
+import { updateHotSeat, evaluateCoachesForFiring, generateCoachMarketplace, cpuHireCoaches } from '../utils/coaching-carousel'
+import type { HeadCoach, StaffRoster } from '../types/staff'
 
 export interface LeagueContextValue {
   db: LeagueDB | null
@@ -160,10 +162,18 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
 
         if (homeTeam) {
           updateTeamRecord(homeTeam, result, game.homeTeamId, game.awayTeamId)
+          const homeWon = result.homeScore > result.awayScore
+          if (homeTeam.staff) {
+            homeTeam.staff.headCoach.hotSeatLevel = updateHotSeat(homeTeam, homeWon)
+          }
           await db.teams.put(homeTeam)
         }
         if (awayTeam) {
           updateTeamRecord(awayTeam, result, game.awayTeamId, game.homeTeamId)
+          const awayWon = result.awayScore > result.homeScore
+          if (awayTeam.staff) {
+            awayTeam.staff.headCoach.hotSeatLevel = updateHotSeat(awayTeam, awayWon)
+          }
           await db.teams.put(awayTeam)
         }
       }
@@ -607,7 +617,13 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
 
       setSimProgress('Updating player ratings...')
 
-      await db.transaction('rw', [db.players, db.teams, db.leagueState, db.games, db.transactions], async () => {
+      setSimProgress('Coaching carousel...')
+      const firedList = evaluateCoachesForFiring(allTeams, state.currentSeason)
+      const firedTeamIds = new Set(firedList.map(f => f.teamId))
+      const marketplace = generateCoachMarketplace(firedList, state.currentSeason, state.currentSeason * 7919)
+      const cpuHires = cpuHireCoaches(allTeams, marketplace, firedTeamIds, state.userTeamId)
+
+      await db.transaction('rw', [db.players, db.teams, db.leagueState, db.games, db.transactions, db.staffMarket], async () => {
         for (const retired of retiredPlayerIds) {
           const p = currentPlayers.find(x => x.id === retired)
           if (p) {
@@ -626,9 +642,53 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
 
         await db.players.bulkPut(updatedPlayers)
 
-        // Reset team records for next season
-        const allTeams = await db.teams.toArray()
-        for (const team of allTeams) {
+        for (const fired of firedList) {
+          const team = allTeams.find(t => t.id === fired.teamId)
+          if (team?.staff) {
+            const tx: Transaction = {
+              id: uuid(),
+              date: state.currentDate,
+              type: 'staff_fire' as Transaction['type'],
+              details: { staffName: fired.coach.name, reason: fired.reason },
+              description: `${team.info.city} ${team.info.name} fired head coach ${fired.coach.name}`,
+              seasonYear: state.currentSeason,
+            }
+            await addTransaction(db, tx)
+          }
+        }
+
+        for (const hire of cpuHires) {
+          const team = allTeams.find(t => t.id === hire.teamId)
+          const coach = hire.coachEntry.data as HeadCoach
+          if (team?.staff) {
+            team.staff.headCoach = { ...coach, teamId: team.id, hotSeatLevel: 0 }
+            const tx: Transaction = {
+              id: uuid(),
+              date: state.currentDate,
+              type: 'staff_hire' as Transaction['type'],
+              details: { staffName: coach.name },
+              description: `${team.info.city} ${team.info.name} hired head coach ${coach.name}`,
+              seasonYear: state.currentSeason,
+            }
+            await addTransaction(db, tx)
+          }
+        }
+
+        await db.staffMarket.clear()
+        const availableCoaches = marketplace.filter(e => e.marketStatus === 'available')
+        if (availableCoaches.length > 0) {
+          await db.staffMarket.bulkAdd(availableCoaches)
+        }
+
+        const refreshedTeams = await db.teams.toArray()
+        for (const team of refreshedTeams) {
+          const hire = cpuHires.find(h => h.teamId === team.id)
+          if (hire) {
+            const coach = hire.coachEntry.data as HeadCoach
+            if (team.staff) {
+              team.staff.headCoach = { ...coach, teamId: team.id, hotSeatLevel: 0 }
+            }
+          }
           team.roster = team.roster.filter(r => !retiredPlayerIds.includes(r.playerId))
           team.seasonRecord = {
             wins: 0, losses: 0,
@@ -639,16 +699,17 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
             streak: 0, last10Wins: 0, last10Losses: 0,
             pointsFor: 0, pointsAgainst: 0,
           }
+          if (team.staff) {
+            team.staff.headCoach.hotSeatLevel = 0
+          }
           await db.teams.put(team)
         }
 
-        // Generate next season schedule
         setSimProgress('Generating schedule...')
         const nextSeason = state.currentSeason + 1
-        const teamInfos = allTeams.map(t => t.info)
+        const teamInfos = refreshedTeams.map(t => t.info)
         const newSchedule = generateSeasonSchedule(teamInfos, nextSeason)
 
-        // Clear old games and add new ones
         await db.games.clear()
         await db.games.bulkAdd(newSchedule)
 
