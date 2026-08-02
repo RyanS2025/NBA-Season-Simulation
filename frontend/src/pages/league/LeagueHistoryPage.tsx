@@ -212,14 +212,24 @@ export default function LeagueHistoryPage() {
                     <div className="text-sm font-medium text-white">Season {s.year}</div>
                     <div className="text-xs text-gray-500 mt-0.5">
                       Champion: <span className="text-[oklch(64.6%_0.222_41.116)]">{teamMap.get(s.championTeamId) ?? 'Unknown'}</span>
-                      {s.finalistTeamId && <> &bull; Runner-up: {teamMap.get(s.finalistTeamId) ?? 'Unknown'}</>}
+                      {s.finalistTeamId && (
+                        <> &bull; defeated {teamMap.get(s.finalistTeamId) ?? 'Unknown'}
+                          {s.finalsResult && <span className="text-gray-400"> ({s.finalsResult})</span>}
+                        </>
+                      )}
                     </div>
                   </div>
-                  <div className="flex gap-6 text-xs text-gray-400">
+                  <div className="flex flex-wrap gap-x-6 gap-y-1 text-xs text-gray-400">
                     <div>
                       <span className="text-gray-600">MVP</span>{' '}
                       <span className="text-white">{playerNameMap.get(s.mvpPlayerId) ?? 'Unknown'}</span>
                     </div>
+                    {s.playoffMvpId && (
+                      <div>
+                        <span className="text-gray-600">Finals MVP</span>{' '}
+                        <span className="text-[oklch(64.6%_0.222_41.116)]">{playerNameMap.get(s.playoffMvpId) ?? 'Unknown'}</span>
+                      </div>
+                    )}
                     <div>
                       <span className="text-gray-600">Scoring</span>{' '}
                       <span className="text-white">{playerNameMap.get(s.topScorerPlayerId) ?? 'Unknown'}</span>

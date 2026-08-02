@@ -912,10 +912,28 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
         }
       }
 
+      let finalsResult: string | undefined
+      let playoffMvpId: string | null = null
+      if (pr) {
+        const finalsSeries = pr.seriesResults[pr.seriesResults.length - 1]
+        if (finalsSeries) {
+          const champWins = finalsSeries.winnerId === finalsSeries.seriesId
+            ? finalsSeries.higherSeedWins : finalsSeries.winnerId === pr.championId
+              ? (pr.championId === pr.bracket.series[pr.bracket.series.length - 1]?.higherSeed.teamId
+                ? finalsSeries.higherSeedWins : finalsSeries.lowerSeedWins)
+              : finalsSeries.higherSeedWins
+          const loserWins = finalsSeries.gamesPlayed - champWins
+          finalsResult = `${champWins}-${loserWins}`
+        }
+        playoffMvpId = pr.playoffMvpId
+      }
+
       const seasonSummary: import('../types/league').SeasonSummary = {
         year: state.currentSeason,
         championTeamId,
         finalistTeamId,
+        finalsResult,
+        playoffMvpId,
         mvpPlayerId,
         rotyPlayerId,
         topScorerPlayerId,

@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
+import GlassCard from '../../components/common/GlassCard'
 import Button from '../../components/common/Button'
 import { useLeague } from '../../hooks/useLeague'
 import type { Game, Team } from '../../types'
@@ -17,7 +18,7 @@ function formatShortDate(date: string): string {
 
 export default function LeagueDashboard() {
   const { id: leagueId } = useParams()
-  const { db, state, teams, simming, simProgress, simDay, simWeek, simSeason, advanceToNextSeason, loading } = useLeague()
+  const { db, state, teams, players, simming, simProgress, simDay, simWeek, simSeason, advanceToNextSeason, playoffResults, startDraft, loading } = useLeague()
   const [recentGames, setRecentGames] = useState<Game[]>([])
   const [upcomingGames, setUpcomingGames] = useState<Game[]>([])
 
@@ -93,6 +94,35 @@ export default function LeagueDashboard() {
             </span>
           </div>
         </div>
+
+        {playoffResults?.championId && (
+          <GlassCard className="p-6 mb-6 bg-gradient-to-r from-[oklch(64.6%_0.222_41.116)]/5 to-transparent border border-[oklch(64.6%_0.222_41.116)]/10">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-[9px] uppercase tracking-[2px] text-[oklch(64.6%_0.222_41.116)] mb-1">
+                  {state.currentSeason} Champion
+                </div>
+                <div className="text-lg font-display text-white">
+                  {teamName(playoffResults.championId, teams)}
+                </div>
+                <div className="text-xs text-gray-500 mt-0.5">
+                  defeated {teamName(playoffResults.finalsLoserId, teams)}
+                  {playoffResults.playoffMvpId && (
+                    <> &middot; Finals MVP: <span className="text-[oklch(64.6%_0.222_41.116)]">
+                      {(() => {
+                        const p = players.find(x => x.id === playoffResults.playoffMvpId)
+                        return p ? `${p.bio.firstName} ${p.bio.lastName}` : 'Unknown'
+                      })()}
+                    </span></>
+                  )}
+                </div>
+              </div>
+              <Link to={`/league/${leagueId}/playoffs`}>
+                <Button variant="secondary" size="sm">View Bracket</Button>
+              </Link>
+            </div>
+          </GlassCard>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl p-6">

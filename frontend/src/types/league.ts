@@ -65,6 +65,8 @@ export interface SeasonSummary {
   year: number;
   championTeamId: string;
   finalistTeamId: string;
+  finalsResult?: string;
+  playoffMvpId?: string | null;
   mvpPlayerId: string;
   rotyPlayerId: string | null;
   topScorerPlayerId: string;

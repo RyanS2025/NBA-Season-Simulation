@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
 import GlassCard from '../../components/common/GlassCard'
 import Button from '../../components/common/Button'
@@ -215,8 +216,18 @@ function ChampionBanner({
 }
 
 export default function PlayoffsPage() {
+  const { id: leagueId } = useParams()
   const { teams, state, players, loading, simming, simProgress, playoffResults, simPlayoffs, startDraft } = useLeague()
   const [expandedSeries, setExpandedSeries] = useState<Set<string>>(new Set())
+
+  const playerNameMap = useMemo(
+    () => new Map(players.map(p => [p.id, `${p.bio.firstName} ${p.bio.lastName}`])),
+    [players],
+  )
+  const playerTeamMap = useMemo(
+    () => new Map(players.map(p => [p.id, p.teamId])),
+    [players],
+  )
 
   const eastSeeds = useMemo(
     () => seedTeamsByConference(teams, 'Eastern'),
@@ -247,6 +258,37 @@ export default function PlayoffsPage() {
       map.set(s.round, arr)
     }
     return map
+  }, [playoffResults])
+
+  const playoffLeaders = useMemo(() => {
+    if (!playoffResults) return null
+    const totals = new Map<string, { pts: number; reb: number; ast: number; gp: number }>()
+    for (const sr of playoffResults.seriesResults) {
+      for (const gr of sr.gameResults) {
+        for (const box of [gr.result.homeBoxScore, gr.result.awayBoxScore]) {
+          for (const ps of box.playerStats) {
+            const cur = totals.get(ps.playerId) ?? { pts: 0, reb: 0, ast: 0, gp: 0 }
+            cur.pts += ps.points
+            cur.reb += ps.totalRebounds
+            cur.ast += ps.assists
+            cur.gp += 1
+            totals.set(ps.playerId, cur)
+          }
+        }
+      }
+    }
+    const entries = Array.from(totals.entries()).map(([id, s]) => ({
+      id,
+      ppg: s.gp > 0 ? s.pts / s.gp : 0,
+      rpg: s.gp > 0 ? s.reb / s.gp : 0,
+      apg: s.gp > 0 ? s.ast / s.gp : 0,
+      gp: s.gp,
+    }))
+    return {
+      scorers: [...entries].sort((a, b) => b.ppg - a.ppg).slice(0, 5),
+      rebounders: [...entries].sort((a, b) => b.rpg - a.rpg).slice(0, 5),
+      assisters: [...entries].sort((a, b) => b.apg - a.apg).slice(0, 5),
+    }
   }, [playoffResults])
 
   if (loading || !state) {
@@ -416,6 +458,72 @@ export default function PlayoffsPage() {
                 </div>
               )
             })}
+          </div>
+        )}
+
+        {/* Playoff Stats Leaders */}
+        {hasResults && playoffLeaders && (
+          <div className="mt-8">
+            <h2 className="text-[10px] uppercase tracking-[3px] text-gray-600 mb-4">Playoff Statistical Leaders</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <GlassCard className="p-5">
+                <h3 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Points Per Game</h3>
+                <div className="space-y-1">
+                  {playoffLeaders.scorers.map((p, i) => (
+                    <div key={p.id} className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/[0.02]">
+                      <div className="flex items-center gap-3">
+                        <span className={`w-5 text-center text-xs ${i === 0 ? 'text-[oklch(64.6%_0.222_41.116)] font-semibold' : 'text-gray-500'}`}>{i + 1}</span>
+                        <div>
+                          <Link to={`/league/${leagueId}/players/${p.id}`} className={`text-sm hover:text-[oklch(64.6%_0.222_41.116)] transition-colors ${i === 0 ? 'text-white font-medium' : 'text-gray-300'}`}>
+                            {playerNameMap.get(p.id) ?? 'Unknown'}
+                          </Link>
+                          <div className="text-[10px] text-gray-600">{shortName(teams, playerTeamMap.get(p.id) ?? '')} &middot; {p.gp} GP</div>
+                        </div>
+                      </div>
+                      <span className={`text-xs ${i === 0 ? 'text-[oklch(64.6%_0.222_41.116)] font-semibold' : 'text-gray-400'}`}>{p.ppg.toFixed(1)}</span>
+                    </div>
+                  ))}
+                </div>
+              </GlassCard>
+              <GlassCard className="p-5">
+                <h3 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Rebounds Per Game</h3>
+                <div className="space-y-1">
+                  {playoffLeaders.rebounders.map((p, i) => (
+                    <div key={p.id} className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/[0.02]">
+                      <div className="flex items-center gap-3">
+                        <span className={`w-5 text-center text-xs ${i === 0 ? 'text-[oklch(64.6%_0.222_41.116)] font-semibold' : 'text-gray-500'}`}>{i + 1}</span>
+                        <div>
+                          <Link to={`/league/${leagueId}/players/${p.id}`} className={`text-sm hover:text-[oklch(64.6%_0.222_41.116)] transition-colors ${i === 0 ? 'text-white font-medium' : 'text-gray-300'}`}>
+                            {playerNameMap.get(p.id) ?? 'Unknown'}
+                          </Link>
+                          <div className="text-[10px] text-gray-600">{shortName(teams, playerTeamMap.get(p.id) ?? '')} &middot; {p.gp} GP</div>
+                        </div>
+                      </div>
+                      <span className={`text-xs ${i === 0 ? 'text-[oklch(64.6%_0.222_41.116)] font-semibold' : 'text-gray-400'}`}>{p.rpg.toFixed(1)}</span>
+                    </div>
+                  ))}
+                </div>
+              </GlassCard>
+              <GlassCard className="p-5">
+                <h3 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Assists Per Game</h3>
+                <div className="space-y-1">
+                  {playoffLeaders.assisters.map((p, i) => (
+                    <div key={p.id} className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/[0.02]">
+                      <div className="flex items-center gap-3">
+                        <span className={`w-5 text-center text-xs ${i === 0 ? 'text-[oklch(64.6%_0.222_41.116)] font-semibold' : 'text-gray-500'}`}>{i + 1}</span>
+                        <div>
+                          <Link to={`/league/${leagueId}/players/${p.id}`} className={`text-sm hover:text-[oklch(64.6%_0.222_41.116)] transition-colors ${i === 0 ? 'text-white font-medium' : 'text-gray-300'}`}>
+                            {playerNameMap.get(p.id) ?? 'Unknown'}
+                          </Link>
+                          <div className="text-[10px] text-gray-600">{shortName(teams, playerTeamMap.get(p.id) ?? '')} &middot; {p.gp} GP</div>
+                        </div>
+                      </div>
+                      <span className={`text-xs ${i === 0 ? 'text-[oklch(64.6%_0.222_41.116)] font-semibold' : 'text-gray-400'}`}>{p.apg.toFixed(1)}</span>
+                    </div>
+                  ))}
+                </div>
+              </GlassCard>
+            </div>
           </div>
         )}
 
