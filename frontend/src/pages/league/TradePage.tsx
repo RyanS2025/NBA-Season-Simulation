@@ -3,7 +3,9 @@ import { useParams, Link } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
 import GlassCard from '../../components/common/GlassCard'
 import Button from '../../components/common/Button'
+import StarRating from '../../components/common/StarRating'
 import { useLeague } from '../../hooks/useLeague'
+import { calculatePlayerValue, type TradeContext, type PlayerValuation } from '../../utils/trade-value-engine'
 import type { Player } from '../../types'
 
 function formatSalary(salary: number): string {
@@ -52,6 +54,61 @@ export default function TradePage() {
     [partnerPlayers, selectedPartnerPlayers]
   )
 
+  const userTeam = teams.find(t => t.id === userTeamId)
+  const partnerTeam = teams.find(t => t.id === partnerTeamId)
+
+  const userContext = useMemo((): TradeContext | null => {
+    if (!userTeam || !state) return null
+    return {
+      evaluatingTeam: userTeam,
+      evaluatingTeamPlayers: userPlayers,
+      allPlayers: players,
+      currentSeason: state.currentSeason,
+      currentDate: state.currentDate,
+    }
+  }, [userTeam, state, userPlayers, players])
+
+  const partnerContext = useMemo((): TradeContext | null => {
+    if (!partnerTeam || !state) return null
+    return {
+      evaluatingTeam: partnerTeam,
+      evaluatingTeamPlayers: partnerPlayers,
+      allPlayers: players,
+      currentSeason: state.currentSeason,
+      currentDate: state.currentDate,
+    }
+  }, [partnerTeam, state, partnerPlayers, players])
+
+  const playerStars = useMemo(() => {
+    const map = new Map<string, PlayerValuation>()
+    if (!userContext) return map
+    for (const p of userPlayers) {
+      map.set(p.id, calculatePlayerValue(p, userContext))
+    }
+    if (partnerContext) {
+      for (const p of partnerPlayers) {
+        map.set(p.id, calculatePlayerValue(p, partnerContext))
+      }
+    }
+    return map
+  }, [userPlayers, partnerPlayers, userContext, partnerContext])
+
+  const outgoingStarTotal = useMemo(() => {
+    let total = 0
+    for (const id of selectedUserPlayers) {
+      total += playerStars.get(id)?.rawValue ?? 0
+    }
+    return total
+  }, [selectedUserPlayers, playerStars])
+
+  const incomingStarTotal = useMemo(() => {
+    let total = 0
+    for (const id of selectedPartnerPlayers) {
+      total += playerStars.get(id)?.rawValue ?? 0
+    }
+    return total
+  }, [selectedPartnerPlayers, playerStars])
+
   const hasAssets = selectedUserPlayers.size > 0 || selectedPartnerPlayers.size > 0
 
   const validation = useMemo(() => {
@@ -79,7 +136,6 @@ export default function TradePage() {
     )
   }
 
-  const userTeam = teams.find(t => t.id === userTeamId)
   const partnerTeams = teams.filter(t => t.id !== userTeamId)
 
   const togglePlayer = (set: Set<string>, setFn: React.Dispatch<React.SetStateAction<Set<string>>>, id: string) => {
@@ -138,33 +194,36 @@ export default function TradePage() {
 
             <div className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-2">Players</div>
             <div className="space-y-1 max-h-80 overflow-y-auto mb-4">
-              {userPlayers.map(p => (
-                <label
-                  key={p.id}
-                  className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
-                    selectedUserPlayers.has(p.id)
-                      ? 'bg-[oklch(64.6%_0.222_41.116)]/10 border border-[oklch(64.6%_0.222_41.116)]/20'
-                      : 'hover:bg-white/[0.02]'
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedUserPlayers.has(p.id)}
-                    onChange={() => togglePlayer(selectedUserPlayers, setSelectedUserPlayers, p.id)}
-                    className="accent-[oklch(64.6%_0.222_41.116)]"
-                  />
-                  <Link
-                    to={`/league/${leagueId}/players/${p.id}`}
-                    onClick={(e) => e.stopPropagation()}
-                    className="text-white text-sm flex-1 font-medium hover:text-[oklch(64.6%_0.222_41.116)] transition-colors truncate"
+              {userPlayers.map(p => {
+                const val = playerStars.get(p.id)
+                return (
+                  <label
+                    key={p.id}
+                    className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
+                      selectedUserPlayers.has(p.id)
+                        ? 'bg-[oklch(64.6%_0.222_41.116)]/10 border border-[oklch(64.6%_0.222_41.116)]/20'
+                        : 'hover:bg-white/[0.02]'
+                    }`}
                   >
-                    {playerLabel(p)}
-                  </Link>
-                  <span className="text-gray-500 text-xs">{p.bio.position}</span>
-                  <span className="text-gray-400 text-xs w-8 text-center">{p.ratings.overall}</span>
-                  <span className="text-gray-400 text-xs w-16 text-right">{formatSalary(p.contract?.annualSalary ?? 0)}</span>
-                </label>
-              ))}
+                    <input
+                      type="checkbox"
+                      checked={selectedUserPlayers.has(p.id)}
+                      onChange={() => togglePlayer(selectedUserPlayers, setSelectedUserPlayers, p.id)}
+                      className="accent-[oklch(64.6%_0.222_41.116)]"
+                    />
+                    <Link
+                      to={`/league/${leagueId}/players/${p.id}`}
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-white text-sm flex-1 font-medium hover:text-[oklch(64.6%_0.222_41.116)] transition-colors truncate"
+                    >
+                      {playerLabel(p)}
+                    </Link>
+                    <span className="text-gray-500 text-xs">{p.bio.position}</span>
+                    {val && <StarRating stars={val.stars} size={12} />}
+                    <span className="text-gray-400 text-xs w-16 text-right">{formatSalary(p.contract?.annualSalary ?? 0)}</span>
+                  </label>
+                )
+              })}
             </div>
           </GlassCard>
 
@@ -191,33 +250,36 @@ export default function TradePage() {
               <>
                 <div className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-2">Players</div>
                 <div className="space-y-1 max-h-80 overflow-y-auto mb-4">
-                  {partnerPlayers.map(p => (
-                    <label
-                      key={p.id}
-                      className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
-                        selectedPartnerPlayers.has(p.id)
-                          ? 'bg-blue-400/10 border border-blue-400/20'
-                          : 'hover:bg-white/[0.02]'
-                      }`}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selectedPartnerPlayers.has(p.id)}
-                        onChange={() => togglePlayer(selectedPartnerPlayers, setSelectedPartnerPlayers, p.id)}
-                        className="accent-blue-400"
-                      />
-                      <Link
-                        to={`/league/${leagueId}/players/${p.id}`}
-                        onClick={(e) => e.stopPropagation()}
-                        className="text-white text-sm flex-1 font-medium hover:text-[oklch(64.6%_0.222_41.116)] transition-colors truncate"
+                  {partnerPlayers.map(p => {
+                    const val = playerStars.get(p.id)
+                    return (
+                      <label
+                        key={p.id}
+                        className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
+                          selectedPartnerPlayers.has(p.id)
+                            ? 'bg-blue-400/10 border border-blue-400/20'
+                            : 'hover:bg-white/[0.02]'
+                        }`}
                       >
-                        {playerLabel(p)}
-                      </Link>
-                      <span className="text-gray-500 text-xs">{p.bio.position}</span>
-                      <span className="text-gray-400 text-xs w-8 text-center">{p.ratings.overall}</span>
-                      <span className="text-gray-400 text-xs w-16 text-right">{formatSalary(p.contract?.annualSalary ?? 0)}</span>
-                    </label>
-                  ))}
+                        <input
+                          type="checkbox"
+                          checked={selectedPartnerPlayers.has(p.id)}
+                          onChange={() => togglePlayer(selectedPartnerPlayers, setSelectedPartnerPlayers, p.id)}
+                          className="accent-blue-400"
+                        />
+                        <Link
+                          to={`/league/${leagueId}/players/${p.id}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-white text-sm flex-1 font-medium hover:text-[oklch(64.6%_0.222_41.116)] transition-colors truncate"
+                        >
+                          {playerLabel(p)}
+                        </Link>
+                        <span className="text-gray-500 text-xs">{p.bio.position}</span>
+                        {val && <StarRating stars={val.stars} size={12} />}
+                        <span className="text-gray-400 text-xs w-16 text-right">{formatSalary(p.contract?.annualSalary ?? 0)}</span>
+                      </label>
+                    )
+                  })}
                 </div>
               </>
             ) : (
@@ -281,6 +343,41 @@ export default function TradePage() {
                   </div>
                 </div>
               </div>
+
+              {(outgoingStarTotal > 0 || incomingStarTotal > 0) && (
+                <div className="pt-3 border-t border-white/[0.06]">
+                  <div className="flex items-center justify-between text-[10px] uppercase tracking-[2px] text-gray-600 mb-1.5">
+                    <span>Trade Value Balance</span>
+                    <span>{outgoingStarTotal.toFixed(1)} vs {incomingStarTotal.toFixed(1)}</span>
+                  </div>
+                  <div className="relative h-3 rounded-full bg-white/[0.06] overflow-hidden">
+                    {(() => {
+                      const total = outgoingStarTotal + incomingStarTotal
+                      if (total === 0) return null
+                      const pct = (outgoingStarTotal / total) * 100
+                      const diff = Math.abs(pct - 50)
+                      const barColor = diff < 10 ? '#22c55e' : diff < 20 ? '#eab308' : '#ef4444'
+                      return (
+                        <>
+                          <div
+                            className="absolute left-0 top-0 h-full rounded-l-full transition-all duration-300"
+                            style={{ width: `${pct}%`, background: 'oklch(64.6% 0.222 41.116)' }}
+                          />
+                          <div
+                            className="absolute right-0 top-0 h-full rounded-r-full transition-all duration-300"
+                            style={{ width: `${100 - pct}%`, background: '#3b82f6' }}
+                          />
+                          <div className="absolute left-1/2 top-0 w-0.5 h-full bg-white/30 -translate-x-1/2" />
+                        </>
+                      )
+                    })()}
+                  </div>
+                  <div className="flex justify-between text-[10px] text-gray-600 mt-1">
+                    <span>{userTeamId}</span>
+                    <span>{partnerTeamId}</span>
+                  </div>
+                </div>
+              )}
 
               <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-white/[0.06]">
                 <div className="flex gap-6 text-sm">
