@@ -3,9 +3,10 @@ import { TEAMS } from '../../data'
 import { loadPlayers } from '../../data/players'
 import { createLeague } from '../../db'
 import { generateSeasonSchedule } from '../../utils/schedule-generator'
+import { generateAllTeamsStaff } from '../../utils/staff-generator'
 import Button from '../common/Button'
 import SectionLabel from '../common/SectionLabel'
-import type { LeagueSettings, Team, CoachingStaff } from '../../types'
+import type { LeagueSettings, Team } from '../../types'
 
 const TEAM_UUID_TO_ABBR: Record<string, string> = {
   '60c62382-1d5a-59cb-ab40-076049ba4284': 'BOS',
@@ -68,36 +69,45 @@ export default function StepConfirm({ leagueName, settings, selectedTeamId, onBa
         teamId: TEAM_UUID_TO_ABBR[p.teamId] ?? p.teamId,
       }))
 
+      setProgress('Generating staff & personalities...')
+      const leagueId = crypto.randomUUID()
+      const allStaff = generateAllTeamsStaff(TEAMS, selectedTeamId, leagueId)
+
       setProgress('Building teams...')
-      const teams: Team[] = TEAMS.map(t => ({
-        id: t.abbreviation,
-        info: t,
-        roster: [],
-        coaching: null as unknown as CoachingStaff,
-        finances: {
-          salaryCap: 0, totalPayroll: 0, luxuryTaxThreshold: 0,
-          firstApronThreshold: 0, secondApronThreshold: 0,
-          isOverCap: false, isInLuxuryTax: false,
-          isAboveFirstApron: false, isAboveSecondApron: false,
-          taxBill: 0, tradeExceptions: [], capHolds: [], draftPicks: [],
-        },
-        chemistry: 50,
-        homeCourtAdvantage: 5,
-        seasonRecord: {
-          wins: 0, losses: 0, conferenceWins: 0, conferenceLosses: 0,
-          divisionWins: 0, divisionLosses: 0, homeWins: 0, homeLosses: 0,
-          awayWins: 0, awayLosses: 0, streak: 0, last10Wins: 0,
-          last10Losses: 0, pointsFor: 0, pointsAgainst: 0,
-        },
-        history: [],
-      }))
+      const teams: Team[] = TEAMS.map(t => {
+        const staffData = allStaff.get(t.abbreviation)!
+        return {
+          id: t.abbreviation,
+          info: t,
+          roster: [],
+          coaching: staffData.coachingStaff,
+          finances: {
+            salaryCap: 0, totalPayroll: 0, luxuryTaxThreshold: 0,
+            firstApronThreshold: 0, secondApronThreshold: 0,
+            isOverCap: false, isInLuxuryTax: false,
+            isAboveFirstApron: false, isAboveSecondApron: false,
+            taxBill: 0, tradeExceptions: [], capHolds: [], draftPicks: [],
+          },
+          chemistry: 50,
+          homeCourtAdvantage: 5,
+          seasonRecord: {
+            wins: 0, losses: 0, conferenceWins: 0, conferenceLosses: 0,
+            divisionWins: 0, divisionLosses: 0, homeWins: 0, homeLosses: 0,
+            awayWins: 0, awayLosses: 0, streak: 0, last10Wins: 0,
+            last10Losses: 0, pointsFor: 0, pointsAgainst: 0,
+          },
+          history: [],
+          staff: staffData.staffRoster,
+          teamPersonality: staffData.teamPersonality,
+        }
+      })
 
       setProgress('Generating schedule...')
       const seasonYear = 2027
       const schedule = generateSeasonSchedule(TEAMS, seasonYear - 1)
 
       setProgress('Creating league...')
-      const { leagueId, db } = await createLeague({
+      const { leagueId: newLeagueId, db } = await createLeague({
         name: leagueName,
         userTeamId: selectedTeamId,
         settings,
@@ -109,10 +119,32 @@ export default function StepConfirm({ leagueName, settings, selectedTeamId, onBa
         seasonYear,
       })
 
+      setProgress('Saving staff records...')
+      const staffRecords = teams.flatMap(t => {
+        const roster = t.staff
+        if (!roster) return []
+        const records: import('../../types').StoredStaffMember[] = []
+        if (roster.generalManager) {
+          records.push({ id: roster.generalManager.id, staffType: 'gm', teamId: t.id, data: roster.generalManager })
+        }
+        records.push({ id: roster.headCoach.id, staffType: 'headCoach', teamId: t.id, data: roster.headCoach })
+        for (const ac of roster.assistantCoaches) {
+          records.push({ id: ac.id, staffType: 'assistantCoach', teamId: t.id, data: ac })
+        }
+        for (const sc of roster.scouts) {
+          records.push({ id: sc.id, staffType: 'scout', teamId: t.id, data: sc })
+        }
+        for (const tr of roster.trainers) {
+          records.push({ id: tr.id, staffType: 'trainer', teamId: t.id, data: tr })
+        }
+        return records
+      })
+      await db.staff.bulkAdd(staffRecords)
+
       setProgress('Saving schedule...')
       await db.games.bulkAdd(schedule)
 
-      onCreated(leagueId)
+      onCreated(newLeagueId)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create league')
       setCreating(false)

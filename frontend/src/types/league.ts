@@ -58,6 +58,7 @@ export type SeasonPhase =
   | "draft_lottery"
   | "draft"
   | "free_agency"
+  | "coaching_carousel"
   | "offseason";
 
 export interface SeasonSummary {
@@ -117,7 +118,11 @@ export type TransactionType =
   | "injured_reserve"
   | "recalled"
   | "buyout"
-  | "ten_day_signing";
+  | "ten_day_signing"
+  | "staff_hire"
+  | "staff_fire"
+  | "staff_resign"
+  | "staff_extension";
 
 export interface LeagueMeta {
   id: string;

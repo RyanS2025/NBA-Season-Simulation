@@ -143,4 +143,6 @@ export interface Team {
   homeCourtAdvantage: number;
   seasonRecord: SeasonRecord;
   history: TeamSeasonHistory[];
+  staff: import('./staff').StaffRoster | null;
+  teamPersonality: import('./staff').TeamPersonality | null;
 }

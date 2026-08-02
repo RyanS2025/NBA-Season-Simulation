@@ -5,3 +5,5 @@ export type * from './contract';
 export type * from './league';
 export type * from './worker-protocol';
 export type * from './draft';
+export type * from './staff';
+export type * from './media';

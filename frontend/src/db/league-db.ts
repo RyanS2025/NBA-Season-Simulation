@@ -9,6 +9,9 @@ import type {
   SeasonAwards,
   DraftPickAsset,
   LeagueSettings,
+  StoredStaffMember,
+  StaffMarketEntry,
+  AwardsSeasonState,
 } from '../types'
 
 export interface LeagueState {
@@ -102,6 +105,9 @@ class LeagueDB extends Dexie {
   retiredPlayers!: EntityTable<RetiredPlayer, 'playerId'>
   allStarHistory!: EntityTable<AllStarRecord, 'seasonYear'>
   preseasonProjections!: EntityTable<PreseasonProjection, 'seasonYear'>
+  staff!: EntityTable<StoredStaffMember, 'id'>
+  staffMarket!: EntityTable<StaffMarketEntry, 'id'>
+  awardsSeasonState!: EntityTable<AwardsSeasonState, 'seasonYear'>
 
   constructor(leagueId: string) {
     super(`bbalsim_league_${leagueId}`)
@@ -121,6 +127,26 @@ class LeagueDB extends Dexie {
       retiredPlayers: 'playerId, retirementYear',
       allStarHistory: 'seasonYear',
       preseasonProjections: '++, [seasonYear+teamId], seasonYear',
+    })
+
+    this.version(2).stores({
+      leagueState: 'id',
+      teams: 'id, [info.conference], [info.division]',
+      players: 'id, [bio.position], [status.teamId]',
+      contracts: 'id, playerId, teamId, [teamId+contract_type]',
+      games: 'id, date, [homeTeamId+date], [awayTeamId+date], [date+isPlayoff]',
+      gameResults: 'gameId, date, seasonYear',
+      playerSeasonStats: 'id, [playerId+seasonYear], playerId, seasonYear, teamId',
+      draftPicks: '++, year, [year+round], originalTeamId, currentOwnerTeamId',
+      transactions: 'id, date, transactionType, seasonYear',
+      awards: 'seasonYear',
+      hallOfFame: 'playerId, inductionYear',
+      retiredPlayers: 'playerId, retirementYear',
+      allStarHistory: 'seasonYear',
+      preseasonProjections: '++, [seasonYear+teamId], seasonYear',
+      staff: 'id, staffType, teamId, [teamId+staffType]',
+      staffMarket: 'id, staffType, marketStatus',
+      awardsSeasonState: 'seasonYear',
     })
   }
 }
