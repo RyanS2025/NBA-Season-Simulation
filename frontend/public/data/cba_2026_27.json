@@ -1,0 +1,148 @@
+{
+  "season": "2026-27",
+  "salary_cap": 141000000,
+  "luxury_tax": 171000000,
+  "first_apron": 178000000,
+  "second_apron": 189000000,
+  "minimum_team_salary": 113000000,
+  "minimum_salaries": {
+    "0": 1157603,
+    "1": 1900441,
+    "2": 2165952,
+    "3": 2241780,
+    "4": 2375112,
+    "5": 2574918,
+    "6": 2774724,
+    "7": 2996094,
+    "8": 3217464,
+    "9": 3326149,
+    "10_plus": 3434834
+  },
+  "rookie_scale": {
+    "1": {
+      "year1": 12200000,
+      "year2": 12810000,
+      "year3_option": 13450000,
+      "year4_option": 17390000
+    },
+    "2": {
+      "year1": 10900000,
+      "year2": 11445000,
+      "year3_option": 12017000,
+      "year4_option": 15542000
+    },
+    "3": {
+      "year1": 9780000,
+      "year2": 10269000,
+      "year3_option": 10782000,
+      "year4_option": 13944000
+    },
+    "4": {
+      "year1": 8790000,
+      "year2": 9229500,
+      "year3_option": 9691000,
+      "year4_option": 12532000
+    },
+    "5": {
+      "year1": 7920000,
+      "year2": 8316000,
+      "year3_option": 8732000,
+      "year4_option": 11292000
+    },
+    "6": {
+      "year1": 7150000,
+      "year2": 7507500,
+      "year3_option": 7883000,
+      "year4_option": 10197000
+    },
+    "7": {
+      "year1": 6470000,
+      "year2": 6793500,
+      "year3_option": 7133000,
+      "year4_option": 9228000
+    },
+    "8": {
+      "year1": 5870000,
+      "year2": 6163500,
+      "year3_option": 6472000,
+      "year4_option": 8374000
+    },
+    "9": {
+      "year1": 5340000,
+      "year2": 5607000,
+      "year3_option": 5887000,
+      "year4_option": 7618000
+    },
+    "10": {
+      "year1": 4880000,
+      "year2": 5124000,
+      "year3_option": 5380000,
+      "year4_option": 6962000
+    },
+    "11": {
+      "year1": 4470000,
+      "year2": 4693500,
+      "year3_option": 4928000,
+      "year4_option": 6377000
+    },
+    "12": {
+      "year1": 4100000,
+      "year2": 4305000,
+      "year3_option": 4520000,
+      "year4_option": 5849000
+    },
+    "13": {
+      "year1": 3780000,
+      "year2": 3969000,
+      "year3_option": 4167000,
+      "year4_option": 5393000
+    },
+    "14": {
+      "year1": 3490000,
+      "year2": 3664500,
+      "year3_option": 3848000,
+      "year4_option": 4980000
+    },
+    "15": {
+      "year1": 3310000,
+      "year2": 3475500,
+      "year3_option": 3649000,
+      "year4_option": 4394000
+    },
+    "16-30": {
+      "year1": 2400000,
+      "year2": 2520000,
+      "year3_option": 2646000,
+      "year4_option": 3424000
+    }
+  },
+  "mid_level_exception": 14000000,
+  "taxpayer_mle": 7700000,
+  "bi_annual_exception": 4700000,
+  "max_contract": {
+    "0_6_years": {
+      "pct_of_cap": 0.25,
+      "amount": 35250000
+    },
+    "7_9_years": {
+      "pct_of_cap": 0.3,
+      "amount": 42300000
+    },
+    "10_plus_years": {
+      "pct_of_cap": 0.35,
+      "amount": 49350000
+    }
+  },
+  "annual_raise": {
+    "same_team": 0.08,
+    "other_team": 0.05
+  },
+  "trade_rules": {
+    "salary_matching_over_cap_pct": 1.25,
+    "salary_matching_over_cap_flat": 5000000
+  },
+  "two_way_contract_salary": 580000,
+  "max_roster_size": 15,
+  "min_roster_size": 14,
+  "two_way_slots": 2
+}

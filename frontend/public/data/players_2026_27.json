@@ -1,0 +1,7652 @@
+[
+  {
+    "id": "ac0135f6-5f8",
+    "bio": {
+      "first_name": "Malik",
+      "last_name": "Hill",
+      "position": "C",
+      "secondary_position": "PF",
+      "height": 86,
+      "weight": 275,
+      "age": 33,
+      "years_in_league": 12,
+      "college": null,
+      "country": "Canada",
+      "draft_year": 2015,
+      "draft_round": 1,
+      "draft_pick": 18,
+      "jersey_number": 46,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 99,
+      "close_range": 98,
+      "mid_range": 87,
+      "three_point": 83,
+      "free_throw": 90,
+      "post_game": 99,
+      "draw_foul": 90,
+      "off_ball_movement": 99,
+      "ball_handling": 77,
+      "passing_vision": 97,
+      "passing_accuracy": 97,
+      "perimeter_defense": 89,
+      "interior_defense": 99,
+      "shot_blocking": 99,
+      "stealing": 98,
+      "defensive_iq": 98,
+      "defensive_consistency": 99,
+      "speed": 98,
+      "acceleration": 89,
+      "lateral_quickness": 97,
+      "vertical": 89,
+      "strength": 99,
+      "stamina": 96,
+      "basketball_iq": 99,
+      "offensive_iq": 91,
+      "rebounding": 99,
+      "offensive_rebounding": 87,
+      "hustle": 98,
+      "overall": 98,
+      "potential": 95,
+      "peak_age": 28
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.447,
+          "make_rate": 0.747
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.197,
+          "make_rate": 0.496
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.224,
+          "make_rate": 0.43
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.113,
+          "make_rate": 0.38
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.199,
+          "make_rate": 0.35
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.139,
+          "make_rate": 0.498
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 90,
+      "catch_and_shoot_frequency": 75,
+      "drive_frequency": 99,
+      "post_up_frequency": 99,
+      "iso_frequency": 84,
+      "pick_and_roll_ball_handler": 92,
+      "pick_and_roll_screener": 92,
+      "spot_up_frequency": 86,
+      "transition_frequency": 99,
+      "cut_frequency": 99,
+      "pass_out_of_drive_rate": 99,
+      "skip_pass_rate": 94,
+      "alley_oop_pass_rate": 93,
+      "gamble_for_steals": 96,
+      "help_defense_rate": 99,
+      "closeout_aggression": 99,
+      "box_out_rate": 99,
+      "usage_desire": 94,
+      "pace_preference": 99,
+      "foul_proneness": 40,
+      "shot_clock_tendency": 58,
+      "contested_shot_willingness": 77
+    },
+    "character": {
+      "leadership": 41,
+      "work_ethic": 41,
+      "clutch": 91,
+      "ego": 33,
+      "coachability": 84,
+      "temperament": 90,
+      "fan_favorite": 38,
+      "media_personality": 81,
+      "loyalty": 54,
+      "competitiveness": 50
+    },
+    "durability": {
+      "overall_durability": 95,
+      "ankle_health": 99,
+      "knee_health": 99,
+      "shoulder_health": 99,
+      "back_health": 93,
+      "wrist_hand_health": 99,
+      "foot_health": 97,
+      "concussion_risk": 10,
+      "soft_tissue_risk": 5,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 1658125,
+      "years_remaining": 4,
+      "year_signed": 2023,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": true
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "60c62382-1d5a-59cb-ab40-076049ba4284"
+    }
+  },
+  {
+    "id": "92b932cc-cff",
+    "bio": {
+      "first_name": "Devin",
+      "last_name": "Brown",
+      "position": "C",
+      "secondary_position": null,
+      "height": 84,
+      "weight": 252,
+      "age": 28,
+      "years_in_league": 7,
+      "college": null,
+      "country": "Cameroon",
+      "draft_year": 2020,
+      "draft_round": 1,
+      "draft_pick": 30,
+      "jersey_number": 32,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 99,
+      "close_range": 92,
+      "mid_range": 96,
+      "three_point": 91,
+      "free_throw": 99,
+      "post_game": 96,
+      "draw_foul": 99,
+      "off_ball_movement": 99,
+      "ball_handling": 85,
+      "passing_vision": 96,
+      "passing_accuracy": 92,
+      "perimeter_defense": 96,
+      "interior_defense": 99,
+      "shot_blocking": 97,
+      "stealing": 95,
+      "defensive_iq": 99,
+      "defensive_consistency": 98,
+      "speed": 85,
+      "acceleration": 93,
+      "lateral_quickness": 99,
+      "vertical": 91,
+      "strength": 99,
+      "stamina": 87,
+      "basketball_iq": 89,
+      "offensive_iq": 87,
+      "rebounding": 99,
+      "offensive_rebounding": 89,
+      "hustle": 93,
+      "overall": 97,
+      "potential": 94,
+      "peak_age": 25
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.447,
+          "make_rate": 0.747
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.188,
+          "make_rate": 0.484
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.242,
+          "make_rate": 0.444
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.121,
+          "make_rate": 0.389
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.214,
+          "make_rate": 0.359
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.135,
+          "make_rate": 0.493
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 99,
+      "catch_and_shoot_frequency": 82,
+      "drive_frequency": 99,
+      "post_up_frequency": 94,
+      "iso_frequency": 95,
+      "pick_and_roll_ball_handler": 91,
+      "pick_and_roll_screener": 91,
+      "spot_up_frequency": 81,
+      "transition_frequency": 85,
+      "cut_frequency": 99,
+      "pass_out_of_drive_rate": 99,
+      "skip_pass_rate": 96,
+      "alley_oop_pass_rate": 80,
+      "gamble_for_steals": 99,
+      "help_defense_rate": 96,
+      "closeout_aggression": 97,
+      "box_out_rate": 99,
+      "usage_desire": 86,
+      "pace_preference": 94,
+      "foul_proneness": 56,
+      "shot_clock_tendency": 49,
+      "contested_shot_willingness": 80
+    },
+    "character": {
+      "leadership": 78,
+      "work_ethic": 55,
+      "clutch": 42,
+      "ego": 59,
+      "coachability": 94,
+      "temperament": 82,
+      "fan_favorite": 69,
+      "media_personality": 39,
+      "loyalty": 91,
+      "competitiveness": 60
+    },
+    "durability": {
+      "overall_durability": 79,
+      "ankle_health": 69,
+      "knee_health": 72,
+      "shoulder_health": 81,
+      "back_health": 71,
+      "wrist_hand_health": 70,
+      "foot_health": 80,
+      "concussion_risk": 26,
+      "soft_tissue_risk": 21,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 1626386,
+      "years_remaining": 1,
+      "year_signed": 2026,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "d8527c14-d9ef-5476-86e4-11927ac2f611"
+    }
+  },
+  {
+    "id": "517b93b8-6c5",
+    "bio": {
+      "first_name": "Darius",
+      "last_name": "Mitchell",
+      "position": "PF",
+      "secondary_position": "C",
+      "height": 81,
+      "weight": 238,
+      "age": 30,
+      "years_in_league": 10,
+      "college": "Gonzaga",
+      "country": "USA",
+      "draft_year": 2017,
+      "draft_round": 1,
+      "draft_pick": 5,
+      "jersey_number": 43,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 94,
+      "close_range": 99,
+      "mid_range": 90,
+      "three_point": 92,
+      "free_throw": 94,
+      "post_game": 94,
+      "draw_foul": 90,
+      "off_ball_movement": 99,
+      "ball_handling": 89,
+      "passing_vision": 99,
+      "passing_accuracy": 89,
+      "perimeter_defense": 93,
+      "interior_defense": 99,
+      "shot_blocking": 95,
+      "stealing": 99,
+      "defensive_iq": 93,
+      "defensive_consistency": 94,
+      "speed": 91,
+      "acceleration": 99,
+      "lateral_quickness": 97,
+      "vertical": 99,
+      "strength": 99,
+      "stamina": 91,
+      "basketball_iq": 99,
+      "offensive_iq": 98,
+      "rebounding": 99,
+      "offensive_rebounding": 99,
+      "hustle": 94,
+      "overall": 96,
+      "potential": 95,
+      "peak_age": 28
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.429,
+          "make_rate": 0.732
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.199,
+          "make_rate": 0.498
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.23,
+          "make_rate": 0.435
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.122,
+          "make_rate": 0.39
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.216,
+          "make_rate": 0.36
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.133,
+          "make_rate": 0.489
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 95,
+      "catch_and_shoot_frequency": 95,
+      "drive_frequency": 93,
+      "post_up_frequency": 98,
+      "iso_frequency": 84,
+      "pick_and_roll_ball_handler": 94,
+      "pick_and_roll_screener": 99,
+      "spot_up_frequency": 97,
+      "transition_frequency": 95,
+      "cut_frequency": 92,
+      "pass_out_of_drive_rate": 99,
+      "skip_pass_rate": 99,
+      "alley_oop_pass_rate": 87,
+      "gamble_for_steals": 92,
+      "help_defense_rate": 89,
+      "closeout_aggression": 89,
+      "box_out_rate": 89,
+      "usage_desire": 83,
+      "pace_preference": 95,
+      "foul_proneness": 60,
+      "shot_clock_tendency": 50,
+      "contested_shot_willingness": 89
+    },
+    "character": {
+      "leadership": 94,
+      "work_ethic": 58,
+      "clutch": 28,
+      "ego": 65,
+      "coachability": 50,
+      "temperament": 75,
+      "fan_favorite": 88,
+      "media_personality": 47,
+      "loyalty": 39,
+      "competitiveness": 70
+    },
+    "durability": {
+      "overall_durability": 90,
+      "ankle_health": 98,
+      "knee_health": 86,
+      "shoulder_health": 98,
+      "back_health": 89,
+      "wrist_hand_health": 98,
+      "foot_health": 88,
+      "concussion_risk": 15,
+      "soft_tissue_risk": 13,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 996402,
+      "years_remaining": 3,
+      "year_signed": 2026,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "1351310f-2614-5bcd-9f50-42ef03946147"
+    }
+  },
+  {
+    "id": "9b1a3ba4-7bf",
+    "bio": {
+      "first_name": "Alperen",
+      "last_name": "Green",
+      "position": "SF",
+      "secondary_position": "PF",
+      "height": 80,
+      "weight": 231,
+      "age": 32,
+      "years_in_league": 12,
+      "college": "Arkansas",
+      "country": "USA",
+      "draft_year": 2015,
+      "draft_round": 1,
+      "draft_pick": 30,
+      "jersey_number": 3,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 99,
+      "close_range": 85,
+      "mid_range": 99,
+      "three_point": 92,
+      "free_throw": 98,
+      "post_game": 83,
+      "draw_foul": 99,
+      "off_ball_movement": 99,
+      "ball_handling": 93,
+      "passing_vision": 98,
+      "passing_accuracy": 93,
+      "perimeter_defense": 95,
+      "interior_defense": 94,
+      "shot_blocking": 85,
+      "stealing": 85,
+      "defensive_iq": 88,
+      "defensive_consistency": 91,
+      "speed": 99,
+      "acceleration": 99,
+      "lateral_quickness": 95,
+      "vertical": 86,
+      "strength": 89,
+      "stamina": 83,
+      "basketball_iq": 97,
+      "offensive_iq": 90,
+      "rebounding": 91,
+      "offensive_rebounding": 96,
+      "hustle": 99,
+      "overall": 94,
+      "potential": 95,
+      "peak_age": 26
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.447,
+          "make_rate": 0.747
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.177,
+          "make_rate": 0.47
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.248,
+          "make_rate": 0.449
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.122,
+          "make_rate": 0.39
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.216,
+          "make_rate": 0.36
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.12,
+          "make_rate": 0.469
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 99,
+      "catch_and_shoot_frequency": 88,
+      "drive_frequency": 97,
+      "post_up_frequency": 88,
+      "iso_frequency": 87,
+      "pick_and_roll_ball_handler": 99,
+      "pick_and_roll_screener": 87,
+      "spot_up_frequency": 93,
+      "transition_frequency": 99,
+      "cut_frequency": 99,
+      "pass_out_of_drive_rate": 99,
+      "skip_pass_rate": 99,
+      "alley_oop_pass_rate": 95,
+      "gamble_for_steals": 81,
+      "help_defense_rate": 82,
+      "closeout_aggression": 99,
+      "box_out_rate": 98,
+      "usage_desire": 90,
+      "pace_preference": 93,
+      "foul_proneness": 44,
+      "shot_clock_tendency": 58,
+      "contested_shot_willingness": 81
+    },
+    "character": {
+      "leadership": 29,
+      "work_ethic": 70,
+      "clutch": 63,
+      "ego": 42,
+      "coachability": 47,
+      "temperament": 64,
+      "fan_favorite": 89,
+      "media_personality": 65,
+      "loyalty": 41,
+      "competitiveness": 93
+    },
+    "durability": {
+      "overall_durability": 65,
+      "ankle_health": 60,
+      "knee_health": 56,
+      "shoulder_health": 60,
+      "back_health": 59,
+      "wrist_hand_health": 68,
+      "foot_health": 75,
+      "concussion_risk": 39,
+      "soft_tissue_risk": 37,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 1257531,
+      "years_remaining": 1,
+      "year_signed": 2026,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "7c8c473d-2b74-5c0c-9eee-7f8dc76b4bd8"
+    }
+  },
+  {
+    "id": "1270047d-3a2",
+    "bio": {
+      "first_name": "Marcus",
+      "last_name": "Clark",
+      "position": "C",
+      "secondary_position": null,
+      "height": 84,
+      "weight": 260,
+      "age": 24,
+      "years_in_league": 3,
+      "college": null,
+      "country": "Spain",
+      "draft_year": 2024,
+      "draft_round": 1,
+      "draft_pick": 10,
+      "jersey_number": 53,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 82,
+      "close_range": 98,
+      "mid_range": 86,
+      "three_point": 82,
+      "free_throw": 94,
+      "post_game": 94,
+      "draw_foul": 79,
+      "off_ball_movement": 78,
+      "ball_handling": 75,
+      "passing_vision": 88,
+      "passing_accuracy": 79,
+      "perimeter_defense": 81,
+      "interior_defense": 99,
+      "shot_blocking": 90,
+      "stealing": 90,
+      "defensive_iq": 89,
+      "defensive_consistency": 85,
+      "speed": 81,
+      "acceleration": 88,
+      "lateral_quickness": 84,
+      "vertical": 89,
+      "strength": 97,
+      "stamina": 92,
+      "basketball_iq": 92,
+      "offensive_iq": 93,
+      "rebounding": 97,
+      "offensive_rebounding": 84,
+      "hustle": 83,
+      "overall": 92,
+      "potential": 93,
+      "peak_age": 26
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.387,
+          "make_rate": 0.696
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.197,
+          "make_rate": 0.496
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.222,
+          "make_rate": 0.429
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.112,
+          "make_rate": 0.378
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.198,
+          "make_rate": 0.348
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.133,
+          "make_rate": 0.489
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 91,
+      "catch_and_shoot_frequency": 72,
+      "drive_frequency": 83,
+      "post_up_frequency": 99,
+      "iso_frequency": 78,
+      "pick_and_roll_ball_handler": 72,
+      "pick_and_roll_screener": 99,
+      "spot_up_frequency": 77,
+      "transition_frequency": 73,
+      "cut_frequency": 77,
+      "pass_out_of_drive_rate": 89,
+      "skip_pass_rate": 90,
+      "alley_oop_pass_rate": 76,
+      "gamble_for_steals": 84,
+      "help_defense_rate": 82,
+      "closeout_aggression": 75,
+      "box_out_rate": 99,
+      "usage_desire": 74,
+      "pace_preference": 89,
+      "foul_proneness": 49,
+      "shot_clock_tendency": 58,
+      "contested_shot_willingness": 70
+    },
+    "character": {
+      "leadership": 75,
+      "work_ethic": 83,
+      "clutch": 93,
+      "ego": 86,
+      "coachability": 50,
+      "temperament": 95,
+      "fan_favorite": 33,
+      "media_personality": 30,
+      "loyalty": 43,
+      "competitiveness": 84
+    },
+    "durability": {
+      "overall_durability": 76,
+      "ankle_health": 83,
+      "knee_health": 74,
+      "shoulder_health": 75,
+      "back_health": 67,
+      "wrist_hand_health": 84,
+      "foot_health": 72,
+      "concussion_risk": 21,
+      "soft_tissue_risk": 23,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 1096267,
+      "years_remaining": 3,
+      "year_signed": 2025,
+      "is_player_option": true,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "03addb95-7f35-5c89-ab00-f68293b2eeac"
+    }
+  },
+  {
+    "id": "395567c0-acd",
+    "bio": {
+      "first_name": "Aaron",
+      "last_name": "Robinson",
+      "position": "SF",
+      "secondary_position": "PF",
+      "height": 78,
+      "weight": 217,
+      "age": 34,
+      "years_in_league": 13,
+      "college": "North Carolina",
+      "country": "USA",
+      "draft_year": 2014,
+      "draft_round": 1,
+      "draft_pick": 15,
+      "jersey_number": 51,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 99,
+      "close_range": 97,
+      "mid_range": 84,
+      "three_point": 86,
+      "free_throw": 92,
+      "post_game": 84,
+      "draw_foul": 82,
+      "off_ball_movement": 85,
+      "ball_handling": 94,
+      "passing_vision": 84,
+      "passing_accuracy": 87,
+      "perimeter_defense": 92,
+      "interior_defense": 82,
+      "shot_blocking": 80,
+      "stealing": 84,
+      "defensive_iq": 98,
+      "defensive_consistency": 85,
+      "speed": 92,
+      "acceleration": 86,
+      "lateral_quickness": 91,
+      "vertical": 97,
+      "strength": 89,
+      "stamina": 92,
+      "basketball_iq": 96,
+      "offensive_iq": 89,
+      "rebounding": 96,
+      "offensive_rebounding": 89,
+      "hustle": 98,
+      "overall": 92,
+      "potential": 92,
+      "peak_age": 28
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.447,
+          "make_rate": 0.747
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.196,
+          "make_rate": 0.494
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.218,
+          "make_rate": 0.426
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.116,
+          "make_rate": 0.383
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.205,
+          "make_rate": 0.353
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.121,
+          "make_rate": 0.471
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 75,
+      "catch_and_shoot_frequency": 91,
+      "drive_frequency": 96,
+      "post_up_frequency": 93,
+      "iso_frequency": 89,
+      "pick_and_roll_ball_handler": 93,
+      "pick_and_roll_screener": 86,
+      "spot_up_frequency": 79,
+      "transition_frequency": 99,
+      "cut_frequency": 90,
+      "pass_out_of_drive_rate": 92,
+      "skip_pass_rate": 81,
+      "alley_oop_pass_rate": 79,
+      "gamble_for_steals": 90,
+      "help_defense_rate": 88,
+      "closeout_aggression": 99,
+      "box_out_rate": 92,
+      "usage_desire": 98,
+      "pace_preference": 83,
+      "foul_proneness": 56,
+      "shot_clock_tendency": 54,
+      "contested_shot_willingness": 74
+    },
+    "character": {
+      "leadership": 62,
+      "work_ethic": 65,
+      "clutch": 91,
+      "ego": 60,
+      "coachability": 64,
+      "temperament": 85,
+      "fan_favorite": 23,
+      "media_personality": 65,
+      "loyalty": 91,
+      "competitiveness": 56
+    },
+    "durability": {
+      "overall_durability": 88,
+      "ankle_health": 81,
+      "knee_health": 96,
+      "shoulder_health": 89,
+      "back_health": 84,
+      "wrist_hand_health": 96,
+      "foot_health": 80,
+      "concussion_risk": 15,
+      "soft_tissue_risk": 9,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 1077743,
+      "years_remaining": 1,
+      "year_signed": 2026,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "46253fad-462c-5619-9c22-d27125e01d6f"
+    }
+  },
+  {
+    "id": "5bb18fec-dcf",
+    "bio": {
+      "first_name": "Jalen",
+      "last_name": "Martin",
+      "position": "C",
+      "secondary_position": null,
+      "height": 86,
+      "weight": 252,
+      "age": 29,
+      "years_in_league": 10,
+      "college": "Virginia",
+      "country": "USA",
+      "draft_year": 2017,
+      "draft_round": 1,
+      "draft_pick": 27,
+      "jersey_number": 42,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 81,
+      "close_range": 92,
+      "mid_range": 86,
+      "three_point": 83,
+      "free_throw": 75,
+      "post_game": 89,
+      "draw_foul": 75,
+      "off_ball_movement": 90,
+      "ball_handling": 74,
+      "passing_vision": 78,
+      "passing_accuracy": 87,
+      "perimeter_defense": 77,
+      "interior_defense": 98,
+      "shot_blocking": 91,
+      "stealing": 90,
+      "defensive_iq": 85,
+      "defensive_consistency": 85,
+      "speed": 81,
+      "acceleration": 90,
+      "lateral_quickness": 81,
+      "vertical": 74,
+      "strength": 95,
+      "stamina": 90,
+      "basketball_iq": 87,
+      "offensive_iq": 86,
+      "rebounding": 95,
+      "offensive_rebounding": 81,
+      "hustle": 86,
+      "overall": 90,
+      "potential": 85,
+      "peak_age": 30
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.383,
+          "make_rate": 0.693
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.188,
+          "make_rate": 0.484
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.222,
+          "make_rate": 0.429
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.113,
+          "make_rate": 0.38
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.199,
+          "make_rate": 0.35
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.127,
+          "make_rate": 0.48
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 76,
+      "catch_and_shoot_frequency": 76,
+      "drive_frequency": 78,
+      "post_up_frequency": 85,
+      "iso_frequency": 69,
+      "pick_and_roll_ball_handler": 81,
+      "pick_and_roll_screener": 99,
+      "spot_up_frequency": 85,
+      "transition_frequency": 86,
+      "cut_frequency": 85,
+      "pass_out_of_drive_rate": 81,
+      "skip_pass_rate": 79,
+      "alley_oop_pass_rate": 64,
+      "gamble_for_steals": 91,
+      "help_defense_rate": 75,
+      "closeout_aggression": 90,
+      "box_out_rate": 87,
+      "usage_desire": 70,
+      "pace_preference": 74,
+      "foul_proneness": 46,
+      "shot_clock_tendency": 52,
+      "contested_shot_willingness": 72
+    },
+    "character": {
+      "leadership": 83,
+      "work_ethic": 79,
+      "clutch": 91,
+      "ego": 32,
+      "coachability": 83,
+      "temperament": 60,
+      "fan_favorite": 61,
+      "media_personality": 59,
+      "loyalty": 25,
+      "competitiveness": 47
+    },
+    "durability": {
+      "overall_durability": 59,
+      "ankle_health": 59,
+      "knee_health": 53,
+      "shoulder_health": 63,
+      "back_health": 69,
+      "wrist_hand_health": 62,
+      "foot_health": 52,
+      "concussion_risk": 46,
+      "soft_tissue_risk": 37,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 1271451,
+      "years_remaining": 2,
+      "year_signed": 2025,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "2cc46d81-65cc-5f4e-8734-bcb37ae782df"
+    }
+  },
+  {
+    "id": "f8f7e19e-b35",
+    "bio": {
+      "first_name": "Terrence",
+      "last_name": "Barnes",
+      "position": "C",
+      "secondary_position": null,
+      "height": 84,
+      "weight": 255,
+      "age": 30,
+      "years_in_league": 9,
+      "college": null,
+      "country": "France",
+      "draft_year": 2018,
+      "draft_round": 1,
+      "draft_pick": 21,
+      "jersey_number": 12,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 86,
+      "close_range": 84,
+      "mid_range": 77,
+      "three_point": 83,
+      "free_throw": 80,
+      "post_game": 88,
+      "draw_foul": 82,
+      "off_ball_movement": 84,
+      "ball_handling": 78,
+      "passing_vision": 84,
+      "passing_accuracy": 89,
+      "perimeter_defense": 72,
+      "interior_defense": 91,
+      "shot_blocking": 92,
+      "stealing": 77,
+      "defensive_iq": 76,
+      "defensive_consistency": 83,
+      "speed": 84,
+      "acceleration": 85,
+      "lateral_quickness": 77,
+      "vertical": 87,
+      "strength": 99,
+      "stamina": 91,
+      "basketball_iq": 88,
+      "offensive_iq": 85,
+      "rebounding": 98,
+      "offensive_rebounding": 77,
+      "hustle": 78,
+      "overall": 90,
+      "potential": 90,
+      "peak_age": 27
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.401,
+          "make_rate": 0.708
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.176,
+          "make_rate": 0.468
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.204,
+          "make_rate": 0.415
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.113,
+          "make_rate": 0.38
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.199,
+          "make_rate": 0.35
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.126,
+          "make_rate": 0.478
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 70,
+      "catch_and_shoot_frequency": 74,
+      "drive_frequency": 92,
+      "post_up_frequency": 82,
+      "iso_frequency": 75,
+      "pick_and_roll_ball_handler": 81,
+      "pick_and_roll_screener": 99,
+      "spot_up_frequency": 83,
+      "transition_frequency": 81,
+      "cut_frequency": 82,
+      "pass_out_of_drive_rate": 93,
+      "skip_pass_rate": 77,
+      "alley_oop_pass_rate": 64,
+      "gamble_for_steals": 76,
+      "help_defense_rate": 71,
+      "closeout_aggression": 88,
+      "box_out_rate": 96,
+      "usage_desire": 87,
+      "pace_preference": 82,
+      "foul_proneness": 54,
+      "shot_clock_tendency": 56,
+      "contested_shot_willingness": 67
+    },
+    "character": {
+      "leadership": 95,
+      "work_ethic": 51,
+      "clutch": 59,
+      "ego": 54,
+      "coachability": 80,
+      "temperament": 31,
+      "fan_favorite": 42,
+      "media_personality": 70,
+      "loyalty": 36,
+      "competitiveness": 82
+    },
+    "durability": {
+      "overall_durability": 80,
+      "ankle_health": 87,
+      "knee_health": 70,
+      "shoulder_health": 87,
+      "back_health": 70,
+      "wrist_hand_health": 72,
+      "foot_health": 71,
+      "concussion_risk": 15,
+      "soft_tissue_risk": 15,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 770140,
+      "years_remaining": 2,
+      "year_signed": 2026,
+      "is_player_option": true,
+      "is_team_option": true,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "bf056fd5-7dac-511d-9c12-58f1add4aadf"
+    }
+  },
+  {
+    "id": "e7d214fe-251",
+    "bio": {
+      "first_name": "DeAndre",
+      "last_name": "Henderson",
+      "position": "PG",
+      "secondary_position": null,
+      "height": 75,
+      "weight": 205,
+      "age": 25,
+      "years_in_league": 4,
+      "college": null,
+      "country": "Spain",
+      "draft_year": 2023,
+      "draft_round": 1,
+      "draft_pick": 18,
+      "jersey_number": 11,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 83,
+      "close_range": 84,
+      "mid_range": 79,
+      "three_point": 85,
+      "free_throw": 95,
+      "post_game": 71,
+      "draw_foul": 90,
+      "off_ball_movement": 81,
+      "ball_handling": 99,
+      "passing_vision": 96,
+      "passing_accuracy": 85,
+      "perimeter_defense": 83,
+      "interior_defense": 78,
+      "shot_blocking": 73,
+      "stealing": 82,
+      "defensive_iq": 89,
+      "defensive_consistency": 94,
+      "speed": 88,
+      "acceleration": 81,
+      "lateral_quickness": 91,
+      "vertical": 87,
+      "strength": 82,
+      "stamina": 82,
+      "basketball_iq": 90,
+      "offensive_iq": 94,
+      "rebounding": 88,
+      "offensive_rebounding": 82,
+      "hustle": 95,
+      "overall": 89,
+      "potential": 90,
+      "peak_age": 27
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.39,
+          "make_rate": 0.699
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.176,
+          "make_rate": 0.468
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.208,
+          "make_rate": 0.418
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.115,
+          "make_rate": 0.382
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.203,
+          "make_rate": 0.352
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.105,
+          "make_rate": 0.448
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 83,
+      "catch_and_shoot_frequency": 93,
+      "drive_frequency": 84,
+      "post_up_frequency": 63,
+      "iso_frequency": 91,
+      "pick_and_roll_ball_handler": 89,
+      "pick_and_roll_screener": 84,
+      "spot_up_frequency": 84,
+      "transition_frequency": 86,
+      "cut_frequency": 78,
+      "pass_out_of_drive_rate": 91,
+      "skip_pass_rate": 91,
+      "alley_oop_pass_rate": 89,
+      "gamble_for_steals": 88,
+      "help_defense_rate": 96,
+      "closeout_aggression": 88,
+      "box_out_rate": 88,
+      "usage_desire": 96,
+      "pace_preference": 90,
+      "foul_proneness": 50,
+      "shot_clock_tendency": 45,
+      "contested_shot_willingness": 73
+    },
+    "character": {
+      "leadership": 84,
+      "work_ethic": 63,
+      "clutch": 69,
+      "ego": 64,
+      "coachability": 82,
+      "temperament": 78,
+      "fan_favorite": 47,
+      "media_personality": 39,
+      "loyalty": 81,
+      "competitiveness": 51
+    },
+    "durability": {
+      "overall_durability": 82,
+      "ankle_health": 80,
+      "knee_health": 82,
+      "shoulder_health": 75,
+      "back_health": 82,
+      "wrist_hand_health": 80,
+      "foot_health": 86,
+      "concussion_risk": 17,
+      "soft_tissue_risk": 15,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 1216310,
+      "years_remaining": 3,
+      "year_signed": 2026,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "cd32f8ce-58f0-5959-a9f9-bf46e16f4f97"
+    }
+  },
+  {
+    "id": "77c5603d-5dc",
+    "bio": {
+      "first_name": "Tyrell",
+      "last_name": "Mitchell",
+      "position": "SF",
+      "secondary_position": "PF",
+      "height": 81,
+      "weight": 227,
+      "age": 20,
+      "years_in_league": 0,
+      "college": null,
+      "country": "Nigeria",
+      "draft_year": 2026,
+      "draft_round": 1,
+      "draft_pick": 29,
+      "jersey_number": 43,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 93,
+      "close_range": 83,
+      "mid_range": 97,
+      "three_point": 96,
+      "free_throw": 86,
+      "post_game": 91,
+      "draw_foul": 91,
+      "off_ball_movement": 90,
+      "ball_handling": 81,
+      "passing_vision": 92,
+      "passing_accuracy": 85,
+      "perimeter_defense": 82,
+      "interior_defense": 88,
+      "shot_blocking": 85,
+      "stealing": 84,
+      "defensive_iq": 90,
+      "defensive_consistency": 93,
+      "speed": 95,
+      "acceleration": 95,
+      "lateral_quickness": 90,
+      "vertical": 80,
+      "strength": 81,
+      "stamina": 87,
+      "basketball_iq": 83,
+      "offensive_iq": 88,
+      "rebounding": 92,
+      "offensive_rebounding": 80,
+      "hustle": 86,
+      "overall": 89,
+      "potential": 94,
+      "peak_age": 29
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.425,
+          "make_rate": 0.729
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.174,
+          "make_rate": 0.466
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.244,
+          "make_rate": 0.446
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.126,
+          "make_rate": 0.395
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.223,
+          "make_rate": 0.365
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.129,
+          "make_rate": 0.484
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 95,
+      "catch_and_shoot_frequency": 99,
+      "drive_frequency": 99,
+      "post_up_frequency": 92,
+      "iso_frequency": 73,
+      "pick_and_roll_ball_handler": 93,
+      "pick_and_roll_screener": 87,
+      "spot_up_frequency": 99,
+      "transition_frequency": 85,
+      "cut_frequency": 83,
+      "pass_out_of_drive_rate": 86,
+      "skip_pass_rate": 87,
+      "alley_oop_pass_rate": 79,
+      "gamble_for_steals": 88,
+      "help_defense_rate": 86,
+      "closeout_aggression": 99,
+      "box_out_rate": 87,
+      "usage_desire": 86,
+      "pace_preference": 87,
+      "foul_proneness": 58,
+      "shot_clock_tendency": 53,
+      "contested_shot_willingness": 97
+    },
+    "character": {
+      "leadership": 42,
+      "work_ethic": 48,
+      "clutch": 28,
+      "ego": 54,
+      "coachability": 83,
+      "temperament": 35,
+      "fan_favorite": 43,
+      "media_personality": 90,
+      "loyalty": 90,
+      "competitiveness": 64
+    },
+    "durability": {
+      "overall_durability": 85,
+      "ankle_health": 85,
+      "knee_health": 85,
+      "shoulder_health": 86,
+      "back_health": 85,
+      "wrist_hand_health": 94,
+      "foot_health": 90,
+      "concussion_risk": 14,
+      "soft_tissue_risk": 17,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 932596,
+      "years_remaining": 3,
+      "year_signed": 2026,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": true,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "eb581ca0-663c-50b8-a4c2-57f559462efa"
+    }
+  },
+  {
+    "id": "52308e38-fde",
+    "bio": {
+      "first_name": "James",
+      "last_name": "Adams",
+      "position": "SG",
+      "secondary_position": null,
+      "height": 77,
+      "weight": 198,
+      "age": 22,
+      "years_in_league": 2,
+      "college": "Texas",
+      "country": "USA",
+      "draft_year": 2025,
+      "draft_round": 1,
+      "draft_pick": 22,
+      "jersey_number": 10,
+      "hand": "left"
+    },
+    "ratings": {
+      "finishing": 91,
+      "close_range": 81,
+      "mid_range": 84,
+      "three_point": 98,
+      "free_throw": 87,
+      "post_game": 86,
+      "draw_foul": 79,
+      "off_ball_movement": 84,
+      "ball_handling": 82,
+      "passing_vision": 86,
+      "passing_accuracy": 79,
+      "perimeter_defense": 88,
+      "interior_defense": 76,
+      "shot_blocking": 74,
+      "stealing": 90,
+      "defensive_iq": 89,
+      "defensive_consistency": 93,
+      "speed": 84,
+      "acceleration": 91,
+      "lateral_quickness": 89,
+      "vertical": 85,
+      "strength": 93,
+      "stamina": 92,
+      "basketball_iq": 82,
+      "offensive_iq": 90,
+      "rebounding": 91,
+      "offensive_rebounding": 87,
+      "hustle": 91,
+      "overall": 88,
+      "potential": 91,
+      "peak_age": 27
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.418,
+          "make_rate": 0.723
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.171,
+          "make_rate": 0.462
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.218,
+          "make_rate": 0.426
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.128,
+          "make_rate": 0.398
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.226,
+          "make_rate": 0.368
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.123,
+          "make_rate": 0.475
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 75,
+      "catch_and_shoot_frequency": 99,
+      "drive_frequency": 81,
+      "post_up_frequency": 85,
+      "iso_frequency": 82,
+      "pick_and_roll_ball_handler": 83,
+      "pick_and_roll_screener": 81,
+      "spot_up_frequency": 97,
+      "transition_frequency": 87,
+      "cut_frequency": 84,
+      "pass_out_of_drive_rate": 94,
+      "skip_pass_rate": 71,
+      "alley_oop_pass_rate": 83,
+      "gamble_for_steals": 90,
+      "help_defense_rate": 85,
+      "closeout_aggression": 93,
+      "box_out_rate": 82,
+      "usage_desire": 79,
+      "pace_preference": 79,
+      "foul_proneness": 59,
+      "shot_clock_tendency": 43,
+      "contested_shot_willingness": 79
+    },
+    "character": {
+      "leadership": 29,
+      "work_ethic": 51,
+      "clutch": 91,
+      "ego": 65,
+      "coachability": 68,
+      "temperament": 33,
+      "fan_favorite": 74,
+      "media_personality": 36,
+      "loyalty": 70,
+      "competitiveness": 88
+    },
+    "durability": {
+      "overall_durability": 79,
+      "ankle_health": 81,
+      "knee_health": 76,
+      "shoulder_health": 82,
+      "back_health": 76,
+      "wrist_hand_health": 73,
+      "foot_health": 74,
+      "concussion_risk": 24,
+      "soft_tissue_risk": 16,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 1311091,
+      "years_remaining": 4,
+      "year_signed": 2024,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "6df39fe0-aa15-5fc6-bb41-e1535122b54b"
+    }
+  },
+  {
+    "id": "e2f4f7fe-5b2",
+    "bio": {
+      "first_name": "Keon",
+      "last_name": "Brooks",
+      "position": "PF",
+      "secondary_position": "SF",
+      "height": 81,
+      "weight": 247,
+      "age": 21,
+      "years_in_league": 1,
+      "college": null,
+      "country": "Serbia",
+      "draft_year": 2026,
+      "draft_round": 1,
+      "draft_pick": 3,
+      "jersey_number": 6,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 90,
+      "close_range": 92,
+      "mid_range": 79,
+      "three_point": 81,
+      "free_throw": 95,
+      "post_game": 89,
+      "draw_foul": 81,
+      "off_ball_movement": 92,
+      "ball_handling": 86,
+      "passing_vision": 81,
+      "passing_accuracy": 84,
+      "perimeter_defense": 86,
+      "interior_defense": 90,
+      "shot_blocking": 94,
+      "stealing": 85,
+      "defensive_iq": 90,
+      "defensive_consistency": 84,
+      "speed": 89,
+      "acceleration": 92,
+      "lateral_quickness": 93,
+      "vertical": 90,
+      "strength": 90,
+      "stamina": 88,
+      "basketball_iq": 93,
+      "offensive_iq": 94,
+      "rebounding": 87,
+      "offensive_rebounding": 85,
+      "hustle": 85,
+      "overall": 88,
+      "potential": 88,
+      "peak_age": 25
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.415,
+          "make_rate": 0.72
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.188,
+          "make_rate": 0.484
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.208,
+          "make_rate": 0.418
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.111,
+          "make_rate": 0.377
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.196,
+          "make_rate": 0.347
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.127,
+          "make_rate": 0.48
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 80,
+      "catch_and_shoot_frequency": 90,
+      "drive_frequency": 85,
+      "post_up_frequency": 82,
+      "iso_frequency": 81,
+      "pick_and_roll_ball_handler": 79,
+      "pick_and_roll_screener": 98,
+      "spot_up_frequency": 84,
+      "transition_frequency": 85,
+      "cut_frequency": 95,
+      "pass_out_of_drive_rate": 71,
+      "skip_pass_rate": 83,
+      "alley_oop_pass_rate": 65,
+      "gamble_for_steals": 95,
+      "help_defense_rate": 99,
+      "closeout_aggression": 87,
+      "box_out_rate": 86,
+      "usage_desire": 89,
+      "pace_preference": 91,
+      "foul_proneness": 40,
+      "shot_clock_tendency": 55,
+      "contested_shot_willingness": 81
+    },
+    "character": {
+      "leadership": 83,
+      "work_ethic": 69,
+      "clutch": 70,
+      "ego": 82,
+      "coachability": 47,
+      "temperament": 43,
+      "fan_favorite": 38,
+      "media_personality": 48,
+      "loyalty": 70,
+      "competitiveness": 93
+    },
+    "durability": {
+      "overall_durability": 79,
+      "ankle_health": 88,
+      "knee_health": 89,
+      "shoulder_health": 87,
+      "back_health": 70,
+      "wrist_hand_health": 86,
+      "foot_health": 79,
+      "concussion_risk": 20,
+      "soft_tissue_risk": 26,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 1042364,
+      "years_remaining": 4,
+      "year_signed": 2024,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "78e2700d-cd87-5a34-9a97-b66fe033c81f"
+    }
+  },
+  {
+    "id": "7bc57a3f-dfa",
+    "bio": {
+      "first_name": "Keldon",
+      "last_name": "Jackson",
+      "position": "C",
+      "secondary_position": "PF",
+      "height": 83,
+      "weight": 247,
+      "age": 32,
+      "years_in_league": 13,
+      "college": null,
+      "country": "France",
+      "draft_year": 2014,
+      "draft_round": 1,
+      "draft_pick": 18,
+      "jersey_number": 38,
+      "hand": "left"
+    },
+    "ratings": {
+      "finishing": 83,
+      "close_range": 88,
+      "mid_range": 75,
+      "three_point": 69,
+      "free_throw": 85,
+      "post_game": 86,
+      "draw_foul": 89,
+      "off_ball_movement": 78,
+      "ball_handling": 72,
+      "passing_vision": 85,
+      "passing_accuracy": 80,
+      "perimeter_defense": 87,
+      "interior_defense": 98,
+      "shot_blocking": 86,
+      "stealing": 77,
+      "defensive_iq": 79,
+      "defensive_consistency": 75,
+      "speed": 86,
+      "acceleration": 84,
+      "lateral_quickness": 79,
+      "vertical": 88,
+      "strength": 91,
+      "stamina": 75,
+      "basketball_iq": 89,
+      "offensive_iq": 84,
+      "rebounding": 89,
+      "offensive_rebounding": 87,
+      "hustle": 75,
+      "overall": 88,
+      "potential": 87,
+      "peak_age": 29
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.39,
+          "make_rate": 0.699
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.182,
+          "make_rate": 0.476
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.2,
+          "make_rate": 0.412
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.099,
+          "make_rate": 0.363
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.174,
+          "make_rate": 0.333
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.123,
+          "make_rate": 0.475
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 68,
+      "catch_and_shoot_frequency": 62,
+      "drive_frequency": 80,
+      "post_up_frequency": 86,
+      "iso_frequency": 76,
+      "pick_and_roll_ball_handler": 70,
+      "pick_and_roll_screener": 89,
+      "spot_up_frequency": 67,
+      "transition_frequency": 90,
+      "cut_frequency": 82,
+      "pass_out_of_drive_rate": 84,
+      "skip_pass_rate": 78,
+      "alley_oop_pass_rate": 79,
+      "gamble_for_steals": 86,
+      "help_defense_rate": 82,
+      "closeout_aggression": 87,
+      "box_out_rate": 88,
+      "usage_desire": 77,
+      "pace_preference": 81,
+      "foul_proneness": 43,
+      "shot_clock_tendency": 59,
+      "contested_shot_willingness": 74
+    },
+    "character": {
+      "leadership": 28,
+      "work_ethic": 61,
+      "clutch": 52,
+      "ego": 57,
+      "coachability": 81,
+      "temperament": 58,
+      "fan_favorite": 61,
+      "media_personality": 41,
+      "loyalty": 37,
+      "competitiveness": 64
+    },
+    "durability": {
+      "overall_durability": 79,
+      "ankle_health": 73,
+      "knee_health": 88,
+      "shoulder_health": 79,
+      "back_health": 89,
+      "wrist_hand_health": 86,
+      "foot_health": 81,
+      "concussion_risk": 19,
+      "soft_tissue_risk": 25,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 759018,
+      "years_remaining": 4,
+      "year_signed": 2024,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "00c86a41-9d52-597a-83ff-2b1b6b506e3c"
+    }
+  },
+  {
+    "id": "e0ea7e65-6e2",
+    "bio": {
+      "first_name": "Miles",
+      "last_name": "Adams",
+      "position": "SG",
+      "secondary_position": "PG",
+      "height": 78,
+      "weight": 220,
+      "age": 23,
+      "years_in_league": 2,
+      "college": null,
+      "country": "Nigeria",
+      "draft_year": 2025,
+      "draft_round": 1,
+      "draft_pick": 30,
+      "jersey_number": 27,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 84,
+      "close_range": 78,
+      "mid_range": 81,
+      "three_point": 96,
+      "free_throw": 89,
+      "post_game": 72,
+      "draw_foul": 90,
+      "off_ball_movement": 95,
+      "ball_handling": 77,
+      "passing_vision": 90,
+      "passing_accuracy": 91,
+      "perimeter_defense": 87,
+      "interior_defense": 73,
+      "shot_blocking": 69,
+      "stealing": 89,
+      "defensive_iq": 81,
+      "defensive_consistency": 89,
+      "speed": 82,
+      "acceleration": 84,
+      "lateral_quickness": 92,
+      "vertical": 83,
+      "strength": 89,
+      "stamina": 79,
+      "basketball_iq": 87,
+      "offensive_iq": 81,
+      "rebounding": 72,
+      "offensive_rebounding": 80,
+      "hustle": 85,
+      "overall": 87,
+      "potential": 84,
+      "peak_age": 28
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.394,
+          "make_rate": 0.702
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.167,
+          "make_rate": 0.456
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.212,
+          "make_rate": 0.421
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.126,
+          "make_rate": 0.395
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.223,
+          "make_rate": 0.365
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.106,
+          "make_rate": 0.45
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 74,
+      "catch_and_shoot_frequency": 93,
+      "drive_frequency": 85,
+      "post_up_frequency": 64,
+      "iso_frequency": 80,
+      "pick_and_roll_ball_handler": 93,
+      "pick_and_roll_screener": 64,
+      "spot_up_frequency": 99,
+      "transition_frequency": 91,
+      "cut_frequency": 93,
+      "pass_out_of_drive_rate": 90,
+      "skip_pass_rate": 88,
+      "alley_oop_pass_rate": 89,
+      "gamble_for_steals": 97,
+      "help_defense_rate": 80,
+      "closeout_aggression": 78,
+      "box_out_rate": 81,
+      "usage_desire": 86,
+      "pace_preference": 77,
+      "foul_proneness": 56,
+      "shot_clock_tendency": 53,
+      "contested_shot_willingness": 81
+    },
+    "character": {
+      "leadership": 29,
+      "work_ethic": 67,
+      "clutch": 92,
+      "ego": 78,
+      "coachability": 67,
+      "temperament": 82,
+      "fan_favorite": 53,
+      "media_personality": 46,
+      "loyalty": 81,
+      "competitiveness": 55
+    },
+    "durability": {
+      "overall_durability": 77,
+      "ankle_health": 83,
+      "knee_health": 76,
+      "shoulder_health": 75,
+      "back_health": 76,
+      "wrist_hand_health": 70,
+      "foot_health": 86,
+      "concussion_risk": 21,
+      "soft_tissue_risk": 18,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 677749,
+      "years_remaining": 3,
+      "year_signed": 2024,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "8ae8973e-078e-5869-b4cf-6d0fe2722e13"
+    }
+  },
+  {
+    "id": "1de6bec6-d7b",
+    "bio": {
+      "first_name": "Dyson",
+      "last_name": "Brooks",
+      "position": "PG",
+      "secondary_position": null,
+      "height": 77,
+      "weight": 183,
+      "age": 24,
+      "years_in_league": 3,
+      "college": "Arkansas",
+      "country": "USA",
+      "draft_year": 2024,
+      "draft_round": 1,
+      "draft_pick": 10,
+      "jersey_number": 38,
+      "hand": "left"
+    },
+    "ratings": {
+      "finishing": 77,
+      "close_range": 83,
+      "mid_range": 89,
+      "three_point": 77,
+      "free_throw": 86,
+      "post_game": 81,
+      "draw_foul": 84,
+      "off_ball_movement": 84,
+      "ball_handling": 92,
+      "passing_vision": 92,
+      "passing_accuracy": 75,
+      "perimeter_defense": 87,
+      "interior_defense": 78,
+      "shot_blocking": 71,
+      "stealing": 84,
+      "defensive_iq": 77,
+      "defensive_consistency": 86,
+      "speed": 95,
+      "acceleration": 87,
+      "lateral_quickness": 90,
+      "vertical": 78,
+      "strength": 78,
+      "stamina": 88,
+      "basketball_iq": 80,
+      "offensive_iq": 82,
+      "rebounding": 70,
+      "offensive_rebounding": 78,
+      "hustle": 82,
+      "overall": 87,
+      "potential": 81,
+      "peak_age": 28
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.369,
+          "make_rate": 0.681
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.174,
+          "make_rate": 0.466
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.228,
+          "make_rate": 0.433
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.107,
+          "make_rate": 0.372
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.189,
+          "make_rate": 0.342
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.117,
+          "make_rate": 0.466
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 84,
+      "catch_and_shoot_frequency": 79,
+      "drive_frequency": 75,
+      "post_up_frequency": 78,
+      "iso_frequency": 95,
+      "pick_and_roll_ball_handler": 94,
+      "pick_and_roll_screener": 69,
+      "spot_up_frequency": 83,
+      "transition_frequency": 90,
+      "cut_frequency": 92,
+      "pass_out_of_drive_rate": 82,
+      "skip_pass_rate": 96,
+      "alley_oop_pass_rate": 77,
+      "gamble_for_steals": 74,
+      "help_defense_rate": 83,
+      "closeout_aggression": 80,
+      "box_out_rate": 69,
+      "usage_desire": 78,
+      "pace_preference": 99,
+      "foul_proneness": 44,
+      "shot_clock_tendency": 40,
+      "contested_shot_willingness": 77
+    },
+    "character": {
+      "leadership": 42,
+      "work_ethic": 86,
+      "clutch": 45,
+      "ego": 86,
+      "coachability": 58,
+      "temperament": 89,
+      "fan_favorite": 23,
+      "media_personality": 66,
+      "loyalty": 30,
+      "competitiveness": 83
+    },
+    "durability": {
+      "overall_durability": 58,
+      "ankle_health": 68,
+      "knee_health": 51,
+      "shoulder_health": 65,
+      "back_health": 64,
+      "wrist_hand_health": 66,
+      "foot_health": 65,
+      "concussion_risk": 44,
+      "soft_tissue_risk": 37,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 541400,
+      "years_remaining": 3,
+      "year_signed": 2026,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "dc43e2a8-759c-5cac-9b78-d24c5522d760"
+    }
+  },
+  {
+    "id": "aa8d2fd8-c90",
+    "bio": {
+      "first_name": "Jordan",
+      "last_name": "Mitchell",
+      "position": "SF",
+      "secondary_position": "PF",
+      "height": 81,
+      "weight": 234,
+      "age": 32,
+      "years_in_league": 11,
+      "college": null,
+      "country": "Spain",
+      "draft_year": 2016,
+      "draft_round": 1,
+      "draft_pick": 30,
+      "jersey_number": 23,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 92,
+      "close_range": 90,
+      "mid_range": 88,
+      "three_point": 88,
+      "free_throw": 87,
+      "post_game": 74,
+      "draw_foul": 87,
+      "off_ball_movement": 88,
+      "ball_handling": 87,
+      "passing_vision": 84,
+      "passing_accuracy": 91,
+      "perimeter_defense": 78,
+      "interior_defense": 87,
+      "shot_blocking": 86,
+      "stealing": 90,
+      "defensive_iq": 77,
+      "defensive_consistency": 76,
+      "speed": 85,
+      "acceleration": 77,
+      "lateral_quickness": 79,
+      "vertical": 86,
+      "strength": 89,
+      "stamina": 84,
+      "basketball_iq": 88,
+      "offensive_iq": 85,
+      "rebounding": 86,
+      "offensive_rebounding": 76,
+      "hustle": 82,
+      "overall": 86,
+      "potential": 83,
+      "peak_age": 25
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.422,
+          "make_rate": 0.726
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.185,
+          "make_rate": 0.48
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.226,
+          "make_rate": 0.432
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.118,
+          "make_rate": 0.386
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.208,
+          "make_rate": 0.356
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.109,
+          "make_rate": 0.453
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 80,
+      "catch_and_shoot_frequency": 85,
+      "drive_frequency": 87,
+      "post_up_frequency": 65,
+      "iso_frequency": 88,
+      "pick_and_roll_ball_handler": 94,
+      "pick_and_roll_screener": 87,
+      "spot_up_frequency": 92,
+      "transition_frequency": 78,
+      "cut_frequency": 97,
+      "pass_out_of_drive_rate": 91,
+      "skip_pass_rate": 85,
+      "alley_oop_pass_rate": 84,
+      "gamble_for_steals": 99,
+      "help_defense_rate": 68,
+      "closeout_aggression": 80,
+      "box_out_rate": 80,
+      "usage_desire": 82,
+      "pace_preference": 88,
+      "foul_proneness": 47,
+      "shot_clock_tendency": 43,
+      "contested_shot_willingness": 75
+    },
+    "character": {
+      "leadership": 38,
+      "work_ethic": 44,
+      "clutch": 74,
+      "ego": 24,
+      "coachability": 47,
+      "temperament": 86,
+      "fan_favorite": 23,
+      "media_personality": 56,
+      "loyalty": 77,
+      "competitiveness": 82
+    },
+    "durability": {
+      "overall_durability": 90,
+      "ankle_health": 94,
+      "knee_health": 86,
+      "shoulder_health": 81,
+      "back_health": 93,
+      "wrist_hand_health": 89,
+      "foot_health": 84,
+      "concussion_risk": 9,
+      "soft_tissue_risk": 15,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 1032263,
+      "years_remaining": 2,
+      "year_signed": 2025,
+      "is_player_option": false,
+      "is_team_option": true,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "0604d91d-5bb0-5780-8017-459a745df4d1"
+    }
+  },
+  {
+    "id": "52a4cf73-86a",
+    "bio": {
+      "first_name": "Marcus",
+      "last_name": "Reed",
+      "position": "PG",
+      "secondary_position": null,
+      "height": 77,
+      "weight": 184,
+      "age": 35,
+      "years_in_league": 16,
+      "college": "Michigan",
+      "country": "USA",
+      "draft_year": 2011,
+      "draft_round": 1,
+      "draft_pick": 3,
+      "jersey_number": 2,
+      "hand": "left"
+    },
+    "ratings": {
+      "finishing": 86,
+      "close_range": 73,
+      "mid_range": 78,
+      "three_point": 76,
+      "free_throw": 81,
+      "post_game": 80,
+      "draw_foul": 88,
+      "off_ball_movement": 87,
+      "ball_handling": 96,
+      "passing_vision": 96,
+      "passing_accuracy": 75,
+      "perimeter_defense": 85,
+      "interior_defense": 76,
+      "shot_blocking": 64,
+      "stealing": 75,
+      "defensive_iq": 81,
+      "defensive_consistency": 84,
+      "speed": 85,
+      "acceleration": 83,
+      "lateral_quickness": 74,
+      "vertical": 74,
+      "strength": 66,
+      "stamina": 77,
+      "basketball_iq": 72,
+      "offensive_iq": 79,
+      "rebounding": 82,
+      "offensive_rebounding": 79,
+      "hustle": 73,
+      "overall": 85,
+      "potential": 80,
+      "peak_age": 27
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.401,
+          "make_rate": 0.708
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.16,
+          "make_rate": 0.446
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.206,
+          "make_rate": 0.417
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.106,
+          "make_rate": 0.371
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.187,
+          "make_rate": 0.341
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.116,
+          "make_rate": 0.464
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 68,
+      "catch_and_shoot_frequency": 86,
+      "drive_frequency": 82,
+      "post_up_frequency": 70,
+      "iso_frequency": 86,
+      "pick_and_roll_ball_handler": 95,
+      "pick_and_roll_screener": 76,
+      "spot_up_frequency": 78,
+      "transition_frequency": 81,
+      "cut_frequency": 91,
+      "pass_out_of_drive_rate": 88,
+      "skip_pass_rate": 94,
+      "alley_oop_pass_rate": 91,
+      "gamble_for_steals": 68,
+      "help_defense_rate": 81,
+      "closeout_aggression": 84,
+      "box_out_rate": 77,
+      "usage_desire": 99,
+      "pace_preference": 82,
+      "foul_proneness": 41,
+      "shot_clock_tendency": 42,
+      "contested_shot_willingness": 66
+    },
+    "character": {
+      "leadership": 78,
+      "work_ethic": 91,
+      "clutch": 30,
+      "ego": 85,
+      "coachability": 41,
+      "temperament": 49,
+      "fan_favorite": 77,
+      "media_personality": 80,
+      "loyalty": 27,
+      "competitiveness": 78
+    },
+    "durability": {
+      "overall_durability": 86,
+      "ankle_health": 95,
+      "knee_health": 81,
+      "shoulder_health": 94,
+      "back_health": 95,
+      "wrist_hand_health": 81,
+      "foot_health": 82,
+      "concussion_risk": 18,
+      "soft_tissue_risk": 17,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 1129078,
+      "years_remaining": 2,
+      "year_signed": 2026,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "f971e46d-d78f-5651-974a-b2d497717c62"
+    }
+  },
+  {
+    "id": "7099cabc-771",
+    "bio": {
+      "first_name": "Wendell",
+      "last_name": "Carter",
+      "position": "PF",
+      "secondary_position": "C",
+      "height": 80,
+      "weight": 234,
+      "age": 23,
+      "years_in_league": 4,
+      "college": "Iowa State",
+      "country": "USA",
+      "draft_year": 2023,
+      "draft_round": 1,
+      "draft_pick": 22,
+      "jersey_number": 17,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 92,
+      "close_range": 94,
+      "mid_range": 79,
+      "three_point": 78,
+      "free_throw": 85,
+      "post_game": 84,
+      "draw_foul": 84,
+      "off_ball_movement": 75,
+      "ball_handling": 72,
+      "passing_vision": 77,
+      "passing_accuracy": 89,
+      "perimeter_defense": 87,
+      "interior_defense": 81,
+      "shot_blocking": 86,
+      "stealing": 87,
+      "defensive_iq": 77,
+      "defensive_consistency": 75,
+      "speed": 83,
+      "acceleration": 77,
+      "lateral_quickness": 83,
+      "vertical": 82,
+      "strength": 86,
+      "stamina": 85,
+      "basketball_iq": 83,
+      "offensive_iq": 77,
+      "rebounding": 90,
+      "offensive_rebounding": 78,
+      "hustle": 77,
+      "overall": 84,
+      "potential": 83,
+      "peak_age": 28
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.422,
+          "make_rate": 0.726
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.191,
+          "make_rate": 0.488
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.208,
+          "make_rate": 0.418
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.108,
+          "make_rate": 0.374
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.19,
+          "make_rate": 0.344
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.121,
+          "make_rate": 0.471
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 86,
+      "catch_and_shoot_frequency": 79,
+      "drive_frequency": 86,
+      "post_up_frequency": 79,
+      "iso_frequency": 66,
+      "pick_and_roll_ball_handler": 70,
+      "pick_and_roll_screener": 94,
+      "spot_up_frequency": 76,
+      "transition_frequency": 76,
+      "cut_frequency": 77,
+      "pass_out_of_drive_rate": 75,
+      "skip_pass_rate": 80,
+      "alley_oop_pass_rate": 77,
+      "gamble_for_steals": 92,
+      "help_defense_rate": 78,
+      "closeout_aggression": 76,
+      "box_out_rate": 86,
+      "usage_desire": 77,
+      "pace_preference": 84,
+      "foul_proneness": 55,
+      "shot_clock_tendency": 42,
+      "contested_shot_willingness": 83
+    },
+    "character": {
+      "leadership": 42,
+      "work_ethic": 71,
+      "clutch": 93,
+      "ego": 26,
+      "coachability": 74,
+      "temperament": 58,
+      "fan_favorite": 55,
+      "media_personality": 80,
+      "loyalty": 29,
+      "competitiveness": 74
+    },
+    "durability": {
+      "overall_durability": 64,
+      "ankle_health": 62,
+      "knee_health": 68,
+      "shoulder_health": 66,
+      "back_health": 57,
+      "wrist_hand_health": 60,
+      "foot_health": 63,
+      "concussion_risk": 32,
+      "soft_tissue_risk": 35,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 1303468,
+      "years_remaining": 4,
+      "year_signed": 2026,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "abdb42d4-2ba3-5957-a1cd-a32f995e706c"
+    }
+  },
+  {
+    "id": "fdfca52c-625",
+    "bio": {
+      "first_name": "Jalen",
+      "last_name": "Walker",
+      "position": "PG",
+      "secondary_position": null,
+      "height": 75,
+      "weight": 191,
+      "age": 22,
+      "years_in_league": 2,
+      "college": "Texas",
+      "country": "USA",
+      "draft_year": 2025,
+      "draft_round": 1,
+      "draft_pick": 3,
+      "jersey_number": 2,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 74,
+      "close_range": 85,
+      "mid_range": 72,
+      "three_point": 85,
+      "free_throw": 85,
+      "post_game": 79,
+      "draw_foul": 72,
+      "off_ball_movement": 77,
+      "ball_handling": 96,
+      "passing_vision": 80,
+      "passing_accuracy": 80,
+      "perimeter_defense": 73,
+      "interior_defense": 68,
+      "shot_blocking": 63,
+      "stealing": 79,
+      "defensive_iq": 77,
+      "defensive_consistency": 71,
+      "speed": 86,
+      "acceleration": 72,
+      "lateral_quickness": 86,
+      "vertical": 79,
+      "strength": 67,
+      "stamina": 76,
+      "basketball_iq": 87,
+      "offensive_iq": 78,
+      "rebounding": 80,
+      "offensive_rebounding": 72,
+      "hustle": 82,
+      "overall": 83,
+      "potential": 83,
+      "peak_age": 29
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.359,
+          "make_rate": 0.672
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.177,
+          "make_rate": 0.47
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.194,
+          "make_rate": 0.408
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.115,
+          "make_rate": 0.382
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.203,
+          "make_rate": 0.352
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.115,
+          "make_rate": 0.462
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 74,
+      "catch_and_shoot_frequency": 89,
+      "drive_frequency": 66,
+      "post_up_frequency": 76,
+      "iso_frequency": 87,
+      "pick_and_roll_ball_handler": 78,
+      "pick_and_roll_screener": 82,
+      "spot_up_frequency": 87,
+      "transition_frequency": 93,
+      "cut_frequency": 69,
+      "pass_out_of_drive_rate": 84,
+      "skip_pass_rate": 84,
+      "alley_oop_pass_rate": 65,
+      "gamble_for_steals": 74,
+      "help_defense_rate": 74,
+      "closeout_aggression": 76,
+      "box_out_rate": 87,
+      "usage_desire": 81,
+      "pace_preference": 92,
+      "foul_proneness": 50,
+      "shot_clock_tendency": 52,
+      "contested_shot_willingness": 71
+    },
+    "character": {
+      "leadership": 46,
+      "work_ethic": 94,
+      "clutch": 36,
+      "ego": 22,
+      "coachability": 74,
+      "temperament": 39,
+      "fan_favorite": 36,
+      "media_personality": 86,
+      "loyalty": 56,
+      "competitiveness": 95
+    },
+    "durability": {
+      "overall_durability": 64,
+      "ankle_health": 64,
+      "knee_health": 59,
+      "shoulder_health": 69,
+      "back_health": 71,
+      "wrist_hand_health": 57,
+      "foot_health": 58,
+      "concussion_risk": 31,
+      "soft_tissue_risk": 37,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 1063951,
+      "years_remaining": 4,
+      "year_signed": 2023,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "d0e64e4e-d77d-5e38-9dab-282f03728e43"
+    }
+  },
+  {
+    "id": "ba654bcf-765",
+    "bio": {
+      "first_name": "Isaiah",
+      "last_name": "Russell",
+      "position": "PG",
+      "secondary_position": "SG",
+      "height": 76,
+      "weight": 182,
+      "age": 26,
+      "years_in_league": 5,
+      "college": null,
+      "country": "Australia",
+      "draft_year": 2022,
+      "draft_round": 1,
+      "draft_pick": 14,
+      "jersey_number": 34,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 70,
+      "close_range": 80,
+      "mid_range": 76,
+      "three_point": 73,
+      "free_throw": 80,
+      "post_game": 65,
+      "draw_foul": 78,
+      "off_ball_movement": 85,
+      "ball_handling": 96,
+      "passing_vision": 91,
+      "passing_accuracy": 80,
+      "perimeter_defense": 77,
+      "interior_defense": 63,
+      "shot_blocking": 71,
+      "stealing": 85,
+      "defensive_iq": 85,
+      "defensive_consistency": 83,
+      "speed": 77,
+      "acceleration": 80,
+      "lateral_quickness": 81,
+      "vertical": 76,
+      "strength": 72,
+      "stamina": 86,
+      "basketball_iq": 81,
+      "offensive_iq": 82,
+      "rebounding": 66,
+      "offensive_rebounding": 70,
+      "hustle": 83,
+      "overall": 83,
+      "potential": 87,
+      "peak_age": 30
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.345,
+          "make_rate": 0.66
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.17,
+          "make_rate": 0.46
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.202,
+          "make_rate": 0.414
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.103,
+          "make_rate": 0.368
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.181,
+          "make_rate": 0.338
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.098,
+          "make_rate": 0.437
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 67,
+      "catch_and_shoot_frequency": 83,
+      "drive_frequency": 79,
+      "post_up_frequency": 56,
+      "iso_frequency": 99,
+      "pick_and_roll_ball_handler": 87,
+      "pick_and_roll_screener": 70,
+      "spot_up_frequency": 75,
+      "transition_frequency": 70,
+      "cut_frequency": 95,
+      "pass_out_of_drive_rate": 92,
+      "skip_pass_rate": 79,
+      "alley_oop_pass_rate": 79,
+      "gamble_for_steals": 78,
+      "help_defense_rate": 82,
+      "closeout_aggression": 84,
+      "box_out_rate": 63,
+      "usage_desire": 93,
+      "pace_preference": 73,
+      "foul_proneness": 48,
+      "shot_clock_tendency": 46,
+      "contested_shot_willingness": 73
+    },
+    "character": {
+      "leadership": 26,
+      "work_ethic": 50,
+      "clutch": 29,
+      "ego": 87,
+      "coachability": 90,
+      "temperament": 74,
+      "fan_favorite": 42,
+      "media_personality": 70,
+      "loyalty": 41,
+      "competitiveness": 60
+    },
+    "durability": {
+      "overall_durability": 93,
+      "ankle_health": 92,
+      "knee_health": 88,
+      "shoulder_health": 92,
+      "back_health": 96,
+      "wrist_hand_health": 92,
+      "foot_health": 96,
+      "concussion_risk": 8,
+      "soft_tissue_risk": 10,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 516676,
+      "years_remaining": 1,
+      "year_signed": 2026,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "00c7f93a-4687-5690-9880-59ba55447052"
+    }
+  },
+  {
+    "id": "652903d5-712",
+    "bio": {
+      "first_name": "Xavier",
+      "last_name": "Wright",
+      "position": "C",
+      "secondary_position": "PF",
+      "height": 85,
+      "weight": 272,
+      "age": 23,
+      "years_in_league": 3,
+      "college": null,
+      "country": "Cameroon",
+      "draft_year": 2024,
+      "draft_round": 2,
+      "draft_pick": 14,
+      "jersey_number": 45,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 71,
+      "close_range": 77,
+      "mid_range": 76,
+      "three_point": 65,
+      "free_throw": 73,
+      "post_game": 85,
+      "draw_foul": 77,
+      "off_ball_movement": 80,
+      "ball_handling": 69,
+      "passing_vision": 63,
+      "passing_accuracy": 72,
+      "perimeter_defense": 76,
+      "interior_defense": 82,
+      "shot_blocking": 89,
+      "stealing": 77,
+      "defensive_iq": 75,
+      "defensive_consistency": 81,
+      "speed": 70,
+      "acceleration": 70,
+      "lateral_quickness": 77,
+      "vertical": 76,
+      "strength": 90,
+      "stamina": 82,
+      "basketball_iq": 73,
+      "offensive_iq": 73,
+      "rebounding": 83,
+      "offensive_rebounding": 81,
+      "hustle": 76,
+      "overall": 81,
+      "potential": 85,
+      "peak_age": 26
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.348,
+          "make_rate": 0.663
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.165,
+          "make_rate": 0.454
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.202,
+          "make_rate": 0.414
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.095,
+          "make_rate": 0.358
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.167,
+          "make_rate": 0.328
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.122,
+          "make_rate": 0.473
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 79,
+      "catch_and_shoot_frequency": 67,
+      "drive_frequency": 67,
+      "post_up_frequency": 75,
+      "iso_frequency": 68,
+      "pick_and_roll_ball_handler": 64,
+      "pick_and_roll_screener": 86,
+      "spot_up_frequency": 58,
+      "transition_frequency": 77,
+      "cut_frequency": 72,
+      "pass_out_of_drive_rate": 56,
+      "skip_pass_rate": 64,
+      "alley_oop_pass_rate": 50,
+      "gamble_for_steals": 73,
+      "help_defense_rate": 68,
+      "closeout_aggression": 77,
+      "box_out_rate": 90,
+      "usage_desire": 65,
+      "pace_preference": 61,
+      "foul_proneness": 50,
+      "shot_clock_tendency": 49,
+      "contested_shot_willingness": 55
+    },
+    "character": {
+      "leadership": 64,
+      "work_ethic": 49,
+      "clutch": 72,
+      "ego": 47,
+      "coachability": 53,
+      "temperament": 43,
+      "fan_favorite": 73,
+      "media_personality": 84,
+      "loyalty": 86,
+      "competitiveness": 37
+    },
+    "durability": {
+      "overall_durability": 84,
+      "ankle_health": 90,
+      "knee_health": 83,
+      "shoulder_health": 82,
+      "back_health": 80,
+      "wrist_hand_health": 94,
+      "foot_health": 76,
+      "concussion_risk": 18,
+      "soft_tissue_risk": 14,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 1023734,
+      "years_remaining": 4,
+      "year_signed": 2024,
+      "is_player_option": true,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "d8527c14-d9ef-5476-86e4-11927ac2f611"
+    }
+  },
+  {
+    "id": "3938462b-87b",
+    "bio": {
+      "first_name": "Zion",
+      "last_name": "Taylor",
+      "position": "SG",
+      "secondary_position": null,
+      "height": 76,
+      "weight": 202,
+      "age": 31,
+      "years_in_league": 10,
+      "college": "Tennessee",
+      "country": "USA",
+      "draft_year": 2017,
+      "draft_round": 2,
+      "draft_pick": 7,
+      "jersey_number": 12,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 88,
+      "close_range": 85,
+      "mid_range": 78,
+      "three_point": 89,
+      "free_throw": 81,
+      "post_game": 64,
+      "draw_foul": 85,
+      "off_ball_movement": 77,
+      "ball_handling": 72,
+      "passing_vision": 81,
+      "passing_accuracy": 72,
+      "perimeter_defense": 74,
+      "interior_defense": 66,
+      "shot_blocking": 67,
+      "stealing": 85,
+      "defensive_iq": 80,
+      "defensive_consistency": 81,
+      "speed": 74,
+      "acceleration": 83,
+      "lateral_quickness": 70,
+      "vertical": 69,
+      "strength": 74,
+      "stamina": 73,
+      "basketball_iq": 75,
+      "offensive_iq": 81,
+      "rebounding": 77,
+      "offensive_rebounding": 79,
+      "hustle": 75,
+      "overall": 79,
+      "potential": 79,
+      "peak_age": 26
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.408,
+          "make_rate": 0.714
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.177,
+          "make_rate": 0.47
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.206,
+          "make_rate": 0.417
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.119,
+          "make_rate": 0.387
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.21,
+          "make_rate": 0.357
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.097,
+          "make_rate": 0.435
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 72,
+      "catch_and_shoot_frequency": 94,
+      "drive_frequency": 87,
+      "post_up_frequency": 66,
+      "iso_frequency": 72,
+      "pick_and_roll_ball_handler": 76,
+      "pick_and_roll_screener": 61,
+      "spot_up_frequency": 81,
+      "transition_frequency": 70,
+      "cut_frequency": 78,
+      "pass_out_of_drive_rate": 74,
+      "skip_pass_rate": 67,
+      "alley_oop_pass_rate": 62,
+      "gamble_for_steals": 88,
+      "help_defense_rate": 76,
+      "closeout_aggression": 82,
+      "box_out_rate": 69,
+      "usage_desire": 85,
+      "pace_preference": 66,
+      "foul_proneness": 60,
+      "shot_clock_tendency": 43,
+      "contested_shot_willingness": 73
+    },
+    "character": {
+      "leadership": 59,
+      "work_ethic": 63,
+      "clutch": 55,
+      "ego": 66,
+      "coachability": 39,
+      "temperament": 83,
+      "fan_favorite": 63,
+      "media_personality": 90,
+      "loyalty": 71,
+      "competitiveness": 39
+    },
+    "durability": {
+      "overall_durability": 93,
+      "ankle_health": 99,
+      "knee_health": 99,
+      "shoulder_health": 96,
+      "back_health": 99,
+      "wrist_hand_health": 83,
+      "foot_health": 86,
+      "concussion_risk": 7,
+      "soft_tissue_risk": 6,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 393976,
+      "years_remaining": 4,
+      "year_signed": 2026,
+      "is_player_option": true,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "95f5a64e-5b76-5a2e-bec2-113683e5149e"
+    }
+  },
+  {
+    "id": "08a73470-3c2",
+    "bio": {
+      "first_name": "Jamal",
+      "last_name": "Washington",
+      "position": "C",
+      "secondary_position": null,
+      "height": 86,
+      "weight": 270,
+      "age": 27,
+      "years_in_league": 8,
+      "college": "Indiana",
+      "country": "USA",
+      "draft_year": 2019,
+      "draft_round": 2,
+      "draft_pick": 17,
+      "jersey_number": 27,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 71,
+      "close_range": 67,
+      "mid_range": 68,
+      "three_point": 61,
+      "free_throw": 68,
+      "post_game": 70,
+      "draw_foul": 64,
+      "off_ball_movement": 67,
+      "ball_handling": 68,
+      "passing_vision": 60,
+      "passing_accuracy": 73,
+      "perimeter_defense": 68,
+      "interior_defense": 86,
+      "shot_blocking": 87,
+      "stealing": 74,
+      "defensive_iq": 64,
+      "defensive_consistency": 72,
+      "speed": 63,
+      "acceleration": 65,
+      "lateral_quickness": 63,
+      "vertical": 69,
+      "strength": 85,
+      "stamina": 77,
+      "basketball_iq": 79,
+      "offensive_iq": 74,
+      "rebounding": 88,
+      "offensive_rebounding": 70,
+      "hustle": 67,
+      "overall": 79,
+      "potential": 79,
+      "peak_age": 28
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.348,
+          "make_rate": 0.663
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.151,
+          "make_rate": 0.434
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.186,
+          "make_rate": 0.402
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.091,
+          "make_rate": 0.353
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.16,
+          "make_rate": 0.323
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.104,
+          "make_rate": 0.446
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 60,
+      "catch_and_shoot_frequency": 51,
+      "drive_frequency": 62,
+      "post_up_frequency": 63,
+      "iso_frequency": 72,
+      "pick_and_roll_ball_handler": 57,
+      "pick_and_roll_screener": 79,
+      "spot_up_frequency": 68,
+      "transition_frequency": 62,
+      "cut_frequency": 70,
+      "pass_out_of_drive_rate": 66,
+      "skip_pass_rate": 51,
+      "alley_oop_pass_rate": 51,
+      "gamble_for_steals": 65,
+      "help_defense_rate": 63,
+      "closeout_aggression": 53,
+      "box_out_rate": 91,
+      "usage_desire": 61,
+      "pace_preference": 69,
+      "foul_proneness": 54,
+      "shot_clock_tendency": 44,
+      "contested_shot_willingness": 60
+    },
+    "character": {
+      "leadership": 41,
+      "work_ethic": 68,
+      "clutch": 28,
+      "ego": 73,
+      "coachability": 83,
+      "temperament": 60,
+      "fan_favorite": 21,
+      "media_personality": 49,
+      "loyalty": 88,
+      "competitiveness": 72
+    },
+    "durability": {
+      "overall_durability": 89,
+      "ankle_health": 87,
+      "knee_health": 89,
+      "shoulder_health": 85,
+      "back_health": 96,
+      "wrist_hand_health": 81,
+      "foot_health": 79,
+      "concussion_risk": 11,
+      "soft_tissue_risk": 15,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 955211,
+      "years_remaining": 1,
+      "year_signed": 2026,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "dc43e2a8-759c-5cac-9b78-d24c5522d760"
+    }
+  },
+  {
+    "id": "4961e5e0-462",
+    "bio": {
+      "first_name": "Wendell",
+      "last_name": "Ward",
+      "position": "PF",
+      "secondary_position": null,
+      "height": 80,
+      "weight": 238,
+      "age": 30,
+      "years_in_league": 10,
+      "college": null,
+      "country": "Serbia",
+      "draft_year": 2017,
+      "draft_round": 2,
+      "draft_pick": 10,
+      "jersey_number": 29,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 77,
+      "close_range": 85,
+      "mid_range": 66,
+      "three_point": 73,
+      "free_throw": 74,
+      "post_game": 86,
+      "draw_foul": 67,
+      "off_ball_movement": 78,
+      "ball_handling": 71,
+      "passing_vision": 73,
+      "passing_accuracy": 82,
+      "perimeter_defense": 77,
+      "interior_defense": 83,
+      "shot_blocking": 70,
+      "stealing": 76,
+      "defensive_iq": 71,
+      "defensive_consistency": 74,
+      "speed": 73,
+      "acceleration": 79,
+      "lateral_quickness": 68,
+      "vertical": 82,
+      "strength": 84,
+      "stamina": 72,
+      "basketball_iq": 74,
+      "offensive_iq": 66,
+      "rebounding": 83,
+      "offensive_rebounding": 78,
+      "hustle": 68,
+      "overall": 78,
+      "potential": 78,
+      "peak_age": 27
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.369,
+          "make_rate": 0.681
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.177,
+          "make_rate": 0.47
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.182,
+          "make_rate": 0.399
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.103,
+          "make_rate": 0.368
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.181,
+          "make_rate": 0.338
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.123,
+          "make_rate": 0.475
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 71,
+      "catch_and_shoot_frequency": 74,
+      "drive_frequency": 67,
+      "post_up_frequency": 89,
+      "iso_frequency": 79,
+      "pick_and_roll_ball_handler": 71,
+      "pick_and_roll_screener": 79,
+      "spot_up_frequency": 76,
+      "transition_frequency": 83,
+      "cut_frequency": 80,
+      "pass_out_of_drive_rate": 83,
+      "skip_pass_rate": 77,
+      "alley_oop_pass_rate": 70,
+      "gamble_for_steals": 69,
+      "help_defense_rate": 81,
+      "closeout_aggression": 71,
+      "box_out_rate": 79,
+      "usage_desire": 71,
+      "pace_preference": 65,
+      "foul_proneness": 54,
+      "shot_clock_tendency": 59,
+      "contested_shot_willingness": 56
+    },
+    "character": {
+      "leadership": 59,
+      "work_ethic": 63,
+      "clutch": 28,
+      "ego": 82,
+      "coachability": 65,
+      "temperament": 88,
+      "fan_favorite": 77,
+      "media_personality": 76,
+      "loyalty": 74,
+      "competitiveness": 59
+    },
+    "durability": {
+      "overall_durability": 90,
+      "ankle_health": 96,
+      "knee_health": 99,
+      "shoulder_health": 92,
+      "back_health": 99,
+      "wrist_hand_health": 98,
+      "foot_health": 82,
+      "concussion_risk": 13,
+      "soft_tissue_risk": 5,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 983728,
+      "years_remaining": 3,
+      "year_signed": 2026,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "fb0efc1b-2525-53b4-9f5e-61346f33e66d"
+    }
+  },
+  {
+    "id": "9d07dfde-2d6",
+    "bio": {
+      "first_name": "Chris",
+      "last_name": "Collins",
+      "position": "SG",
+      "secondary_position": "PG",
+      "height": 78,
+      "weight": 212,
+      "age": 30,
+      "years_in_league": 10,
+      "college": "Gonzaga",
+      "country": "USA",
+      "draft_year": 2017,
+      "draft_round": 2,
+      "draft_pick": 5,
+      "jersey_number": 2,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 88,
+      "close_range": 73,
+      "mid_range": 80,
+      "three_point": 81,
+      "free_throw": 84,
+      "post_game": 70,
+      "draw_foul": 74,
+      "off_ball_movement": 72,
+      "ball_handling": 78,
+      "passing_vision": 68,
+      "passing_accuracy": 81,
+      "perimeter_defense": 71,
+      "interior_defense": 66,
+      "shot_blocking": 64,
+      "stealing": 82,
+      "defensive_iq": 79,
+      "defensive_consistency": 78,
+      "speed": 79,
+      "acceleration": 78,
+      "lateral_quickness": 77,
+      "vertical": 75,
+      "strength": 76,
+      "stamina": 77,
+      "basketball_iq": 83,
+      "offensive_iq": 76,
+      "rebounding": 73,
+      "offensive_rebounding": 79,
+      "hustle": 70,
+      "overall": 78,
+      "potential": 84,
+      "peak_age": 29
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.408,
+          "make_rate": 0.714
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.16,
+          "make_rate": 0.446
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.21,
+          "make_rate": 0.42
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.111,
+          "make_rate": 0.377
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.196,
+          "make_rate": 0.347
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.104,
+          "make_rate": 0.446
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 80,
+      "catch_and_shoot_frequency": 82,
+      "drive_frequency": 97,
+      "post_up_frequency": 80,
+      "iso_frequency": 74,
+      "pick_and_roll_ball_handler": 82,
+      "pick_and_roll_screener": 66,
+      "spot_up_frequency": 90,
+      "transition_frequency": 86,
+      "cut_frequency": 64,
+      "pass_out_of_drive_rate": 72,
+      "skip_pass_rate": 54,
+      "alley_oop_pass_rate": 54,
+      "gamble_for_steals": 85,
+      "help_defense_rate": 71,
+      "closeout_aggression": 89,
+      "box_out_rate": 69,
+      "usage_desire": 90,
+      "pace_preference": 83,
+      "foul_proneness": 46,
+      "shot_clock_tendency": 40,
+      "contested_shot_willingness": 85
+    },
+    "character": {
+      "leadership": 56,
+      "work_ethic": 92,
+      "clutch": 71,
+      "ego": 38,
+      "coachability": 82,
+      "temperament": 95,
+      "fan_favorite": 20,
+      "media_personality": 60,
+      "loyalty": 88,
+      "competitiveness": 87
+    },
+    "durability": {
+      "overall_durability": 58,
+      "ankle_health": 58,
+      "knee_health": 51,
+      "shoulder_health": 68,
+      "back_health": 65,
+      "wrist_hand_health": 54,
+      "foot_health": 63,
+      "concussion_risk": 43,
+      "soft_tissue_risk": 38,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 613499,
+      "years_remaining": 2,
+      "year_signed": 2026,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "d6157769-4ad2-52b1-9c3f-0690876c65df"
+    }
+  },
+  {
+    "id": "3b2e8853-ef3",
+    "bio": {
+      "first_name": "Chris",
+      "last_name": "Turner",
+      "position": "SF",
+      "secondary_position": "SG",
+      "height": 78,
+      "weight": 237,
+      "age": 21,
+      "years_in_league": 1,
+      "college": null,
+      "country": "Greece",
+      "draft_year": 2026,
+      "draft_round": 2,
+      "draft_pick": 17,
+      "jersey_number": 33,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 83,
+      "close_range": 69,
+      "mid_range": 76,
+      "three_point": 82,
+      "free_throw": 77,
+      "post_game": 66,
+      "draw_foul": 75,
+      "off_ball_movement": 82,
+      "ball_handling": 70,
+      "passing_vision": 79,
+      "passing_accuracy": 72,
+      "perimeter_defense": 73,
+      "interior_defense": 79,
+      "shot_blocking": 69,
+      "stealing": 76,
+      "defensive_iq": 72,
+      "defensive_consistency": 70,
+      "speed": 81,
+      "acceleration": 67,
+      "lateral_quickness": 81,
+      "vertical": 83,
+      "strength": 82,
+      "stamina": 76,
+      "basketball_iq": 77,
+      "offensive_iq": 75,
+      "rebounding": 73,
+      "offensive_rebounding": 75,
+      "hustle": 77,
+      "overall": 78,
+      "potential": 77,
+      "peak_age": 26
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.39,
+          "make_rate": 0.699
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.153,
+          "make_rate": 0.438
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.202,
+          "make_rate": 0.414
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.112,
+          "make_rate": 0.378
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.198,
+          "make_rate": 0.348
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.099,
+          "make_rate": 0.439
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 71,
+      "catch_and_shoot_frequency": 92,
+      "drive_frequency": 83,
+      "post_up_frequency": 56,
+      "iso_frequency": 80,
+      "pick_and_roll_ball_handler": 72,
+      "pick_and_roll_screener": 66,
+      "spot_up_frequency": 82,
+      "transition_frequency": 73,
+      "cut_frequency": 90,
+      "pass_out_of_drive_rate": 83,
+      "skip_pass_rate": 77,
+      "alley_oop_pass_rate": 60,
+      "gamble_for_steals": 74,
+      "help_defense_rate": 68,
+      "closeout_aggression": 75,
+      "box_out_rate": 69,
+      "usage_desire": 83,
+      "pace_preference": 73,
+      "foul_proneness": 54,
+      "shot_clock_tendency": 44,
+      "contested_shot_willingness": 66
+    },
+    "character": {
+      "leadership": 76,
+      "work_ethic": 59,
+      "clutch": 68,
+      "ego": 69,
+      "coachability": 95,
+      "temperament": 42,
+      "fan_favorite": 75,
+      "media_personality": 42,
+      "loyalty": 34,
+      "competitiveness": 37
+    },
+    "durability": {
+      "overall_durability": 71,
+      "ankle_health": 77,
+      "knee_health": 64,
+      "shoulder_health": 62,
+      "back_health": 68,
+      "wrist_hand_health": 71,
+      "foot_health": 66,
+      "concussion_risk": 28,
+      "soft_tissue_risk": 31,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 702851,
+      "years_remaining": 3,
+      "year_signed": 2026,
+      "is_player_option": true,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "6df39fe0-aa15-5fc6-bb41-e1535122b54b"
+    }
+  },
+  {
+    "id": "31cebfec-1a0",
+    "bio": {
+      "first_name": "Isaiah",
+      "last_name": "Taylor",
+      "position": "C",
+      "secondary_position": null,
+      "height": 87,
+      "weight": 251,
+      "age": 30,
+      "years_in_league": 9,
+      "college": "Purdue",
+      "country": "USA",
+      "draft_year": 2018,
+      "draft_round": 2,
+      "draft_pick": 10,
+      "jersey_number": 46,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 75,
+      "close_range": 77,
+      "mid_range": 63,
+      "three_point": 71,
+      "free_throw": 65,
+      "post_game": 75,
+      "draw_foul": 74,
+      "off_ball_movement": 70,
+      "ball_handling": 62,
+      "passing_vision": 65,
+      "passing_accuracy": 75,
+      "perimeter_defense": 71,
+      "interior_defense": 78,
+      "shot_blocking": 83,
+      "stealing": 77,
+      "defensive_iq": 64,
+      "defensive_consistency": 64,
+      "speed": 71,
+      "acceleration": 72,
+      "lateral_quickness": 66,
+      "vertical": 77,
+      "strength": 78,
+      "stamina": 74,
+      "basketball_iq": 76,
+      "offensive_iq": 72,
+      "rebounding": 89,
+      "offensive_rebounding": 74,
+      "hustle": 67,
+      "overall": 78,
+      "potential": 74,
+      "peak_age": 30
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.362,
+          "make_rate": 0.675
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.165,
+          "make_rate": 0.454
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.176,
+          "make_rate": 0.394
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.101,
+          "make_rate": 0.365
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.178,
+          "make_rate": 0.335
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.11,
+          "make_rate": 0.455
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 69,
+      "catch_and_shoot_frequency": 64,
+      "drive_frequency": 81,
+      "post_up_frequency": 82,
+      "iso_frequency": 54,
+      "pick_and_roll_ball_handler": 57,
+      "pick_and_roll_screener": 72,
+      "spot_up_frequency": 74,
+      "transition_frequency": 69,
+      "cut_frequency": 62,
+      "pass_out_of_drive_rate": 74,
+      "skip_pass_rate": 65,
+      "alley_oop_pass_rate": 47,
+      "gamble_for_steals": 70,
+      "help_defense_rate": 54,
+      "closeout_aggression": 57,
+      "box_out_rate": 89,
+      "usage_desire": 62,
+      "pace_preference": 69,
+      "foul_proneness": 58,
+      "shot_clock_tendency": 40,
+      "contested_shot_willingness": 53
+    },
+    "character": {
+      "leadership": 84,
+      "work_ethic": 76,
+      "clutch": 40,
+      "ego": 53,
+      "coachability": 49,
+      "temperament": 61,
+      "fan_favorite": 23,
+      "media_personality": 42,
+      "loyalty": 61,
+      "competitiveness": 46
+    },
+    "durability": {
+      "overall_durability": 55,
+      "ankle_health": 62,
+      "knee_health": 45,
+      "shoulder_health": 54,
+      "back_health": 46,
+      "wrist_hand_health": 55,
+      "foot_health": 60,
+      "concussion_risk": 44,
+      "soft_tissue_risk": 44,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 1115070,
+      "years_remaining": 4,
+      "year_signed": 2026,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "d0e64e4e-d77d-5e38-9dab-282f03728e43"
+    }
+  },
+  {
+    "id": "ff94c3af-1f2",
+    "bio": {
+      "first_name": "Jabari",
+      "last_name": "Turner",
+      "position": "SF",
+      "secondary_position": null,
+      "height": 79,
+      "weight": 221,
+      "age": 34,
+      "years_in_league": 13,
+      "college": null,
+      "country": "Canada",
+      "draft_year": 2014,
+      "draft_round": 2,
+      "draft_pick": 20,
+      "jersey_number": 24,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 86,
+      "close_range": 82,
+      "mid_range": 73,
+      "three_point": 68,
+      "free_throw": 80,
+      "post_game": 75,
+      "draw_foul": 76,
+      "off_ball_movement": 77,
+      "ball_handling": 80,
+      "passing_vision": 77,
+      "passing_accuracy": 69,
+      "perimeter_defense": 77,
+      "interior_defense": 82,
+      "shot_blocking": 70,
+      "stealing": 68,
+      "defensive_iq": 78,
+      "defensive_consistency": 81,
+      "speed": 75,
+      "acceleration": 72,
+      "lateral_quickness": 81,
+      "vertical": 80,
+      "strength": 68,
+      "stamina": 83,
+      "basketball_iq": 78,
+      "offensive_iq": 80,
+      "rebounding": 86,
+      "offensive_rebounding": 80,
+      "hustle": 79,
+      "overall": 77,
+      "potential": 76,
+      "peak_age": 28
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.401,
+          "make_rate": 0.708
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.173,
+          "make_rate": 0.464
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.196,
+          "make_rate": 0.409
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.098,
+          "make_rate": 0.362
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.172,
+          "make_rate": 0.332
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.11,
+          "make_rate": 0.455
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 72,
+      "catch_and_shoot_frequency": 75,
+      "drive_frequency": 77,
+      "post_up_frequency": 80,
+      "iso_frequency": 87,
+      "pick_and_roll_ball_handler": 84,
+      "pick_and_roll_screener": 75,
+      "spot_up_frequency": 59,
+      "transition_frequency": 72,
+      "cut_frequency": 85,
+      "pass_out_of_drive_rate": 80,
+      "skip_pass_rate": 67,
+      "alley_oop_pass_rate": 62,
+      "gamble_for_steals": 59,
+      "help_defense_rate": 86,
+      "closeout_aggression": 86,
+      "box_out_rate": 93,
+      "usage_desire": 87,
+      "pace_preference": 78,
+      "foul_proneness": 58,
+      "shot_clock_tendency": 50,
+      "contested_shot_willingness": 62
+    },
+    "character": {
+      "leadership": 88,
+      "work_ethic": 46,
+      "clutch": 39,
+      "ego": 20,
+      "coachability": 33,
+      "temperament": 93,
+      "fan_favorite": 72,
+      "media_personality": 22,
+      "loyalty": 28,
+      "competitiveness": 57
+    },
+    "durability": {
+      "overall_durability": 87,
+      "ankle_health": 81,
+      "knee_health": 82,
+      "shoulder_health": 77,
+      "back_health": 92,
+      "wrist_hand_health": 77,
+      "foot_health": 79,
+      "concussion_risk": 18,
+      "soft_tissue_risk": 14,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 407123,
+      "years_remaining": 3,
+      "year_signed": 2025,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "311c164c-75f8-5eda-a34d-75c9195b649c"
+    }
+  },
+  {
+    "id": "2b80b35a-943",
+    "bio": {
+      "first_name": "Ayo",
+      "last_name": "Price",
+      "position": "SF",
+      "secondary_position": "SG",
+      "height": 80,
+      "weight": 228,
+      "age": 27,
+      "years_in_league": 8,
+      "college": null,
+      "country": "Spain",
+      "draft_year": 2019,
+      "draft_round": 2,
+      "draft_pick": 18,
+      "jersey_number": 12,
+      "hand": "left"
+    },
+    "ratings": {
+      "finishing": 82,
+      "close_range": 76,
+      "mid_range": 82,
+      "three_point": 71,
+      "free_throw": 84,
+      "post_game": 67,
+      "draw_foul": 82,
+      "off_ball_movement": 79,
+      "ball_handling": 80,
+      "passing_vision": 82,
+      "passing_accuracy": 71,
+      "perimeter_defense": 85,
+      "interior_defense": 72,
+      "shot_blocking": 73,
+      "stealing": 80,
+      "defensive_iq": 80,
+      "defensive_consistency": 77,
+      "speed": 70,
+      "acceleration": 73,
+      "lateral_quickness": 72,
+      "vertical": 68,
+      "strength": 73,
+      "stamina": 84,
+      "basketball_iq": 76,
+      "offensive_iq": 78,
+      "rebounding": 74,
+      "offensive_rebounding": 78,
+      "hustle": 68,
+      "overall": 77,
+      "potential": 77,
+      "peak_age": 30
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.387,
+          "make_rate": 0.696
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.164,
+          "make_rate": 0.452
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.214,
+          "make_rate": 0.423
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.101,
+          "make_rate": 0.365
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.178,
+          "make_rate": 0.335
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.1,
+          "make_rate": 0.441
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 83,
+      "catch_and_shoot_frequency": 81,
+      "drive_frequency": 86,
+      "post_up_frequency": 76,
+      "iso_frequency": 84,
+      "pick_and_roll_ball_handler": 88,
+      "pick_and_roll_screener": 62,
+      "spot_up_frequency": 76,
+      "transition_frequency": 72,
+      "cut_frequency": 85,
+      "pass_out_of_drive_rate": 88,
+      "skip_pass_rate": 82,
+      "alley_oop_pass_rate": 78,
+      "gamble_for_steals": 78,
+      "help_defense_rate": 88,
+      "closeout_aggression": 83,
+      "box_out_rate": 82,
+      "usage_desire": 83,
+      "pace_preference": 63,
+      "foul_proneness": 55,
+      "shot_clock_tendency": 59,
+      "contested_shot_willingness": 75
+    },
+    "character": {
+      "leadership": 94,
+      "work_ethic": 79,
+      "clutch": 65,
+      "ego": 82,
+      "coachability": 73,
+      "temperament": 82,
+      "fan_favorite": 74,
+      "media_personality": 21,
+      "loyalty": 72,
+      "competitiveness": 81
+    },
+    "durability": {
+      "overall_durability": 73,
+      "ankle_health": 83,
+      "knee_health": 79,
+      "shoulder_health": 69,
+      "back_health": 83,
+      "wrist_hand_health": 76,
+      "foot_health": 78,
+      "concussion_risk": 22,
+      "soft_tissue_risk": 30,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 1013986,
+      "years_remaining": 4,
+      "year_signed": 2024,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "e59cc547-ea9b-5492-b0e0-7336e8a5f6ed"
+    }
+  },
+  {
+    "id": "42e473ce-981",
+    "bio": {
+      "first_name": "James",
+      "last_name": "Campbell",
+      "position": "SG",
+      "secondary_position": "SF",
+      "height": 77,
+      "weight": 213,
+      "age": 33,
+      "years_in_league": 13,
+      "college": null,
+      "country": "Greece",
+      "draft_year": 2014,
+      "draft_round": 2,
+      "draft_pick": 6,
+      "jersey_number": 19,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 75,
+      "close_range": 80,
+      "mid_range": 73,
+      "three_point": 74,
+      "free_throw": 69,
+      "post_game": 65,
+      "draw_foul": 68,
+      "off_ball_movement": 76,
+      "ball_handling": 79,
+      "passing_vision": 79,
+      "passing_accuracy": 72,
+      "perimeter_defense": 81,
+      "interior_defense": 75,
+      "shot_blocking": 65,
+      "stealing": 80,
+      "defensive_iq": 81,
+      "defensive_consistency": 80,
+      "speed": 83,
+      "acceleration": 80,
+      "lateral_quickness": 82,
+      "vertical": 69,
+      "strength": 79,
+      "stamina": 82,
+      "basketball_iq": 73,
+      "offensive_iq": 69,
+      "rebounding": 76,
+      "offensive_rebounding": 75,
+      "hustle": 70,
+      "overall": 77,
+      "potential": 84,
+      "peak_age": 29
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.362,
+          "make_rate": 0.675
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.17,
+          "make_rate": 0.46
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.196,
+          "make_rate": 0.409
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.104,
+          "make_rate": 0.369
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.183,
+          "make_rate": 0.339
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.098,
+          "make_rate": 0.437
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 71,
+      "catch_and_shoot_frequency": 64,
+      "drive_frequency": 84,
+      "post_up_frequency": 74,
+      "iso_frequency": 75,
+      "pick_and_roll_ball_handler": 84,
+      "pick_and_roll_screener": 78,
+      "spot_up_frequency": 78,
+      "transition_frequency": 82,
+      "cut_frequency": 85,
+      "pass_out_of_drive_rate": 81,
+      "skip_pass_rate": 69,
+      "alley_oop_pass_rate": 63,
+      "gamble_for_steals": 79,
+      "help_defense_rate": 82,
+      "closeout_aggression": 92,
+      "box_out_rate": 85,
+      "usage_desire": 67,
+      "pace_preference": 74,
+      "foul_proneness": 48,
+      "shot_clock_tendency": 54,
+      "contested_shot_willingness": 61
+    },
+    "character": {
+      "leadership": 95,
+      "work_ethic": 74,
+      "clutch": 95,
+      "ego": 23,
+      "coachability": 93,
+      "temperament": 50,
+      "fan_favorite": 72,
+      "media_personality": 64,
+      "loyalty": 70,
+      "competitiveness": 39
+    },
+    "durability": {
+      "overall_durability": 74,
+      "ankle_health": 70,
+      "knee_health": 83,
+      "shoulder_health": 79,
+      "back_health": 72,
+      "wrist_hand_health": 73,
+      "foot_health": 64,
+      "concussion_risk": 23,
+      "soft_tissue_risk": 26,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 335183,
+      "years_remaining": 4,
+      "year_signed": 2026,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "1351310f-2614-5bcd-9f50-42ef03946147"
+    }
+  },
+  {
+    "id": "0a8e272f-08e",
+    "bio": {
+      "first_name": "Brandon",
+      "last_name": "Russell",
+      "position": "C",
+      "secondary_position": null,
+      "height": 84,
+      "weight": 268,
+      "age": 29,
+      "years_in_league": 8,
+      "college": null,
+      "country": "Nigeria",
+      "draft_year": 2019,
+      "draft_round": 2,
+      "draft_pick": 14,
+      "jersey_number": 34,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 68,
+      "close_range": 70,
+      "mid_range": 64,
+      "three_point": 74,
+      "free_throw": 67,
+      "post_game": 71,
+      "draw_foul": 68,
+      "off_ball_movement": 70,
+      "ball_handling": 58,
+      "passing_vision": 60,
+      "passing_accuracy": 70,
+      "perimeter_defense": 61,
+      "interior_defense": 85,
+      "shot_blocking": 83,
+      "stealing": 72,
+      "defensive_iq": 79,
+      "defensive_consistency": 79,
+      "speed": 61,
+      "acceleration": 68,
+      "lateral_quickness": 71,
+      "vertical": 79,
+      "strength": 85,
+      "stamina": 69,
+      "basketball_iq": 79,
+      "offensive_iq": 69,
+      "rebounding": 75,
+      "offensive_rebounding": 72,
+      "hustle": 75,
+      "overall": 77,
+      "potential": 78,
+      "peak_age": 26
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.338,
+          "make_rate": 0.654
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.155,
+          "make_rate": 0.44
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.178,
+          "make_rate": 0.396
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.104,
+          "make_rate": 0.369
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.183,
+          "make_rate": 0.339
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.105,
+          "make_rate": 0.448
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 56,
+      "catch_and_shoot_frequency": 76,
+      "drive_frequency": 61,
+      "post_up_frequency": 77,
+      "iso_frequency": 65,
+      "pick_and_roll_ball_handler": 52,
+      "pick_and_roll_screener": 71,
+      "spot_up_frequency": 73,
+      "transition_frequency": 57,
+      "cut_frequency": 66,
+      "pass_out_of_drive_rate": 64,
+      "skip_pass_rate": 57,
+      "alley_oop_pass_rate": 40,
+      "gamble_for_steals": 63,
+      "help_defense_rate": 71,
+      "closeout_aggression": 65,
+      "box_out_rate": 67,
+      "usage_desire": 58,
+      "pace_preference": 71,
+      "foul_proneness": 41,
+      "shot_clock_tendency": 52,
+      "contested_shot_willingness": 66
+    },
+    "character": {
+      "leadership": 79,
+      "work_ethic": 49,
+      "clutch": 43,
+      "ego": 21,
+      "coachability": 71,
+      "temperament": 72,
+      "fan_favorite": 49,
+      "media_personality": 39,
+      "loyalty": 95,
+      "competitiveness": 51
+    },
+    "durability": {
+      "overall_durability": 76,
+      "ankle_health": 66,
+      "knee_health": 81,
+      "shoulder_health": 67,
+      "back_health": 68,
+      "wrist_hand_health": 74,
+      "foot_health": 79,
+      "concussion_risk": 24,
+      "soft_tissue_risk": 26,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 226892,
+      "years_remaining": 2,
+      "year_signed": 2025,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "03addb95-7f35-5c89-ab00-f68293b2eeac"
+    }
+  },
+  {
+    "id": "cb6a1993-f1e",
+    "bio": {
+      "first_name": "Saddiq",
+      "last_name": "Butler",
+      "position": "SF",
+      "secondary_position": "PF",
+      "height": 78,
+      "weight": 217,
+      "age": 29,
+      "years_in_league": 9,
+      "college": "Stanford",
+      "country": "USA",
+      "draft_year": 2018,
+      "draft_round": 2,
+      "draft_pick": 6,
+      "jersey_number": 48,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 82,
+      "close_range": 67,
+      "mid_range": 81,
+      "three_point": 77,
+      "free_throw": 75,
+      "post_game": 74,
+      "draw_foul": 67,
+      "off_ball_movement": 66,
+      "ball_handling": 80,
+      "passing_vision": 74,
+      "passing_accuracy": 82,
+      "perimeter_defense": 78,
+      "interior_defense": 69,
+      "shot_blocking": 72,
+      "stealing": 69,
+      "defensive_iq": 66,
+      "defensive_consistency": 69,
+      "speed": 72,
+      "acceleration": 73,
+      "lateral_quickness": 68,
+      "vertical": 77,
+      "strength": 79,
+      "stamina": 67,
+      "basketball_iq": 74,
+      "offensive_iq": 66,
+      "rebounding": 74,
+      "offensive_rebounding": 80,
+      "hustle": 82,
+      "overall": 76,
+      "potential": 76,
+      "peak_age": 29
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.387,
+          "make_rate": 0.696
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.151,
+          "make_rate": 0.434
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.212,
+          "make_rate": 0.421
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.107,
+          "make_rate": 0.372
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.189,
+          "make_rate": 0.342
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.109,
+          "make_rate": 0.453
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 81,
+      "catch_and_shoot_frequency": 87,
+      "drive_frequency": 91,
+      "post_up_frequency": 77,
+      "iso_frequency": 72,
+      "pick_and_roll_ball_handler": 67,
+      "pick_and_roll_screener": 66,
+      "spot_up_frequency": 68,
+      "transition_frequency": 65,
+      "cut_frequency": 74,
+      "pass_out_of_drive_rate": 74,
+      "skip_pass_rate": 68,
+      "alley_oop_pass_rate": 62,
+      "gamble_for_steals": 68,
+      "help_defense_rate": 68,
+      "closeout_aggression": 61,
+      "box_out_rate": 75,
+      "usage_desire": 74,
+      "pace_preference": 73,
+      "foul_proneness": 55,
+      "shot_clock_tendency": 51,
+      "contested_shot_willingness": 71
+    },
+    "character": {
+      "leadership": 42,
+      "work_ethic": 43,
+      "clutch": 31,
+      "ego": 41,
+      "coachability": 74,
+      "temperament": 67,
+      "fan_favorite": 24,
+      "media_personality": 41,
+      "loyalty": 33,
+      "competitiveness": 99
+    },
+    "durability": {
+      "overall_durability": 94,
+      "ankle_health": 85,
+      "knee_health": 93,
+      "shoulder_health": 99,
+      "back_health": 99,
+      "wrist_hand_health": 94,
+      "foot_health": 91,
+      "concussion_risk": 5,
+      "soft_tissue_risk": 5,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 438374,
+      "years_remaining": 4,
+      "year_signed": 2025,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "de8bfc98-6fc6-5b93-af1c-6c7cc0d535e1"
+    }
+  },
+  {
+    "id": "8e6e7dcf-78b",
+    "bio": {
+      "first_name": "Brandon",
+      "last_name": "Lewis",
+      "position": "SF",
+      "secondary_position": null,
+      "height": 78,
+      "weight": 230,
+      "age": 34,
+      "years_in_league": 14,
+      "college": null,
+      "country": "Nigeria",
+      "draft_year": 2013,
+      "draft_round": 2,
+      "draft_pick": 12,
+      "jersey_number": 12,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 78,
+      "close_range": 68,
+      "mid_range": 75,
+      "three_point": 71,
+      "free_throw": 67,
+      "post_game": 67,
+      "draw_foul": 69,
+      "off_ball_movement": 81,
+      "ball_handling": 72,
+      "passing_vision": 71,
+      "passing_accuracy": 68,
+      "perimeter_defense": 75,
+      "interior_defense": 77,
+      "shot_blocking": 78,
+      "stealing": 77,
+      "defensive_iq": 68,
+      "defensive_consistency": 77,
+      "speed": 83,
+      "acceleration": 68,
+      "lateral_quickness": 82,
+      "vertical": 82,
+      "strength": 81,
+      "stamina": 83,
+      "basketball_iq": 77,
+      "offensive_iq": 76,
+      "rebounding": 80,
+      "offensive_rebounding": 82,
+      "hustle": 69,
+      "overall": 76,
+      "potential": 75,
+      "peak_age": 25
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.373,
+          "make_rate": 0.684
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.152,
+          "make_rate": 0.436
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.2,
+          "make_rate": 0.412
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.101,
+          "make_rate": 0.365
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.178,
+          "make_rate": 0.335
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.1,
+          "make_rate": 0.441
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 77,
+      "catch_and_shoot_frequency": 79,
+      "drive_frequency": 86,
+      "post_up_frequency": 62,
+      "iso_frequency": 81,
+      "pick_and_roll_ball_handler": 67,
+      "pick_and_roll_screener": 79,
+      "spot_up_frequency": 67,
+      "transition_frequency": 77,
+      "cut_frequency": 85,
+      "pass_out_of_drive_rate": 63,
+      "skip_pass_rate": 71,
+      "alley_oop_pass_rate": 59,
+      "gamble_for_steals": 77,
+      "help_defense_rate": 61,
+      "closeout_aggression": 73,
+      "box_out_rate": 76,
+      "usage_desire": 75,
+      "pace_preference": 76,
+      "foul_proneness": 43,
+      "shot_clock_tendency": 50,
+      "contested_shot_willingness": 76
+    },
+    "character": {
+      "leadership": 51,
+      "work_ethic": 98,
+      "clutch": 90,
+      "ego": 77,
+      "coachability": 54,
+      "temperament": 81,
+      "fan_favorite": 71,
+      "media_personality": 81,
+      "loyalty": 64,
+      "competitiveness": 96
+    },
+    "durability": {
+      "overall_durability": 59,
+      "ankle_health": 58,
+      "knee_health": 63,
+      "shoulder_health": 55,
+      "back_health": 53,
+      "wrist_hand_health": 56,
+      "foot_health": 51,
+      "concussion_risk": 38,
+      "soft_tissue_risk": 40,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 373211,
+      "years_remaining": 4,
+      "year_signed": 2023,
+      "is_player_option": true,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "413438ba-b3e0-5fd8-85f0-48a2a307905d"
+    }
+  },
+  {
+    "id": "ebe3dd9c-72e",
+    "bio": {
+      "first_name": "Wendell",
+      "last_name": "Lewis",
+      "position": "C",
+      "secondary_position": "PF",
+      "height": 84,
+      "weight": 247,
+      "age": 29,
+      "years_in_league": 9,
+      "college": null,
+      "country": "Serbia",
+      "draft_year": 2018,
+      "draft_round": 2,
+      "draft_pick": 9,
+      "jersey_number": 9,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 81,
+      "close_range": 72,
+      "mid_range": 67,
+      "three_point": 64,
+      "free_throw": 69,
+      "post_game": 81,
+      "draw_foul": 69,
+      "off_ball_movement": 64,
+      "ball_handling": 61,
+      "passing_vision": 72,
+      "passing_accuracy": 74,
+      "perimeter_defense": 66,
+      "interior_defense": 75,
+      "shot_blocking": 78,
+      "stealing": 64,
+      "defensive_iq": 72,
+      "defensive_consistency": 78,
+      "speed": 73,
+      "acceleration": 64,
+      "lateral_quickness": 64,
+      "vertical": 62,
+      "strength": 82,
+      "stamina": 69,
+      "basketball_iq": 77,
+      "offensive_iq": 77,
+      "rebounding": 75,
+      "offensive_rebounding": 64,
+      "hustle": 76,
+      "overall": 76,
+      "potential": 70,
+      "peak_age": 29
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.383,
+          "make_rate": 0.693
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.158,
+          "make_rate": 0.444
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.184,
+          "make_rate": 0.4
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.094,
+          "make_rate": 0.357
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.165,
+          "make_rate": 0.327
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.117,
+          "make_rate": 0.466
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 66,
+      "catch_and_shoot_frequency": 58,
+      "drive_frequency": 82,
+      "post_up_frequency": 83,
+      "iso_frequency": 59,
+      "pick_and_roll_ball_handler": 75,
+      "pick_and_roll_screener": 75,
+      "spot_up_frequency": 60,
+      "transition_frequency": 74,
+      "cut_frequency": 62,
+      "pass_out_of_drive_rate": 73,
+      "skip_pass_rate": 68,
+      "alley_oop_pass_rate": 72,
+      "gamble_for_steals": 67,
+      "help_defense_rate": 67,
+      "closeout_aggression": 62,
+      "box_out_rate": 79,
+      "usage_desire": 67,
+      "pace_preference": 69,
+      "foul_proneness": 54,
+      "shot_clock_tendency": 48,
+      "contested_shot_willingness": 60
+    },
+    "character": {
+      "leadership": 42,
+      "work_ethic": 89,
+      "clutch": 32,
+      "ego": 37,
+      "coachability": 58,
+      "temperament": 50,
+      "fan_favorite": 63,
+      "media_personality": 90,
+      "loyalty": 50,
+      "competitiveness": 77
+    },
+    "durability": {
+      "overall_durability": 62,
+      "ankle_health": 62,
+      "knee_health": 58,
+      "shoulder_health": 60,
+      "back_health": 69,
+      "wrist_hand_health": 72,
+      "foot_health": 56,
+      "concussion_risk": 41,
+      "soft_tissue_risk": 39,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 834313,
+      "years_remaining": 4,
+      "year_signed": 2024,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "f971e46d-d78f-5651-974a-b2d497717c62"
+    }
+  },
+  {
+    "id": "089bf12a-92f",
+    "bio": {
+      "first_name": "Keegan",
+      "last_name": "Thompson",
+      "position": "PF",
+      "secondary_position": null,
+      "height": 82,
+      "weight": 231,
+      "age": 22,
+      "years_in_league": 2,
+      "college": "Baylor",
+      "country": "USA",
+      "draft_year": 2025,
+      "draft_round": 2,
+      "draft_pick": 10,
+      "jersey_number": 17,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 82,
+      "close_range": 78,
+      "mid_range": 73,
+      "three_point": 69,
+      "free_throw": 73,
+      "post_game": 74,
+      "draw_foul": 80,
+      "off_ball_movement": 82,
+      "ball_handling": 75,
+      "passing_vision": 77,
+      "passing_accuracy": 72,
+      "perimeter_defense": 69,
+      "interior_defense": 80,
+      "shot_blocking": 69,
+      "stealing": 78,
+      "defensive_iq": 73,
+      "defensive_consistency": 76,
+      "speed": 73,
+      "acceleration": 81,
+      "lateral_quickness": 79,
+      "vertical": 81,
+      "strength": 76,
+      "stamina": 78,
+      "basketball_iq": 72,
+      "offensive_iq": 69,
+      "rebounding": 74,
+      "offensive_rebounding": 73,
+      "hustle": 73,
+      "overall": 75,
+      "potential": 77,
+      "peak_age": 25
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.387,
+          "make_rate": 0.696
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.167,
+          "make_rate": 0.456
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.196,
+          "make_rate": 0.409
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.099,
+          "make_rate": 0.363
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.174,
+          "make_rate": 0.333
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.109,
+          "make_rate": 0.453
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 67,
+      "catch_and_shoot_frequency": 72,
+      "drive_frequency": 84,
+      "post_up_frequency": 80,
+      "iso_frequency": 78,
+      "pick_and_roll_ball_handler": 84,
+      "pick_and_roll_screener": 69,
+      "spot_up_frequency": 64,
+      "transition_frequency": 77,
+      "cut_frequency": 74,
+      "pass_out_of_drive_rate": 74,
+      "skip_pass_rate": 78,
+      "alley_oop_pass_rate": 63,
+      "gamble_for_steals": 71,
+      "help_defense_rate": 68,
+      "closeout_aggression": 81,
+      "box_out_rate": 72,
+      "usage_desire": 83,
+      "pace_preference": 65,
+      "foul_proneness": 51,
+      "shot_clock_tendency": 40,
+      "contested_shot_willingness": 60
+    },
+    "character": {
+      "leadership": 72,
+      "work_ethic": 54,
+      "clutch": 48,
+      "ego": 27,
+      "coachability": 92,
+      "temperament": 67,
+      "fan_favorite": 41,
+      "media_personality": 63,
+      "loyalty": 74,
+      "competitiveness": 76
+    },
+    "durability": {
+      "overall_durability": 86,
+      "ankle_health": 94,
+      "knee_health": 92,
+      "shoulder_health": 82,
+      "back_health": 91,
+      "wrist_hand_health": 79,
+      "foot_health": 91,
+      "concussion_risk": 15,
+      "soft_tissue_risk": 12,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 572806,
+      "years_remaining": 2,
+      "year_signed": 2025,
+      "is_player_option": false,
+      "is_team_option": true,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "772c0a18-fcfb-5a8c-ac49-3a9ca70ee90c"
+    }
+  },
+  {
+    "id": "5848900b-1bf",
+    "bio": {
+      "first_name": "Ziaire",
+      "last_name": "Clark",
+      "position": "SF",
+      "secondary_position": "SG",
+      "height": 79,
+      "weight": 216,
+      "age": 33,
+      "years_in_league": 13,
+      "college": null,
+      "country": "Australia",
+      "draft_year": 2014,
+      "draft_round": 2,
+      "draft_pick": 11,
+      "jersey_number": 10,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 75,
+      "close_range": 69,
+      "mid_range": 77,
+      "three_point": 72,
+      "free_throw": 72,
+      "post_game": 74,
+      "draw_foul": 68,
+      "off_ball_movement": 82,
+      "ball_handling": 72,
+      "passing_vision": 82,
+      "passing_accuracy": 69,
+      "perimeter_defense": 77,
+      "interior_defense": 76,
+      "shot_blocking": 78,
+      "stealing": 75,
+      "defensive_iq": 75,
+      "defensive_consistency": 68,
+      "speed": 76,
+      "acceleration": 78,
+      "lateral_quickness": 78,
+      "vertical": 71,
+      "strength": 81,
+      "stamina": 68,
+      "basketball_iq": 70,
+      "offensive_iq": 77,
+      "rebounding": 72,
+      "offensive_rebounding": 66,
+      "hustle": 75,
+      "overall": 75,
+      "potential": 85,
+      "peak_age": 26
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.362,
+          "make_rate": 0.675
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.153,
+          "make_rate": 0.438
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.204,
+          "make_rate": 0.415
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.102,
+          "make_rate": 0.366
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.18,
+          "make_rate": 0.336
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.109,
+          "make_rate": 0.453
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 79,
+      "catch_and_shoot_frequency": 73,
+      "drive_frequency": 67,
+      "post_up_frequency": 66,
+      "iso_frequency": 74,
+      "pick_and_roll_ball_handler": 72,
+      "pick_and_roll_screener": 75,
+      "spot_up_frequency": 81,
+      "transition_frequency": 76,
+      "cut_frequency": 89,
+      "pass_out_of_drive_rate": 79,
+      "skip_pass_rate": 78,
+      "alley_oop_pass_rate": 81,
+      "gamble_for_steals": 66,
+      "help_defense_rate": 70,
+      "closeout_aggression": 80,
+      "box_out_rate": 64,
+      "usage_desire": 64,
+      "pace_preference": 77,
+      "foul_proneness": 44,
+      "shot_clock_tendency": 57,
+      "contested_shot_willingness": 71
+    },
+    "character": {
+      "leadership": 70,
+      "work_ethic": 74,
+      "clutch": 79,
+      "ego": 22,
+      "coachability": 71,
+      "temperament": 74,
+      "fan_favorite": 31,
+      "media_personality": 85,
+      "loyalty": 53,
+      "competitiveness": 41
+    },
+    "durability": {
+      "overall_durability": 56,
+      "ankle_health": 66,
+      "knee_health": 47,
+      "shoulder_health": 60,
+      "back_health": 48,
+      "wrist_hand_health": 55,
+      "foot_health": 58,
+      "concussion_risk": 44,
+      "soft_tissue_risk": 44,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 677918,
+      "years_remaining": 2,
+      "year_signed": 2026,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "b4a6cc87-82f0-5f96-8515-e528c6bff0ec"
+    }
+  },
+  {
+    "id": "7d75e5d0-1a5",
+    "bio": {
+      "first_name": "RJ",
+      "last_name": "White",
+      "position": "PF",
+      "secondary_position": "SF",
+      "height": 81,
+      "weight": 225,
+      "age": 20,
+      "years_in_league": 0,
+      "college": null,
+      "country": "Cameroon",
+      "draft_year": 2026,
+      "draft_round": 2,
+      "draft_pick": 29,
+      "jersey_number": 24,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 82,
+      "close_range": 82,
+      "mid_range": 72,
+      "three_point": 66,
+      "free_throw": 78,
+      "post_game": 77,
+      "draw_foul": 73,
+      "off_ball_movement": 75,
+      "ball_handling": 64,
+      "passing_vision": 76,
+      "passing_accuracy": 74,
+      "perimeter_defense": 72,
+      "interior_defense": 82,
+      "shot_blocking": 65,
+      "stealing": 73,
+      "defensive_iq": 71,
+      "defensive_consistency": 68,
+      "speed": 63,
+      "acceleration": 74,
+      "lateral_quickness": 68,
+      "vertical": 80,
+      "strength": 75,
+      "stamina": 77,
+      "basketball_iq": 67,
+      "offensive_iq": 73,
+      "rebounding": 75,
+      "offensive_rebounding": 70,
+      "hustle": 75,
+      "overall": 75,
+      "potential": 76,
+      "peak_age": 27
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.387,
+          "make_rate": 0.696
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.173,
+          "make_rate": 0.464
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.194,
+          "make_rate": 0.408
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.096,
+          "make_rate": 0.359
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.169,
+          "make_rate": 0.329
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.112,
+          "make_rate": 0.459
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 66,
+      "catch_and_shoot_frequency": 58,
+      "drive_frequency": 84,
+      "post_up_frequency": 87,
+      "iso_frequency": 64,
+      "pick_and_roll_ball_handler": 75,
+      "pick_and_roll_screener": 78,
+      "spot_up_frequency": 70,
+      "transition_frequency": 64,
+      "cut_frequency": 69,
+      "pass_out_of_drive_rate": 79,
+      "skip_pass_rate": 61,
+      "alley_oop_pass_rate": 67,
+      "gamble_for_steals": 80,
+      "help_defense_rate": 63,
+      "closeout_aggression": 73,
+      "box_out_rate": 81,
+      "usage_desire": 74,
+      "pace_preference": 70,
+      "foul_proneness": 58,
+      "shot_clock_tendency": 46,
+      "contested_shot_willingness": 70
+    },
+    "character": {
+      "leadership": 53,
+      "work_ethic": 55,
+      "clutch": 28,
+      "ego": 77,
+      "coachability": 90,
+      "temperament": 34,
+      "fan_favorite": 32,
+      "media_personality": 48,
+      "loyalty": 36,
+      "competitiveness": 92
+    },
+    "durability": {
+      "overall_durability": 76,
+      "ankle_health": 81,
+      "knee_health": 66,
+      "shoulder_health": 78,
+      "back_health": 67,
+      "wrist_hand_health": 69,
+      "foot_health": 78,
+      "concussion_risk": 28,
+      "soft_tissue_risk": 25,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 689359,
+      "years_remaining": 4,
+      "year_signed": 2024,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": true,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "60c62382-1d5a-59cb-ab40-076049ba4284"
+    }
+  },
+  {
+    "id": "4c4de106-69f",
+    "bio": {
+      "first_name": "Marcus",
+      "last_name": "Butler",
+      "position": "C",
+      "secondary_position": "PF",
+      "height": 83,
+      "weight": 250,
+      "age": 26,
+      "years_in_league": 7,
+      "college": "Virginia",
+      "country": "USA",
+      "draft_year": 2020,
+      "draft_round": 2,
+      "draft_pick": 22,
+      "jersey_number": 17,
+      "hand": "left"
+    },
+    "ratings": {
+      "finishing": 78,
+      "close_range": 76,
+      "mid_range": 62,
+      "three_point": 66,
+      "free_throw": 70,
+      "post_game": 75,
+      "draw_foul": 70,
+      "off_ball_movement": 71,
+      "ball_handling": 56,
+      "passing_vision": 67,
+      "passing_accuracy": 69,
+      "perimeter_defense": 61,
+      "interior_defense": 75,
+      "shot_blocking": 70,
+      "stealing": 65,
+      "defensive_iq": 71,
+      "defensive_consistency": 65,
+      "speed": 61,
+      "acceleration": 70,
+      "lateral_quickness": 68,
+      "vertical": 67,
+      "strength": 72,
+      "stamina": 71,
+      "basketball_iq": 70,
+      "offensive_iq": 72,
+      "rebounding": 84,
+      "offensive_rebounding": 72,
+      "hustle": 68,
+      "overall": 75,
+      "potential": 78,
+      "peak_age": 26
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.373,
+          "make_rate": 0.684
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.164,
+          "make_rate": 0.452
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.174,
+          "make_rate": 0.393
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.096,
+          "make_rate": 0.359
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.169,
+          "make_rate": 0.329
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.11,
+          "make_rate": 0.455
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 68,
+      "catch_and_shoot_frequency": 60,
+      "drive_frequency": 74,
+      "post_up_frequency": 85,
+      "iso_frequency": 51,
+      "pick_and_roll_ball_handler": 67,
+      "pick_and_roll_screener": 76,
+      "spot_up_frequency": 71,
+      "transition_frequency": 66,
+      "cut_frequency": 70,
+      "pass_out_of_drive_rate": 73,
+      "skip_pass_rate": 63,
+      "alley_oop_pass_rate": 48,
+      "gamble_for_steals": 57,
+      "help_defense_rate": 66,
+      "closeout_aggression": 61,
+      "box_out_rate": 90,
+      "usage_desire": 61,
+      "pace_preference": 55,
+      "foul_proneness": 45,
+      "shot_clock_tendency": 56,
+      "contested_shot_willingness": 58
+    },
+    "character": {
+      "leadership": 95,
+      "work_ethic": 41,
+      "clutch": 83,
+      "ego": 47,
+      "coachability": 32,
+      "temperament": 62,
+      "fan_favorite": 75,
+      "media_personality": 61,
+      "loyalty": 45,
+      "competitiveness": 64
+    },
+    "durability": {
+      "overall_durability": 92,
+      "ankle_health": 83,
+      "knee_health": 88,
+      "shoulder_health": 92,
+      "back_health": 99,
+      "wrist_hand_health": 82,
+      "foot_health": 99,
+      "concussion_risk": 8,
+      "soft_tissue_risk": 8,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 400091,
+      "years_remaining": 4,
+      "year_signed": 2026,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "0604d91d-5bb0-5780-8017-459a745df4d1"
+    }
+  },
+  {
+    "id": "b12c7df2-05c",
+    "bio": {
+      "first_name": "Jaylen",
+      "last_name": "Ward",
+      "position": "PG",
+      "secondary_position": "SG",
+      "height": 74,
+      "weight": 195,
+      "age": 23,
+      "years_in_league": 4,
+      "college": null,
+      "country": "Greece",
+      "draft_year": 2023,
+      "draft_round": 2,
+      "draft_pick": 10,
+      "jersey_number": 8,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 67,
+      "close_range": 78,
+      "mid_range": 69,
+      "three_point": 71,
+      "free_throw": 73,
+      "post_game": 66,
+      "draw_foul": 73,
+      "off_ball_movement": 65,
+      "ball_handling": 82,
+      "passing_vision": 83,
+      "passing_accuracy": 68,
+      "perimeter_defense": 71,
+      "interior_defense": 58,
+      "shot_blocking": 60,
+      "stealing": 66,
+      "defensive_iq": 70,
+      "defensive_consistency": 64,
+      "speed": 70,
+      "acceleration": 68,
+      "lateral_quickness": 77,
+      "vertical": 72,
+      "strength": 66,
+      "stamina": 65,
+      "basketball_iq": 67,
+      "offensive_iq": 80,
+      "rebounding": 71,
+      "offensive_rebounding": 74,
+      "hustle": 70,
+      "overall": 74,
+      "potential": 74,
+      "peak_age": 25
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.335,
+          "make_rate": 0.651
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.167,
+          "make_rate": 0.456
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.188,
+          "make_rate": 0.403
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.101,
+          "make_rate": 0.365
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.178,
+          "make_rate": 0.335
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.099,
+          "make_rate": 0.439
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 71,
+      "catch_and_shoot_frequency": 73,
+      "drive_frequency": 60,
+      "post_up_frequency": 62,
+      "iso_frequency": 77,
+      "pick_and_roll_ball_handler": 80,
+      "pick_and_roll_screener": 77,
+      "spot_up_frequency": 73,
+      "transition_frequency": 80,
+      "cut_frequency": 66,
+      "pass_out_of_drive_rate": 86,
+      "skip_pass_rate": 83,
+      "alley_oop_pass_rate": 81,
+      "gamble_for_steals": 74,
+      "help_defense_rate": 71,
+      "closeout_aggression": 80,
+      "box_out_rate": 64,
+      "usage_desire": 78,
+      "pace_preference": 78,
+      "foul_proneness": 48,
+      "shot_clock_tendency": 53,
+      "contested_shot_willingness": 64
+    },
+    "character": {
+      "leadership": 56,
+      "work_ethic": 51,
+      "clutch": 39,
+      "ego": 25,
+      "coachability": 93,
+      "temperament": 89,
+      "fan_favorite": 36,
+      "media_personality": 60,
+      "loyalty": 87,
+      "competitiveness": 76
+    },
+    "durability": {
+      "overall_durability": 78,
+      "ankle_health": 69,
+      "knee_health": 87,
+      "shoulder_health": 69,
+      "back_health": 69,
+      "wrist_hand_health": 85,
+      "foot_health": 75,
+      "concussion_risk": 17,
+      "soft_tissue_risk": 20,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 546636,
+      "years_remaining": 3,
+      "year_signed": 2024,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "7c8c473d-2b74-5c0c-9eee-7f8dc76b4bd8"
+    }
+  },
+  {
+    "id": "80f62e5f-7d5",
+    "bio": {
+      "first_name": "Cade",
+      "last_name": "White",
+      "position": "SG",
+      "secondary_position": null,
+      "height": 79,
+      "weight": 208,
+      "age": 20,
+      "years_in_league": 0,
+      "college": null,
+      "country": "Canada",
+      "draft_year": 2026,
+      "draft_round": 2,
+      "draft_pick": 15,
+      "jersey_number": 6,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 76,
+      "close_range": 72,
+      "mid_range": 70,
+      "three_point": 75,
+      "free_throw": 68,
+      "post_game": 57,
+      "draw_foul": 77,
+      "off_ball_movement": 80,
+      "ball_handling": 74,
+      "passing_vision": 70,
+      "passing_accuracy": 75,
+      "perimeter_defense": 71,
+      "interior_defense": 69,
+      "shot_blocking": 56,
+      "stealing": 72,
+      "defensive_iq": 79,
+      "defensive_consistency": 79,
+      "speed": 80,
+      "acceleration": 65,
+      "lateral_quickness": 78,
+      "vertical": 71,
+      "strength": 64,
+      "stamina": 71,
+      "basketball_iq": 65,
+      "offensive_iq": 72,
+      "rebounding": 71,
+      "offensive_rebounding": 64,
+      "hustle": 76,
+      "overall": 74,
+      "potential": 73,
+      "peak_age": 27
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.366,
+          "make_rate": 0.678
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.158,
+          "make_rate": 0.444
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.19,
+          "make_rate": 0.405
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.105,
+          "make_rate": 0.37
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.185,
+          "make_rate": 0.34
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.088,
+          "make_rate": 0.423
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 64,
+      "catch_and_shoot_frequency": 78,
+      "drive_frequency": 82,
+      "post_up_frequency": 49,
+      "iso_frequency": 79,
+      "pick_and_roll_ball_handler": 68,
+      "pick_and_roll_screener": 65,
+      "spot_up_frequency": 72,
+      "transition_frequency": 73,
+      "cut_frequency": 82,
+      "pass_out_of_drive_rate": 63,
+      "skip_pass_rate": 69,
+      "alley_oop_pass_rate": 60,
+      "gamble_for_steals": 80,
+      "help_defense_rate": 72,
+      "closeout_aggression": 72,
+      "box_out_rate": 71,
+      "usage_desire": 66,
+      "pace_preference": 90,
+      "foul_proneness": 53,
+      "shot_clock_tendency": 40,
+      "contested_shot_willingness": 62
+    },
+    "character": {
+      "leadership": 35,
+      "work_ethic": 63,
+      "clutch": 52,
+      "ego": 32,
+      "coachability": 38,
+      "temperament": 43,
+      "fan_favorite": 53,
+      "media_personality": 65,
+      "loyalty": 58,
+      "competitiveness": 73
+    },
+    "durability": {
+      "overall_durability": 75,
+      "ankle_health": 83,
+      "knee_health": 84,
+      "shoulder_health": 80,
+      "back_health": 68,
+      "wrist_hand_health": 82,
+      "foot_health": 67,
+      "concussion_risk": 26,
+      "soft_tissue_risk": 24,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 353658,
+      "years_remaining": 2,
+      "year_signed": 2026,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": true,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "abdb42d4-2ba3-5957-a1cd-a32f995e706c"
+    }
+  },
+  {
+    "id": "4874d099-113",
+    "bio": {
+      "first_name": "Marcus",
+      "last_name": "Brown",
+      "position": "SG",
+      "secondary_position": "SF",
+      "height": 75,
+      "weight": 201,
+      "age": 25,
+      "years_in_league": 6,
+      "college": "UCLA",
+      "country": "USA",
+      "draft_year": 2021,
+      "draft_round": 2,
+      "draft_pick": 19,
+      "jersey_number": 45,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 70,
+      "close_range": 72,
+      "mid_range": 73,
+      "three_point": 78,
+      "free_throw": 67,
+      "post_game": 74,
+      "draw_foul": 70,
+      "off_ball_movement": 77,
+      "ball_handling": 67,
+      "passing_vision": 64,
+      "passing_accuracy": 80,
+      "perimeter_defense": 68,
+      "interior_defense": 64,
+      "shot_blocking": 72,
+      "stealing": 76,
+      "defensive_iq": 66,
+      "defensive_consistency": 71,
+      "speed": 79,
+      "acceleration": 68,
+      "lateral_quickness": 67,
+      "vertical": 68,
+      "strength": 69,
+      "stamina": 69,
+      "basketball_iq": 70,
+      "offensive_iq": 80,
+      "rebounding": 72,
+      "offensive_rebounding": 70,
+      "hustle": 79,
+      "overall": 72,
+      "potential": 83,
+      "peak_age": 28
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.345,
+          "make_rate": 0.66
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.158,
+          "make_rate": 0.444
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.196,
+          "make_rate": 0.409
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.108,
+          "make_rate": 0.374
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.19,
+          "make_rate": 0.344
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.109,
+          "make_rate": 0.453
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 78,
+      "catch_and_shoot_frequency": 80,
+      "drive_frequency": 61,
+      "post_up_frequency": 73,
+      "iso_frequency": 57,
+      "pick_and_roll_ball_handler": 66,
+      "pick_and_roll_screener": 72,
+      "spot_up_frequency": 73,
+      "transition_frequency": 78,
+      "cut_frequency": 79,
+      "pass_out_of_drive_rate": 70,
+      "skip_pass_rate": 59,
+      "alley_oop_pass_rate": 53,
+      "gamble_for_steals": 70,
+      "help_defense_rate": 64,
+      "closeout_aggression": 66,
+      "box_out_rate": 76,
+      "usage_desire": 71,
+      "pace_preference": 77,
+      "foul_proneness": 42,
+      "shot_clock_tendency": 60,
+      "contested_shot_willingness": 65
+    },
+    "character": {
+      "leadership": 87,
+      "work_ethic": 74,
+      "clutch": 57,
+      "ego": 76,
+      "coachability": 81,
+      "temperament": 81,
+      "fan_favorite": 25,
+      "media_personality": 55,
+      "loyalty": 84,
+      "competitiveness": 46
+    },
+    "durability": {
+      "overall_durability": 69,
+      "ankle_health": 78,
+      "knee_health": 66,
+      "shoulder_health": 71,
+      "back_health": 60,
+      "wrist_hand_health": 70,
+      "foot_health": 69,
+      "concussion_risk": 26,
+      "soft_tissue_risk": 30,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 573040,
+      "years_remaining": 3,
+      "year_signed": 2025,
+      "is_player_option": true,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "176f95fa-96b1-5e82-bc8d-d79a049229e7"
+    }
+  },
+  {
+    "id": "6d7b8e73-6b1",
+    "bio": {
+      "first_name": "Jabari",
+      "last_name": "Green",
+      "position": "PF",
+      "secondary_position": "SF",
+      "height": 82,
+      "weight": 243,
+      "age": 33,
+      "years_in_league": 12,
+      "college": "LSU",
+      "country": "USA",
+      "draft_year": 2015,
+      "draft_round": 2,
+      "draft_pick": 18,
+      "jersey_number": 10,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 78,
+      "close_range": 67,
+      "mid_range": 72,
+      "three_point": 59,
+      "free_throw": 67,
+      "post_game": 67,
+      "draw_foul": 75,
+      "off_ball_movement": 70,
+      "ball_handling": 69,
+      "passing_vision": 58,
+      "passing_accuracy": 61,
+      "perimeter_defense": 68,
+      "interior_defense": 69,
+      "shot_blocking": 68,
+      "stealing": 63,
+      "defensive_iq": 76,
+      "defensive_consistency": 68,
+      "speed": 72,
+      "acceleration": 76,
+      "lateral_quickness": 71,
+      "vertical": 70,
+      "strength": 70,
+      "stamina": 64,
+      "basketball_iq": 76,
+      "offensive_iq": 70,
+      "rebounding": 72,
+      "offensive_rebounding": 70,
+      "hustle": 76,
+      "overall": 71,
+      "potential": 77,
+      "peak_age": 26
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.373,
+          "make_rate": 0.684
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.151,
+          "make_rate": 0.434
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.194,
+          "make_rate": 0.408
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.089,
+          "make_rate": 0.351
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.156,
+          "make_rate": 0.321
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.1,
+          "make_rate": 0.441
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 67,
+      "catch_and_shoot_frequency": 53,
+      "drive_frequency": 80,
+      "post_up_frequency": 76,
+      "iso_frequency": 65,
+      "pick_and_roll_ball_handler": 56,
+      "pick_and_roll_screener": 60,
+      "spot_up_frequency": 68,
+      "transition_frequency": 72,
+      "cut_frequency": 63,
+      "pass_out_of_drive_rate": 50,
+      "skip_pass_rate": 57,
+      "alley_oop_pass_rate": 56,
+      "gamble_for_steals": 53,
+      "help_defense_rate": 70,
+      "closeout_aggression": 78,
+      "box_out_rate": 77,
+      "usage_desire": 74,
+      "pace_preference": 66,
+      "foul_proneness": 42,
+      "shot_clock_tendency": 53,
+      "contested_shot_willingness": 55
+    },
+    "character": {
+      "leadership": 36,
+      "work_ethic": 69,
+      "clutch": 58,
+      "ego": 73,
+      "coachability": 42,
+      "temperament": 59,
+      "fan_favorite": 55,
+      "media_personality": 47,
+      "loyalty": 65,
+      "competitiveness": 83
+    },
+    "durability": {
+      "overall_durability": 76,
+      "ankle_health": 74,
+      "knee_health": 86,
+      "shoulder_health": 79,
+      "back_health": 70,
+      "wrist_hand_health": 67,
+      "foot_health": 77,
+      "concussion_risk": 24,
+      "soft_tissue_risk": 23,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 691701,
+      "years_remaining": 3,
+      "year_signed": 2024,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "46253fad-462c-5619-9c22-d27125e01d6f"
+    }
+  },
+  {
+    "id": "bfb6b4cf-723",
+    "bio": {
+      "first_name": "Cade",
+      "last_name": "Moore",
+      "position": "SG",
+      "secondary_position": null,
+      "height": 77,
+      "weight": 198,
+      "age": 32,
+      "years_in_league": 12,
+      "college": null,
+      "country": "Australia",
+      "draft_year": 2015,
+      "draft_round": 2,
+      "draft_pick": 24,
+      "jersey_number": 15,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 68,
+      "close_range": 74,
+      "mid_range": 69,
+      "three_point": 70,
+      "free_throw": 76,
+      "post_game": 62,
+      "draw_foul": 64,
+      "off_ball_movement": 71,
+      "ball_handling": 70,
+      "passing_vision": 67,
+      "passing_accuracy": 73,
+      "perimeter_defense": 67,
+      "interior_defense": 62,
+      "shot_blocking": 63,
+      "stealing": 68,
+      "defensive_iq": 75,
+      "defensive_consistency": 65,
+      "speed": 70,
+      "acceleration": 79,
+      "lateral_quickness": 80,
+      "vertical": 71,
+      "strength": 68,
+      "stamina": 76,
+      "basketball_iq": 71,
+      "offensive_iq": 70,
+      "rebounding": 72,
+      "offensive_rebounding": 78,
+      "hustle": 76,
+      "overall": 70,
+      "potential": 79,
+      "peak_age": 27
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.338,
+          "make_rate": 0.654
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.161,
+          "make_rate": 0.448
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.188,
+          "make_rate": 0.403
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.1,
+          "make_rate": 0.364
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.176,
+          "make_rate": 0.334
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.094,
+          "make_rate": 0.432
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 76,
+      "catch_and_shoot_frequency": 61,
+      "drive_frequency": 73,
+      "post_up_frequency": 64,
+      "iso_frequency": 62,
+      "pick_and_roll_ball_handler": 65,
+      "pick_and_roll_screener": 66,
+      "spot_up_frequency": 65,
+      "transition_frequency": 60,
+      "cut_frequency": 76,
+      "pass_out_of_drive_rate": 71,
+      "skip_pass_rate": 70,
+      "alley_oop_pass_rate": 55,
+      "gamble_for_steals": 61,
+      "help_defense_rate": 77,
+      "closeout_aggression": 73,
+      "box_out_rate": 72,
+      "usage_desire": 74,
+      "pace_preference": 64,
+      "foul_proneness": 56,
+      "shot_clock_tendency": 51,
+      "contested_shot_willingness": 62
+    },
+    "character": {
+      "leadership": 86,
+      "work_ethic": 85,
+      "clutch": 80,
+      "ego": 83,
+      "coachability": 86,
+      "temperament": 78,
+      "fan_favorite": 49,
+      "media_personality": 55,
+      "loyalty": 58,
+      "competitiveness": 99
+    },
+    "durability": {
+      "overall_durability": 90,
+      "ankle_health": 83,
+      "knee_health": 80,
+      "shoulder_health": 85,
+      "back_health": 86,
+      "wrist_hand_health": 98,
+      "foot_health": 87,
+      "concussion_risk": 10,
+      "soft_tissue_risk": 15,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 238792,
+      "years_remaining": 4,
+      "year_signed": 2025,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "00c7f93a-4687-5690-9880-59ba55447052"
+    }
+  },
+  {
+    "id": "7618d83f-871",
+    "bio": {
+      "first_name": "Monte",
+      "last_name": "Washington",
+      "position": "SF",
+      "secondary_position": "PF",
+      "height": 80,
+      "weight": 232,
+      "age": 28,
+      "years_in_league": 7,
+      "college": null,
+      "country": "Greece",
+      "draft_year": 2020,
+      "draft_round": 2,
+      "draft_pick": 4,
+      "jersey_number": 21,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 68,
+      "close_range": 80,
+      "mid_range": 72,
+      "three_point": 72,
+      "free_throw": 64,
+      "post_game": 69,
+      "draw_foul": 73,
+      "off_ball_movement": 71,
+      "ball_handling": 73,
+      "passing_vision": 66,
+      "passing_accuracy": 67,
+      "perimeter_defense": 66,
+      "interior_defense": 79,
+      "shot_blocking": 61,
+      "stealing": 66,
+      "defensive_iq": 72,
+      "defensive_consistency": 79,
+      "speed": 72,
+      "acceleration": 68,
+      "lateral_quickness": 65,
+      "vertical": 73,
+      "strength": 64,
+      "stamina": 73,
+      "basketball_iq": 66,
+      "offensive_iq": 80,
+      "rebounding": 66,
+      "offensive_rebounding": 75,
+      "hustle": 71,
+      "overall": 69,
+      "potential": 73,
+      "peak_age": 30
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.338,
+          "make_rate": 0.654
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.17,
+          "make_rate": 0.46
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.194,
+          "make_rate": 0.408
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.102,
+          "make_rate": 0.366
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.18,
+          "make_rate": 0.336
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.103,
+          "make_rate": 0.444
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 63,
+      "catch_and_shoot_frequency": 64,
+      "drive_frequency": 76,
+      "post_up_frequency": 62,
+      "iso_frequency": 81,
+      "pick_and_roll_ball_handler": 71,
+      "pick_and_roll_screener": 67,
+      "spot_up_frequency": 66,
+      "transition_frequency": 63,
+      "cut_frequency": 62,
+      "pass_out_of_drive_rate": 63,
+      "skip_pass_rate": 71,
+      "alley_oop_pass_rate": 55,
+      "gamble_for_steals": 68,
+      "help_defense_rate": 78,
+      "closeout_aggression": 70,
+      "box_out_rate": 60,
+      "usage_desire": 60,
+      "pace_preference": 68,
+      "foul_proneness": 49,
+      "shot_clock_tendency": 41,
+      "contested_shot_willingness": 71
+    },
+    "character": {
+      "leadership": 73,
+      "work_ethic": 71,
+      "clutch": 37,
+      "ego": 66,
+      "coachability": 46,
+      "temperament": 68,
+      "fan_favorite": 80,
+      "media_personality": 78,
+      "loyalty": 27,
+      "competitiveness": 77
+    },
+    "durability": {
+      "overall_durability": 69,
+      "ankle_health": 66,
+      "knee_health": 71,
+      "shoulder_health": 69,
+      "back_health": 71,
+      "wrist_hand_health": 63,
+      "foot_health": 60,
+      "concussion_risk": 26,
+      "soft_tissue_risk": 27,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 180374,
+      "years_remaining": 4,
+      "year_signed": 2024,
+      "is_player_option": false,
+      "is_team_option": true,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "eb581ca0-663c-50b8-a4c2-57f559462efa"
+    }
+  },
+  {
+    "id": "76b56d75-254",
+    "bio": {
+      "first_name": "Wendell",
+      "last_name": "Jackson",
+      "position": "SG",
+      "secondary_position": null,
+      "height": 77,
+      "weight": 212,
+      "age": 32,
+      "years_in_league": 11,
+      "college": "Kansas",
+      "country": "USA",
+      "draft_year": 2016,
+      "draft_round": 2,
+      "draft_pick": 3,
+      "jersey_number": 48,
+      "hand": "left"
+    },
+    "ratings": {
+      "finishing": 64,
+      "close_range": 65,
+      "mid_range": 69,
+      "three_point": 75,
+      "free_throw": 75,
+      "post_game": 60,
+      "draw_foul": 63,
+      "off_ball_movement": 78,
+      "ball_handling": 62,
+      "passing_vision": 71,
+      "passing_accuracy": 65,
+      "perimeter_defense": 65,
+      "interior_defense": 57,
+      "shot_blocking": 61,
+      "stealing": 62,
+      "defensive_iq": 60,
+      "defensive_consistency": 60,
+      "speed": 68,
+      "acceleration": 68,
+      "lateral_quickness": 64,
+      "vertical": 68,
+      "strength": 68,
+      "stamina": 64,
+      "basketball_iq": 62,
+      "offensive_iq": 67,
+      "rebounding": 62,
+      "offensive_rebounding": 62,
+      "hustle": 66,
+      "overall": 68,
+      "potential": 73,
+      "peak_age": 28
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.324,
+          "make_rate": 0.642
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.148,
+          "make_rate": 0.43
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.188,
+          "make_rate": 0.403
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.105,
+          "make_rate": 0.37
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.185,
+          "make_rate": 0.34
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.092,
+          "make_rate": 0.428
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 74,
+      "catch_and_shoot_frequency": 69,
+      "drive_frequency": 57,
+      "post_up_frequency": 50,
+      "iso_frequency": 69,
+      "pick_and_roll_ball_handler": 63,
+      "pick_and_roll_screener": 61,
+      "spot_up_frequency": 79,
+      "transition_frequency": 76,
+      "cut_frequency": 86,
+      "pass_out_of_drive_rate": 79,
+      "skip_pass_rate": 68,
+      "alley_oop_pass_rate": 54,
+      "gamble_for_steals": 71,
+      "help_defense_rate": 60,
+      "closeout_aggression": 60,
+      "box_out_rate": 53,
+      "usage_desire": 72,
+      "pace_preference": 68,
+      "foul_proneness": 51,
+      "shot_clock_tendency": 44,
+      "contested_shot_willingness": 60
+    },
+    "character": {
+      "leadership": 38,
+      "work_ethic": 45,
+      "clutch": 39,
+      "ego": 72,
+      "coachability": 95,
+      "temperament": 92,
+      "fan_favorite": 37,
+      "media_personality": 90,
+      "loyalty": 66,
+      "competitiveness": 68
+    },
+    "durability": {
+      "overall_durability": 57,
+      "ankle_health": 50,
+      "knee_health": 57,
+      "shoulder_health": 60,
+      "back_health": 61,
+      "wrist_hand_health": 52,
+      "foot_health": 50,
+      "concussion_risk": 44,
+      "soft_tissue_risk": 39,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 943956,
+      "years_remaining": 2,
+      "year_signed": 2026,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "cd32f8ce-58f0-5959-a9f9-bf46e16f4f97"
+    }
+  },
+  {
+    "id": "5474b6d6-d47",
+    "bio": {
+      "first_name": "Andre",
+      "last_name": "Nelson",
+      "position": "SF",
+      "secondary_position": null,
+      "height": 81,
+      "weight": 217,
+      "age": 31,
+      "years_in_league": 11,
+      "college": null,
+      "country": "Australia",
+      "draft_year": 2016,
+      "draft_round": 2,
+      "draft_pick": 1,
+      "jersey_number": 16,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 67,
+      "close_range": 62,
+      "mid_range": 74,
+      "three_point": 74,
+      "free_throw": 68,
+      "post_game": 62,
+      "draw_foul": 61,
+      "off_ball_movement": 63,
+      "ball_handling": 70,
+      "passing_vision": 65,
+      "passing_accuracy": 66,
+      "perimeter_defense": 74,
+      "interior_defense": 70,
+      "shot_blocking": 67,
+      "stealing": 58,
+      "defensive_iq": 66,
+      "defensive_consistency": 59,
+      "speed": 61,
+      "acceleration": 66,
+      "lateral_quickness": 74,
+      "vertical": 71,
+      "strength": 60,
+      "stamina": 63,
+      "basketball_iq": 66,
+      "offensive_iq": 60,
+      "rebounding": 71,
+      "offensive_rebounding": 72,
+      "hustle": 66,
+      "overall": 68,
+      "potential": 71,
+      "peak_age": 29
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.335,
+          "make_rate": 0.651
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.143,
+          "make_rate": 0.424
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.198,
+          "make_rate": 0.411
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.104,
+          "make_rate": 0.369
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.183,
+          "make_rate": 0.339
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.094,
+          "make_rate": 0.432
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 82,
+      "catch_and_shoot_frequency": 65,
+      "drive_frequency": 63,
+      "post_up_frequency": 57,
+      "iso_frequency": 75,
+      "pick_and_roll_ball_handler": 58,
+      "pick_and_roll_screener": 69,
+      "spot_up_frequency": 83,
+      "transition_frequency": 67,
+      "cut_frequency": 60,
+      "pass_out_of_drive_rate": 63,
+      "skip_pass_rate": 53,
+      "alley_oop_pass_rate": 64,
+      "gamble_for_steals": 49,
+      "help_defense_rate": 63,
+      "closeout_aggression": 58,
+      "box_out_rate": 76,
+      "usage_desire": 60,
+      "pace_preference": 69,
+      "foul_proneness": 44,
+      "shot_clock_tendency": 55,
+      "contested_shot_willingness": 64
+    },
+    "character": {
+      "leadership": 58,
+      "work_ethic": 64,
+      "clutch": 46,
+      "ego": 86,
+      "coachability": 80,
+      "temperament": 83,
+      "fan_favorite": 80,
+      "media_personality": 24,
+      "loyalty": 55,
+      "competitiveness": 84
+    },
+    "durability": {
+      "overall_durability": 71,
+      "ankle_health": 65,
+      "knee_health": 76,
+      "shoulder_health": 62,
+      "back_health": 72,
+      "wrist_hand_health": 76,
+      "foot_health": 71,
+      "concussion_risk": 29,
+      "soft_tissue_risk": 28,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 589974,
+      "years_remaining": 1,
+      "year_signed": 2026,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "2cc46d81-65cc-5f4e-8734-bcb37ae782df"
+    }
+  },
+  {
+    "id": "62e677b1-1b6",
+    "bio": {
+      "first_name": "Ziaire",
+      "last_name": "Scott",
+      "position": "PG",
+      "secondary_position": null,
+      "height": 76,
+      "weight": 186,
+      "age": 28,
+      "years_in_league": 8,
+      "college": null,
+      "country": "Nigeria",
+      "draft_year": 2019,
+      "draft_round": 2,
+      "draft_pick": 24,
+      "jersey_number": 23,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 67,
+      "close_range": 64,
+      "mid_range": 74,
+      "three_point": 64,
+      "free_throw": 68,
+      "post_game": 62,
+      "draw_foul": 66,
+      "off_ball_movement": 60,
+      "ball_handling": 69,
+      "passing_vision": 72,
+      "passing_accuracy": 66,
+      "perimeter_defense": 59,
+      "interior_defense": 65,
+      "shot_blocking": 58,
+      "stealing": 61,
+      "defensive_iq": 63,
+      "defensive_consistency": 62,
+      "speed": 64,
+      "acceleration": 74,
+      "lateral_quickness": 68,
+      "vertical": 71,
+      "strength": 53,
+      "stamina": 65,
+      "basketball_iq": 70,
+      "offensive_iq": 65,
+      "rebounding": 61,
+      "offensive_rebounding": 69,
+      "hustle": 67,
+      "overall": 67,
+      "potential": 74,
+      "peak_age": 26
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.335,
+          "make_rate": 0.651
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.146,
+          "make_rate": 0.428
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.198,
+          "make_rate": 0.411
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.094,
+          "make_rate": 0.357
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.165,
+          "make_rate": 0.327
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.094,
+          "make_rate": 0.432
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 77,
+      "catch_and_shoot_frequency": 70,
+      "drive_frequency": 67,
+      "post_up_frequency": 66,
+      "iso_frequency": 63,
+      "pick_and_roll_ball_handler": 63,
+      "pick_and_roll_screener": 57,
+      "spot_up_frequency": 55,
+      "transition_frequency": 65,
+      "cut_frequency": 53,
+      "pass_out_of_drive_rate": 75,
+      "skip_pass_rate": 77,
+      "alley_oop_pass_rate": 55,
+      "gamble_for_steals": 64,
+      "help_defense_rate": 67,
+      "closeout_aggression": 65,
+      "box_out_rate": 61,
+      "usage_desire": 58,
+      "pace_preference": 64,
+      "foul_proneness": 44,
+      "shot_clock_tendency": 53,
+      "contested_shot_willingness": 64
+    },
+    "character": {
+      "leadership": 36,
+      "work_ethic": 91,
+      "clutch": 31,
+      "ego": 48,
+      "coachability": 60,
+      "temperament": 84,
+      "fan_favorite": 70,
+      "media_personality": 65,
+      "loyalty": 49,
+      "competitiveness": 85
+    },
+    "durability": {
+      "overall_durability": 74,
+      "ankle_health": 81,
+      "knee_health": 68,
+      "shoulder_health": 70,
+      "back_health": 79,
+      "wrist_hand_health": 77,
+      "foot_health": 80,
+      "concussion_risk": 26,
+      "soft_tissue_risk": 29,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 946749,
+      "years_remaining": 2,
+      "year_signed": 2025,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "78e2700d-cd87-5a34-9a97-b66fe033c81f"
+    }
+  },
+  {
+    "id": "463b65b5-b6a",
+    "bio": {
+      "first_name": "Caleb",
+      "last_name": "Ward",
+      "position": "SG",
+      "secondary_position": null,
+      "height": 79,
+      "weight": 193,
+      "age": 23,
+      "years_in_league": 4,
+      "college": "Villanova",
+      "country": "USA",
+      "draft_year": 2023,
+      "draft_round": 2,
+      "draft_pick": 26,
+      "jersey_number": 31,
+      "hand": "left"
+    },
+    "ratings": {
+      "finishing": 62,
+      "close_range": 68,
+      "mid_range": 77,
+      "three_point": 71,
+      "free_throw": 72,
+      "post_game": 54,
+      "draw_foul": 70,
+      "off_ball_movement": 74,
+      "ball_handling": 63,
+      "passing_vision": 60,
+      "passing_accuracy": 65,
+      "perimeter_defense": 68,
+      "interior_defense": 51,
+      "shot_blocking": 55,
+      "stealing": 65,
+      "defensive_iq": 62,
+      "defensive_consistency": 63,
+      "speed": 61,
+      "acceleration": 66,
+      "lateral_quickness": 57,
+      "vertical": 67,
+      "strength": 66,
+      "stamina": 59,
+      "basketball_iq": 73,
+      "offensive_iq": 71,
+      "rebounding": 60,
+      "offensive_rebounding": 68,
+      "hustle": 62,
+      "overall": 67,
+      "potential": 76,
+      "peak_age": 30
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.317,
+          "make_rate": 0.636
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.152,
+          "make_rate": 0.436
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.204,
+          "make_rate": 0.415
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.101,
+          "make_rate": 0.365
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.178,
+          "make_rate": 0.335
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.085,
+          "make_rate": 0.417
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 76,
+      "catch_and_shoot_frequency": 74,
+      "drive_frequency": 58,
+      "post_up_frequency": 46,
+      "iso_frequency": 58,
+      "pick_and_roll_ball_handler": 53,
+      "pick_and_roll_screener": 51,
+      "spot_up_frequency": 75,
+      "transition_frequency": 66,
+      "cut_frequency": 82,
+      "pass_out_of_drive_rate": 55,
+      "skip_pass_rate": 58,
+      "alley_oop_pass_rate": 45,
+      "gamble_for_steals": 70,
+      "help_defense_rate": 53,
+      "closeout_aggression": 53,
+      "box_out_rate": 52,
+      "usage_desire": 67,
+      "pace_preference": 66,
+      "foul_proneness": 48,
+      "shot_clock_tendency": 48,
+      "contested_shot_willingness": 72
+    },
+    "character": {
+      "leadership": 72,
+      "work_ethic": 48,
+      "clutch": 46,
+      "ego": 43,
+      "coachability": 50,
+      "temperament": 77,
+      "fan_favorite": 82,
+      "media_personality": 27,
+      "loyalty": 92,
+      "competitiveness": 45
+    },
+    "durability": {
+      "overall_durability": 84,
+      "ankle_health": 81,
+      "knee_health": 86,
+      "shoulder_health": 79,
+      "back_health": 76,
+      "wrist_hand_health": 90,
+      "foot_health": 82,
+      "concussion_risk": 12,
+      "soft_tissue_risk": 16,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 971508,
+      "years_remaining": 3,
+      "year_signed": 2025,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "8ae8973e-078e-5869-b4cf-6d0fe2722e13"
+    }
+  },
+  {
+    "id": "b0a7e2b3-b77",
+    "bio": {
+      "first_name": "Desmond",
+      "last_name": "Turner",
+      "position": "SF",
+      "secondary_position": "PF",
+      "height": 79,
+      "weight": 233,
+      "age": 29,
+      "years_in_league": 8,
+      "college": "Michigan",
+      "country": "USA",
+      "draft_year": 2019,
+      "draft_round": 2,
+      "draft_pick": 1,
+      "jersey_number": 1,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 64,
+      "close_range": 68,
+      "mid_range": 71,
+      "three_point": 63,
+      "free_throw": 75,
+      "post_game": 65,
+      "draw_foul": 71,
+      "off_ball_movement": 75,
+      "ball_handling": 65,
+      "passing_vision": 60,
+      "passing_accuracy": 75,
+      "perimeter_defense": 65,
+      "interior_defense": 60,
+      "shot_blocking": 59,
+      "stealing": 66,
+      "defensive_iq": 72,
+      "defensive_consistency": 65,
+      "speed": 75,
+      "acceleration": 60,
+      "lateral_quickness": 66,
+      "vertical": 61,
+      "strength": 69,
+      "stamina": 72,
+      "basketball_iq": 62,
+      "offensive_iq": 76,
+      "rebounding": 75,
+      "offensive_rebounding": 73,
+      "hustle": 69,
+      "overall": 67,
+      "potential": 69,
+      "peak_age": 27
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.324,
+          "make_rate": 0.642
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.152,
+          "make_rate": 0.436
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.192,
+          "make_rate": 0.406
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.093,
+          "make_rate": 0.356
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.163,
+          "make_rate": 0.326
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.098,
+          "make_rate": 0.437
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 72,
+      "catch_and_shoot_frequency": 59,
+      "drive_frequency": 74,
+      "post_up_frequency": 68,
+      "iso_frequency": 61,
+      "pick_and_roll_ball_handler": 62,
+      "pick_and_roll_screener": 69,
+      "spot_up_frequency": 71,
+      "transition_frequency": 70,
+      "cut_frequency": 78,
+      "pass_out_of_drive_rate": 59,
+      "skip_pass_rate": 46,
+      "alley_oop_pass_rate": 56,
+      "gamble_for_steals": 73,
+      "help_defense_rate": 74,
+      "closeout_aggression": 68,
+      "box_out_rate": 68,
+      "usage_desire": 64,
+      "pace_preference": 74,
+      "foul_proneness": 55,
+      "shot_clock_tendency": 55,
+      "contested_shot_willingness": 55
+    },
+    "character": {
+      "leadership": 42,
+      "work_ethic": 98,
+      "clutch": 63,
+      "ego": 70,
+      "coachability": 49,
+      "temperament": 48,
+      "fan_favorite": 34,
+      "media_personality": 24,
+      "loyalty": 45,
+      "competitiveness": 51
+    },
+    "durability": {
+      "overall_durability": 93,
+      "ankle_health": 99,
+      "knee_health": 93,
+      "shoulder_health": 99,
+      "back_health": 99,
+      "wrist_hand_health": 99,
+      "foot_health": 99,
+      "concussion_risk": 7,
+      "soft_tissue_risk": 5,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 615693,
+      "years_remaining": 2,
+      "year_signed": 2026,
+      "is_player_option": true,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "bf056fd5-7dac-511d-9c12-58f1add4aadf"
+    }
+  },
+  {
+    "id": "fccbbbe3-5db",
+    "bio": {
+      "first_name": "Derrick",
+      "last_name": "Baker",
+      "position": "SF",
+      "secondary_position": "PF",
+      "height": 79,
+      "weight": 218,
+      "age": 28,
+      "years_in_league": 8,
+      "college": null,
+      "country": "Nigeria",
+      "draft_year": 2019,
+      "draft_round": 2,
+      "draft_pick": 3,
+      "jersey_number": 44,
+      "hand": "right"
+    },
+    "ratings": {
+      "finishing": 69,
+      "close_range": 68,
+      "mid_range": 67,
+      "three_point": 58,
+      "free_throw": 62,
+      "post_game": 66,
+      "draw_foul": 67,
+      "off_ball_movement": 67,
+      "ball_handling": 60,
+      "passing_vision": 63,
+      "passing_accuracy": 60,
+      "perimeter_defense": 63,
+      "interior_defense": 73,
+      "shot_blocking": 64,
+      "stealing": 58,
+      "defensive_iq": 69,
+      "defensive_consistency": 68,
+      "speed": 66,
+      "acceleration": 68,
+      "lateral_quickness": 62,
+      "vertical": 58,
+      "strength": 67,
+      "stamina": 63,
+      "basketball_iq": 59,
+      "offensive_iq": 66,
+      "rebounding": 73,
+      "offensive_rebounding": 73,
+      "hustle": 58,
+      "overall": 64,
+      "potential": 69,
+      "peak_age": 30
+    },
+    "shot_chart": {
+      "zones": [
+        {
+          "zone_id": "restricted_area",
+          "tendency": 0.341,
+          "make_rate": 0.657
+        },
+        {
+          "zone_id": "paint_non_ra",
+          "tendency": 0.152,
+          "make_rate": 0.436
+        },
+        {
+          "zone_id": "mid_range",
+          "tendency": 0.184,
+          "make_rate": 0.4
+        },
+        {
+          "zone_id": "corner_three",
+          "tendency": 0.088,
+          "make_rate": 0.35
+        },
+        {
+          "zone_id": "above_break_three",
+          "tendency": 0.154,
+          "make_rate": 0.32
+        },
+        {
+          "zone_id": "post",
+          "tendency": 0.099,
+          "make_rate": 0.439
+        }
+      ]
+    },
+    "tendencies": {
+      "pull_up_frequency": 60,
+      "catch_and_shoot_frequency": 52,
+      "drive_frequency": 69,
+      "post_up_frequency": 59,
+      "iso_frequency": 60,
+      "pick_and_roll_ball_handler": 66,
+      "pick_and_roll_screener": 76,
+      "spot_up_frequency": 67,
+      "transition_frequency": 70,
+      "cut_frequency": 77,
+      "pass_out_of_drive_rate": 71,
+      "skip_pass_rate": 56,
+      "alley_oop_pass_rate": 59,
+      "gamble_for_steals": 60,
+      "help_defense_rate": 67,
+      "closeout_aggression": 58,
+      "box_out_rate": 68,
+      "usage_desire": 66,
+      "pace_preference": 71,
+      "foul_proneness": 43,
+      "shot_clock_tendency": 57,
+      "contested_shot_willingness": 60
+    },
+    "character": {
+      "leadership": 95,
+      "work_ethic": 68,
+      "clutch": 36,
+      "ego": 74,
+      "coachability": 77,
+      "temperament": 84,
+      "fan_favorite": 23,
+      "media_personality": 49,
+      "loyalty": 30,
+      "competitiveness": 94
+    },
+    "durability": {
+      "overall_durability": 72,
+      "ankle_health": 78,
+      "knee_health": 81,
+      "shoulder_health": 81,
+      "back_health": 64,
+      "wrist_hand_health": 81,
+      "foot_health": 77,
+      "concussion_risk": 32,
+      "soft_tissue_risk": 28,
+      "injury_history": []
+    },
+    "contract": {
+      "salary": 73449,
+      "years_remaining": 1,
+      "year_signed": 2026,
+      "is_player_option": false,
+      "is_team_option": false,
+      "no_trade_clause": false
+    },
+    "status": {
+      "health": "healthy",
+      "current_injury": null,
+      "fatigue": 0.0,
+      "morale": 1.0,
+      "is_rookie": false,
+      "is_free_agent": false,
+      "is_restricted_fa": false,
+      "team_id": "00c86a41-9d52-597a-83ff-2b1b6b506e3c"
+    }
+  }
+]

@@ -1,0 +1,1772 @@
+[
+  {
+    "id": "60c62382-1d5a-59cb-ab40-076049ba4284",
+    "info": {
+      "city": "Boston",
+      "name": "Minutemen",
+      "abbreviation": "BOS",
+      "conference": "Eastern",
+      "division": "Atlantic",
+      "primary_color": "#1B4D3E",
+      "secondary_color": "#C4A35A",
+      "arena_name": "Liberty Arena",
+      "arena_capacity": 19619,
+      "market_size": 7
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Rick Sullivan",
+        "offense_rating": 83,
+        "defense_rating": 68,
+        "player_development": 67,
+        "motivation": 67,
+        "adaptability": 64,
+        "experience": 83
+      },
+      "offensive_scheme": "princeton",
+      "defensive_scheme": "conservative_shell",
+      "pace_preference": 74,
+      "three_point_emphasis": 45,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "d8527c14-d9ef-5476-86e4-11927ac2f611",
+    "info": {
+      "city": "New York",
+      "name": "Titans",
+      "abbreviation": "NYT",
+      "conference": "Eastern",
+      "division": "Atlantic",
+      "primary_color": "#003366",
+      "secondary_color": "#FF6600",
+      "arena_name": "Titan Center",
+      "arena_capacity": 19418,
+      "market_size": 10
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Greg Chambers",
+        "offense_rating": 60,
+        "defense_rating": 62,
+        "player_development": 66,
+        "motivation": 67,
+        "adaptability": 76,
+        "experience": 79
+      },
+      "offensive_scheme": "motion",
+      "defensive_scheme": "aggressive_blitz",
+      "pace_preference": 52,
+      "three_point_emphasis": 74,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "1351310f-2614-5bcd-9f50-42ef03946147",
+    "info": {
+      "city": "Philadelphia",
+      "name": "Ironworks",
+      "abbreviation": "PHI",
+      "conference": "Eastern",
+      "division": "Atlantic",
+      "primary_color": "#8B4513",
+      "secondary_color": "#D4A574",
+      "arena_name": "Foundry Arena",
+      "arena_capacity": 18718,
+      "market_size": 7
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Mark Langford",
+        "offense_rating": 78,
+        "defense_rating": 68,
+        "player_development": 85,
+        "motivation": 87,
+        "adaptability": 60,
+        "experience": 84
+      },
+      "offensive_scheme": "pick_and_roll_heavy",
+      "defensive_scheme": "conservative_shell",
+      "pace_preference": 67,
+      "three_point_emphasis": 61,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "6df39fe0-aa15-5fc6-bb41-e1535122b54b",
+    "info": {
+      "city": "Toronto",
+      "name": "Raptides",
+      "abbreviation": "TOR",
+      "conference": "Eastern",
+      "division": "Atlantic",
+      "primary_color": "#1E3A5F",
+      "secondary_color": "#00BCD4",
+      "arena_name": "Northern Arena",
+      "arena_capacity": 18138,
+      "market_size": 8
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "James Mercer",
+        "offense_rating": 90,
+        "defense_rating": 84,
+        "player_development": 70,
+        "motivation": 63,
+        "adaptability": 62,
+        "experience": 72
+      },
+      "offensive_scheme": "princeton",
+      "defensive_scheme": "hedge_and_recover",
+      "pace_preference": 62,
+      "three_point_emphasis": 78,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "03addb95-7f35-5c89-ab00-f68293b2eeac",
+    "info": {
+      "city": "Brooklyn",
+      "name": "Specters",
+      "abbreviation": "BKN",
+      "conference": "Eastern",
+      "division": "Atlantic",
+      "primary_color": "#2C2C2C",
+      "secondary_color": "#9B59B6",
+      "arena_name": "Phantom Pavilion",
+      "arena_capacity": 18083,
+      "market_size": 10
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Terry Chambers",
+        "offense_rating": 83,
+        "defense_rating": 74,
+        "player_development": 77,
+        "motivation": 63,
+        "adaptability": 89,
+        "experience": 72
+      },
+      "offensive_scheme": "princeton",
+      "defensive_scheme": "aggressive_blitz",
+      "pace_preference": 58,
+      "three_point_emphasis": 80,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "cd32f8ce-58f0-5959-a9f9-bf46e16f4f97",
+    "info": {
+      "city": "Chicago",
+      "name": "Forge",
+      "abbreviation": "CHI",
+      "conference": "Eastern",
+      "division": "Central",
+      "primary_color": "#B22222",
+      "secondary_color": "#FFD700",
+      "arena_name": "Forge Field House",
+      "arena_capacity": 19533,
+      "market_size": 9
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Brian Ashford",
+        "offense_rating": 71,
+        "defense_rating": 78,
+        "player_development": 66,
+        "motivation": 82,
+        "adaptability": 62,
+        "experience": 61
+      },
+      "offensive_scheme": "iso_heavy",
+      "defensive_scheme": "hedge_and_recover",
+      "pace_preference": 45,
+      "three_point_emphasis": 54,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "eb581ca0-663c-50b8-a4c2-57f559462efa",
+    "info": {
+      "city": "Cleveland",
+      "name": "Ironclad",
+      "abbreviation": "CLE",
+      "conference": "Eastern",
+      "division": "Central",
+      "primary_color": "#4A0E0E",
+      "secondary_color": "#C0C0C0",
+      "arena_name": "Steel Arena",
+      "arena_capacity": 20549,
+      "market_size": 5
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Rick Westbrook",
+        "offense_rating": 68,
+        "defense_rating": 74,
+        "player_development": 80,
+        "motivation": 86,
+        "adaptability": 71,
+        "experience": 65
+      },
+      "offensive_scheme": "triangle",
+      "defensive_scheme": "hedge_and_recover",
+      "pace_preference": 53,
+      "three_point_emphasis": 57,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "7c8c473d-2b74-5c0c-9eee-7f8dc76b4bd8",
+    "info": {
+      "city": "Milwaukee",
+      "name": "Stags",
+      "abbreviation": "MIL",
+      "conference": "Eastern",
+      "division": "Central",
+      "primary_color": "#2E4600",
+      "secondary_color": "#C4A35A",
+      "arena_name": "Antler Arena",
+      "arena_capacity": 19874,
+      "market_size": 4
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Paul Kendrick",
+        "offense_rating": 80,
+        "defense_rating": 62,
+        "player_development": 79,
+        "motivation": 80,
+        "adaptability": 65,
+        "experience": 77
+      },
+      "offensive_scheme": "iso_heavy",
+      "defensive_scheme": "drop_coverage",
+      "pace_preference": 69,
+      "three_point_emphasis": 64,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "78e2700d-cd87-5a34-9a97-b66fe033c81f",
+    "info": {
+      "city": "Indiana",
+      "name": "Diesels",
+      "abbreviation": "IND",
+      "conference": "Eastern",
+      "division": "Central",
+      "primary_color": "#333399",
+      "secondary_color": "#FF8C00",
+      "arena_name": "Motor Speedway Arena",
+      "arena_capacity": 18105,
+      "market_size": 4
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Paul Beaumont",
+        "offense_rating": 82,
+        "defense_rating": 77,
+        "player_development": 67,
+        "motivation": 81,
+        "adaptability": 70,
+        "experience": 86
+      },
+      "offensive_scheme": "motion",
+      "defensive_scheme": "drop_coverage",
+      "pace_preference": 42,
+      "three_point_emphasis": 60,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "46253fad-462c-5619-9c22-d27125e01d6f",
+    "info": {
+      "city": "Detroit",
+      "name": "Gears",
+      "abbreviation": "DET",
+      "conference": "Eastern",
+      "division": "Central",
+      "primary_color": "#1C1C1C",
+      "secondary_color": "#E74C3C",
+      "arena_name": "Gear Works Arena",
+      "arena_capacity": 18643,
+      "market_size": 5
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Jason Preston",
+        "offense_rating": 66,
+        "defense_rating": 89,
+        "player_development": 90,
+        "motivation": 78,
+        "adaptability": 88,
+        "experience": 82
+      },
+      "offensive_scheme": "triangle",
+      "defensive_scheme": "drop_coverage",
+      "pace_preference": 71,
+      "three_point_emphasis": 65,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "d0e64e4e-d77d-5e38-9dab-282f03728e43",
+    "info": {
+      "city": "Miami",
+      "name": "Tides",
+      "abbreviation": "MIA",
+      "conference": "Eastern",
+      "division": "Southeast",
+      "primary_color": "#FF4500",
+      "secondary_color": "#1C1C1C",
+      "arena_name": "Tidal Center",
+      "arena_capacity": 20623,
+      "market_size": 8
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Paul Beaumont",
+        "offense_rating": 74,
+        "defense_rating": 64,
+        "player_development": 68,
+        "motivation": 64,
+        "adaptability": 67,
+        "experience": 83
+      },
+      "offensive_scheme": "pace_and_space",
+      "defensive_scheme": "conservative_shell",
+      "pace_preference": 77,
+      "three_point_emphasis": 67,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "00c86a41-9d52-597a-83ff-2b1b6b506e3c",
+    "info": {
+      "city": "Atlanta",
+      "name": "Phoenixes",
+      "abbreviation": "ATL",
+      "conference": "Eastern",
+      "division": "Southeast",
+      "primary_color": "#CC0000",
+      "secondary_color": "#FFD700",
+      "arena_name": "Phoenix Nest",
+      "arena_capacity": 20677,
+      "market_size": 7
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Keith Westbrook",
+        "offense_rating": 71,
+        "defense_rating": 67,
+        "player_development": 64,
+        "motivation": 76,
+        "adaptability": 75,
+        "experience": 62
+      },
+      "offensive_scheme": "motion",
+      "defensive_scheme": "switch_everything",
+      "pace_preference": 49,
+      "three_point_emphasis": 80,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "2cc46d81-65cc-5f4e-8734-bcb37ae782df",
+    "info": {
+      "city": "Charlotte",
+      "name": "Swarm",
+      "abbreviation": "CHA",
+      "conference": "Eastern",
+      "division": "Southeast",
+      "primary_color": "#2E8B57",
+      "secondary_color": "#FAFAD2",
+      "arena_name": "Hive Center",
+      "arena_capacity": 17655,
+      "market_size": 4
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Terry Kendrick",
+        "offense_rating": 73,
+        "defense_rating": 79,
+        "player_development": 62,
+        "motivation": 72,
+        "adaptability": 72,
+        "experience": 79
+      },
+      "offensive_scheme": "horns",
+      "defensive_scheme": "aggressive_blitz",
+      "pace_preference": 56,
+      "three_point_emphasis": 75,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "8ae8973e-078e-5869-b4cf-6d0fe2722e13",
+    "info": {
+      "city": "Washington",
+      "name": "Monuments",
+      "abbreviation": "WAS",
+      "conference": "Eastern",
+      "division": "Southeast",
+      "primary_color": "#191970",
+      "secondary_color": "#FFFFFF",
+      "arena_name": "Capitol Arena",
+      "arena_capacity": 20525,
+      "market_size": 6
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Mike Kendrick",
+        "offense_rating": 83,
+        "defense_rating": 63,
+        "player_development": 81,
+        "motivation": 88,
+        "adaptability": 77,
+        "experience": 84
+      },
+      "offensive_scheme": "pace_and_space",
+      "defensive_scheme": "conservative_shell",
+      "pace_preference": 61,
+      "three_point_emphasis": 47,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "0604d91d-5bb0-5780-8017-459a745df4d1",
+    "info": {
+      "city": "Orlando",
+      "name": "Spectrums",
+      "abbreviation": "ORL",
+      "conference": "Eastern",
+      "division": "Southeast",
+      "primary_color": "#4B0082",
+      "secondary_color": "#00FF7F",
+      "arena_name": "Prism Center",
+      "arena_capacity": 18202,
+      "market_size": 5
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Greg Blackwood",
+        "offense_rating": 74,
+        "defense_rating": 60,
+        "player_development": 90,
+        "motivation": 83,
+        "adaptability": 88,
+        "experience": 83
+      },
+      "offensive_scheme": "pace_and_space",
+      "defensive_scheme": "aggressive_blitz",
+      "pace_preference": 51,
+      "three_point_emphasis": 72,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "abdb42d4-2ba3-5957-a1cd-a32f995e706c",
+    "info": {
+      "city": "Denver",
+      "name": "Altitude",
+      "abbreviation": "DEN",
+      "conference": "Western",
+      "division": "Northwest",
+      "primary_color": "#4169E1",
+      "secondary_color": "#DAA520",
+      "arena_name": "Summit Arena",
+      "arena_capacity": 20738,
+      "market_size": 5
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Rick Ashford",
+        "offense_rating": 80,
+        "defense_rating": 69,
+        "player_development": 86,
+        "motivation": 80,
+        "adaptability": 76,
+        "experience": 79
+      },
+      "offensive_scheme": "iso_heavy",
+      "defensive_scheme": "drop_coverage",
+      "pace_preference": 63,
+      "three_point_emphasis": 50,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "00c7f93a-4687-5690-9880-59ba55447052",
+    "info": {
+      "city": "Portland",
+      "name": "Lumberjacks",
+      "abbreviation": "POR",
+      "conference": "Western",
+      "division": "Northwest",
+      "primary_color": "#006400",
+      "secondary_color": "#8B4513",
+      "arena_name": "Timber Arena",
+      "arena_capacity": 19209,
+      "market_size": 4
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Daryl Holbrook",
+        "offense_rating": 76,
+        "defense_rating": 89,
+        "player_development": 60,
+        "motivation": 79,
+        "adaptability": 70,
+        "experience": 75
+      },
+      "offensive_scheme": "motion",
+      "defensive_scheme": "switch_everything",
+      "pace_preference": 63,
+      "three_point_emphasis": 59,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "bf056fd5-7dac-511d-9c12-58f1add4aadf",
+    "info": {
+      "city": "Minnesota",
+      "name": "Blizzard",
+      "abbreviation": "MIN",
+      "conference": "Western",
+      "division": "Northwest",
+      "primary_color": "#4682B4",
+      "secondary_color": "#F0F8FF",
+      "arena_name": "Frost Center",
+      "arena_capacity": 17980,
+      "market_size": 4
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Steve Callahan",
+        "offense_rating": 88,
+        "defense_rating": 78,
+        "player_development": 90,
+        "motivation": 62,
+        "adaptability": 62,
+        "experience": 83
+      },
+      "offensive_scheme": "horns",
+      "defensive_scheme": "switch_everything",
+      "pace_preference": 74,
+      "three_point_emphasis": 48,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "f971e46d-d78f-5651-974a-b2d497717c62",
+    "info": {
+      "city": "Oklahoma City",
+      "name": "Cyclones",
+      "abbreviation": "OKC",
+      "conference": "Western",
+      "division": "Northwest",
+      "primary_color": "#556B2F",
+      "secondary_color": "#FFD700",
+      "arena_name": "Storm Center",
+      "arena_capacity": 17525,
+      "market_size": 3
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Phil Hargrove",
+        "offense_rating": 90,
+        "defense_rating": 77,
+        "player_development": 65,
+        "motivation": 68,
+        "adaptability": 76,
+        "experience": 87
+      },
+      "offensive_scheme": "flex",
+      "defensive_scheme": "drop_coverage",
+      "pace_preference": 74,
+      "three_point_emphasis": 52,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "dc43e2a8-759c-5cac-9b78-d24c5522d760",
+    "info": {
+      "city": "Utah",
+      "name": "Prospectors",
+      "abbreviation": "UTA",
+      "conference": "Western",
+      "division": "Northwest",
+      "primary_color": "#8B6914",
+      "secondary_color": "#2F4F4F",
+      "arena_name": "Prospector Arena",
+      "arena_capacity": 19920,
+      "market_size": 3
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Eric Westbrook",
+        "offense_rating": 81,
+        "defense_rating": 80,
+        "player_development": 71,
+        "motivation": 74,
+        "adaptability": 88,
+        "experience": 76
+      },
+      "offensive_scheme": "horns",
+      "defensive_scheme": "switch_everything",
+      "pace_preference": 55,
+      "three_point_emphasis": 54,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "95f5a64e-5b76-5a2e-bec2-113683e5149e",
+    "info": {
+      "city": "Los Angeles",
+      "name": "Vipers",
+      "abbreviation": "LAV",
+      "conference": "Western",
+      "division": "Pacific",
+      "primary_color": "#800080",
+      "secondary_color": "#39FF14",
+      "arena_name": "Venom Arena",
+      "arena_capacity": 17262,
+      "market_size": 10
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Kevin Sullivan",
+        "offense_rating": 78,
+        "defense_rating": 77,
+        "player_development": 67,
+        "motivation": 78,
+        "adaptability": 67,
+        "experience": 60
+      },
+      "offensive_scheme": "princeton",
+      "defensive_scheme": "conservative_shell",
+      "pace_preference": 80,
+      "three_point_emphasis": 43,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "176f95fa-96b1-5e82-bc8d-d79a049229e7",
+    "info": {
+      "city": "Golden State",
+      "name": "Samurai",
+      "abbreviation": "GSS",
+      "conference": "Western",
+      "division": "Pacific",
+      "primary_color": "#C41E3A",
+      "secondary_color": "#1C1C1C",
+      "arena_name": "Katana Center",
+      "arena_capacity": 17937,
+      "market_size": 9
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Tom Pemberton",
+        "offense_rating": 61,
+        "defense_rating": 87,
+        "player_development": 70,
+        "motivation": 62,
+        "adaptability": 76,
+        "experience": 67
+      },
+      "offensive_scheme": "pace_and_space",
+      "defensive_scheme": "conservative_shell",
+      "pace_preference": 71,
+      "three_point_emphasis": 53,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "311c164c-75f8-5eda-a34d-75c9195b649c",
+    "info": {
+      "city": "Sacramento",
+      "name": "Empire",
+      "abbreviation": "SAC",
+      "conference": "Western",
+      "division": "Pacific",
+      "primary_color": "#4B0082",
+      "secondary_color": "#DAA520",
+      "arena_name": "Imperial Arena",
+      "arena_capacity": 19208,
+      "market_size": 4
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "James Fairbanks",
+        "offense_rating": 89,
+        "defense_rating": 88,
+        "player_development": 78,
+        "motivation": 78,
+        "adaptability": 75,
+        "experience": 67
+      },
+      "offensive_scheme": "horns",
+      "defensive_scheme": "zone_heavy",
+      "pace_preference": 52,
+      "three_point_emphasis": 46,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "772c0a18-fcfb-5a8c-ac49-3a9ca70ee90c",
+    "info": {
+      "city": "Phoenix",
+      "name": "Scorchers",
+      "abbreviation": "PHX",
+      "conference": "Western",
+      "division": "Pacific",
+      "primary_color": "#FF4500",
+      "secondary_color": "#1C1C1C",
+      "arena_name": "Inferno Arena",
+      "arena_capacity": 17397,
+      "market_size": 6
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Phil Prescott",
+        "offense_rating": 71,
+        "defense_rating": 73,
+        "player_development": 73,
+        "motivation": 74,
+        "adaptability": 87,
+        "experience": 83
+      },
+      "offensive_scheme": "motion",
+      "defensive_scheme": "conservative_shell",
+      "pace_preference": 46,
+      "three_point_emphasis": 43,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "de8bfc98-6fc6-5b93-af1c-6c7cc0d535e1",
+    "info": {
+      "city": "Los Angeles",
+      "name": "Waves",
+      "abbreviation": "LAW",
+      "conference": "Western",
+      "division": "Pacific",
+      "primary_color": "#006994",
+      "secondary_color": "#F0E68C",
+      "arena_name": "Pacific Arena",
+      "arena_capacity": 18649,
+      "market_size": 10
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Sam Vasquez",
+        "offense_rating": 85,
+        "defense_rating": 87,
+        "player_development": 63,
+        "motivation": 67,
+        "adaptability": 66,
+        "experience": 66
+      },
+      "offensive_scheme": "horns",
+      "defensive_scheme": "drop_coverage",
+      "pace_preference": 67,
+      "three_point_emphasis": 51,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "fb0efc1b-2525-53b4-9f5e-61346f33e66d",
+    "info": {
+      "city": "Dallas",
+      "name": "Mustangs",
+      "abbreviation": "DAL",
+      "conference": "Western",
+      "division": "Southwest",
+      "primary_color": "#003366",
+      "secondary_color": "#8B4513",
+      "arena_name": "Corral Arena",
+      "arena_capacity": 18140,
+      "market_size": 7
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Bill Callahan",
+        "offense_rating": 87,
+        "defense_rating": 89,
+        "player_development": 62,
+        "motivation": 74,
+        "adaptability": 85,
+        "experience": 87
+      },
+      "offensive_scheme": "princeton",
+      "defensive_scheme": "switch_everything",
+      "pace_preference": 74,
+      "three_point_emphasis": 40,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "e59cc547-ea9b-5492-b0e0-7336e8a5f6ed",
+    "info": {
+      "city": "Houston",
+      "name": "Comets",
+      "abbreviation": "HOU",
+      "conference": "Western",
+      "division": "Southwest",
+      "primary_color": "#FF6347",
+      "secondary_color": "#1C1C1C",
+      "arena_name": "Launchpad Center",
+      "arena_capacity": 20969,
+      "market_size": 8
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Tom Holbrook",
+        "offense_rating": 84,
+        "defense_rating": 87,
+        "player_development": 67,
+        "motivation": 65,
+        "adaptability": 73,
+        "experience": 75
+      },
+      "offensive_scheme": "horns",
+      "defensive_scheme": "drop_coverage",
+      "pace_preference": 65,
+      "three_point_emphasis": 43,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "413438ba-b3e0-5fd8-85f0-48a2a307905d",
+    "info": {
+      "city": "San Antonio",
+      "name": "Coyotes",
+      "abbreviation": "SAS",
+      "conference": "Western",
+      "division": "Southwest",
+      "primary_color": "#708090",
+      "secondary_color": "#000000",
+      "arena_name": "Desert Arena",
+      "arena_capacity": 17674,
+      "market_size": 5
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Jeff Sullivan",
+        "offense_rating": 72,
+        "defense_rating": 68,
+        "player_development": 89,
+        "motivation": 85,
+        "adaptability": 85,
+        "experience": 74
+      },
+      "offensive_scheme": "pace_and_space",
+      "defensive_scheme": "zone_heavy",
+      "pace_preference": 75,
+      "three_point_emphasis": 71,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "b4a6cc87-82f0-5f96-8515-e528c6bff0ec",
+    "info": {
+      "city": "Memphis",
+      "name": "Blues",
+      "abbreviation": "MEM",
+      "conference": "Western",
+      "division": "Southwest",
+      "primary_color": "#000080",
+      "secondary_color": "#87CEEB",
+      "arena_name": "Rhythm Arena",
+      "arena_capacity": 17634,
+      "market_size": 3
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Chris Brennan",
+        "offense_rating": 66,
+        "defense_rating": 90,
+        "player_development": 61,
+        "motivation": 78,
+        "adaptability": 83,
+        "experience": 77
+      },
+      "offensive_scheme": "motion",
+      "defensive_scheme": "conservative_shell",
+      "pace_preference": 60,
+      "three_point_emphasis": 43,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  },
+  {
+    "id": "d6157769-4ad2-52b1-9c3f-0690876c65df",
+    "info": {
+      "city": "New Orleans",
+      "name": "Krewe",
+      "abbreviation": "NOP",
+      "conference": "Western",
+      "division": "Southwest",
+      "primary_color": "#800020",
+      "secondary_color": "#DAA520",
+      "arena_name": "Bayou Center",
+      "arena_capacity": 17205,
+      "market_size": 4
+    },
+    "coaching": {
+      "head_coach": {
+        "name": "Keith Hargrove",
+        "offense_rating": 76,
+        "defense_rating": 89,
+        "player_development": 87,
+        "motivation": 76,
+        "adaptability": 65,
+        "experience": 61
+      },
+      "offensive_scheme": "princeton",
+      "defensive_scheme": "drop_coverage",
+      "pace_preference": 44,
+      "three_point_emphasis": 78,
+      "starter_minutes": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    "roster": [],
+    "finances": {},
+    "chemistry": 50,
+    "home_court_advantage": 5,
+    "season_record": {
+      "wins": 0,
+      "losses": 0,
+      "conference_wins": 0,
+      "conference_losses": 0,
+      "division_wins": 0,
+      "division_losses": 0,
+      "home_wins": 0,
+      "home_losses": 0,
+      "away_wins": 0,
+      "away_losses": 0,
+      "streak": 0,
+      "last_10_wins": 0,
+      "last_10_losses": 0,
+      "points_for": 0,
+      "points_against": 0
+    },
+    "history": []
+  }
+]
