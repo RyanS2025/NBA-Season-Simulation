@@ -22,6 +22,8 @@ import {
 } from '../db/league-manager'
 import { quickSimGame } from '../utils/quick-sim'
 import { validateTrade, computeTeamPayroll } from '../utils/cba-engine'
+import { runPlayerDevelopment } from '../utils/offseason-engine'
+import { generateSeasonSchedule } from '../utils/schedule-generator'
 import type { Team, Game, GameResult, Player, Transaction } from '../types'
 import type { SeasonPhase } from '../types'
 import type { TradeValidationResult } from '../utils/cba-engine'
@@ -54,6 +56,7 @@ export interface LeagueContextValue {
     years: number,
   ) => Promise<boolean>
   releasePlayer: (playerId: string) => Promise<boolean>
+  advanceToNextSeason: () => Promise<boolean>
 }
 
 const LeagueContext = createContext<LeagueContextValue | null>(null)
@@ -484,6 +487,93 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
     [players, teams, state, refreshTeams, refreshPlayers],
   )
 
+  const advanceToNextSeason = useCallback(async (): Promise<boolean> => {
+    const db = dbRef.current
+    if (!db || !state) return false
+
+    setSimming(true)
+    setSimProgress('Running player development...')
+
+    try {
+      const currentPlayers = await getAllPlayers(db)
+      const { updatedPlayers, retiredPlayerIds } = runPlayerDevelopment(currentPlayers)
+
+      setSimProgress('Updating player ratings...')
+
+      await db.transaction('rw', [db.players, db.teams, db.leagueState, db.games, db.transactions], async () => {
+        for (const retired of retiredPlayerIds) {
+          const p = currentPlayers.find(x => x.id === retired)
+          if (p) {
+            const tx: Transaction = {
+              id: uuid(),
+              date: state.currentDate,
+              type: 'release',
+              details: { playerId: retired, reason: 'retirement' },
+              description: `${p.bio.firstName} ${p.bio.lastName} has retired`,
+              seasonYear: state.currentSeason,
+            }
+            await addTransaction(db, tx)
+          }
+          await db.players.delete(retired)
+        }
+
+        await db.players.bulkPut(updatedPlayers)
+
+        // Reset team records for next season
+        const allTeams = await db.teams.toArray()
+        for (const team of allTeams) {
+          team.roster = team.roster.filter(r => !retiredPlayerIds.includes(r.playerId))
+          team.seasonRecord = {
+            wins: 0, losses: 0,
+            conferenceWins: 0, conferenceLosses: 0,
+            divisionWins: 0, divisionLosses: 0,
+            homeWins: 0, homeLosses: 0,
+            awayWins: 0, awayLosses: 0,
+            streak: 0, last10Wins: 0, last10Losses: 0,
+            pointsFor: 0, pointsAgainst: 0,
+          }
+          await db.teams.put(team)
+        }
+
+        // Generate next season schedule
+        setSimProgress('Generating schedule...')
+        const nextSeason = state.currentSeason + 1
+        const teamInfos = allTeams.map(t => t.info)
+        const newSchedule = generateSeasonSchedule(teamInfos, nextSeason)
+
+        // Clear old games and add new ones
+        await db.games.clear()
+        await db.games.bulkAdd(newSchedule)
+
+        const startDate = newSchedule.length > 0
+          ? newSchedule.sort((a, b) => a.date.localeCompare(b.date))[0].date
+          : `${nextSeason}-10-22`
+
+        await db.leagueState.update('singleton', {
+          currentSeason: nextSeason,
+          currentDate: startDate,
+          currentPhase: 'regular_season',
+        })
+      })
+
+      if (leagueId) {
+        await saveLeagueMeta(leagueId, {
+          currentSeason: state.currentSeason + 1,
+          currentPhase: 'regular_season' as SeasonPhase,
+        })
+      }
+
+      await refreshState()
+      await refreshTeams()
+      await refreshPlayers()
+
+      return true
+    } finally {
+      setSimming(false)
+      setSimProgress(null)
+    }
+  }, [state, leagueId, refreshState, refreshTeams, refreshPlayers])
+
   return (
     <LeagueContext.Provider
       value={{
@@ -504,6 +594,7 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
         executeTrade,
         signFreeAgent,
         releasePlayer,
+        advanceToNextSeason,
       }}
     >
       {children}
