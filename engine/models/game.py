@@ -10,6 +10,11 @@ class ShotAttempt:
     is_contested: bool
     assisted_by_player_id: str | None = None
     quarter: int = 1
+    shot_clock: float = 24.0
+    game_clock: float = 720.0
+    is_clutch: bool = False
+    defender_id: str | None = None
+    contest_level: float = 0.0
 
 @dataclass
 class PlayerGameStats:
@@ -32,6 +37,12 @@ class PlayerGameStats:
     personal_fouls: int = 0
     plus_minus: int = 0
     shot_chart: list[ShotAttempt] = field(default_factory=list)
+    clutch_points: int = 0
+    fast_break_points: int = 0
+    second_chance_points: int = 0
+    points_in_paint: int = 0
+    contested_shots_made: int = 0
+    contested_shots_attempted: int = 0
 
 @dataclass
 class TeamGameStats:
@@ -43,6 +54,13 @@ class TeamGameStats:
     team_rebounds: int = 0
     biggest_lead: int = 0
     pace: float = 0.0
+    points_off_turnovers: int = 0
+    assists: int = 0
+    biggest_run: int = 0
+    lead_changes: int = 0
+    times_tied: int = 0
+    offensive_rating: float = 0.0
+    defensive_rating: float = 0.0
 
 @dataclass
 class TeamBoxScore:
@@ -59,6 +77,19 @@ class GameResult:
     home_box_score: TeamBoxScore | None = None
     away_box_score: TeamBoxScore | None = None
     quarter_scores: dict = field(default_factory=lambda: {"home": [], "away": []})
+    lead_changes: int = 0
+    times_tied: int = 0
+    home_biggest_run: int = 0
+    away_biggest_run: int = 0
+
+@dataclass
+class TimeoutState:
+    home_full: int = 7
+    home_twenty: int = 0
+    away_full: int = 7
+    away_twenty: int = 0
+    home_used_this_quarter: int = 0
+    away_used_this_quarter: int = 0
 
 @dataclass
 class GameState:
@@ -71,6 +102,34 @@ class GameState:
     possession_count: int = 0
     home_lineup: list[str] = field(default_factory=list)
     away_lineup: list[str] = field(default_factory=list)
+    timeouts: TimeoutState = field(default_factory=TimeoutState)
+    is_playoff: bool = False
+    home_fouls_quarter: int = 0
+    away_fouls_quarter: int = 0
+    last_scorer_team: str | None = None
+    home_run: int = 0
+    away_run: int = 0
+    lead_changes: int = 0
+    times_tied: int = 0
+    last_lead_team: str | None = None
+    is_transition: bool = False
+    last_possession_result: str | None = None
+
+@dataclass
+class GameContext:
+    is_back_to_back: bool = False
+    is_second_of_back_to_back: bool = False
+    days_rest: int = 1
+    games_in_last_5_days: int = 1
+    travel_distance: int = 0
+    is_home: bool = True
+    altitude_game: bool = False
+    road_trip_length: int = 0
+    is_rivalry: bool = False
+    is_national_tv: bool = False
+    playoff_series_game: int = 0
+    playoff_series_score: tuple[int, int] = (0, 0)
+    is_elimination: bool = False
 
 @dataclass
 class PlayoffSeriesRef:
@@ -93,3 +152,5 @@ class Game:
     neutral_site: bool = False
     result: GameResult | None = None
     playoff_series: PlayoffSeriesRef | None = None
+    home_context: GameContext = field(default_factory=GameContext)
+    away_context: GameContext = field(default_factory=lambda: GameContext(is_home=False))
