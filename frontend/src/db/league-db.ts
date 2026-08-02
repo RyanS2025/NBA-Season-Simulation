@@ -23,6 +23,7 @@ export interface LeagueState {
   currentPhase: string
   userTeamId: string
   settings: LeagueSettings
+  seasonHistory: import('../types/league').SeasonSummary[]
 }
 
 export interface PlayerSeasonStats {

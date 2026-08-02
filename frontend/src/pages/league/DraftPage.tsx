@@ -2,10 +2,11 @@ import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
 import GlassCard from '../../components/common/GlassCard'
+import Button from '../../components/common/Button'
 import { useLeague } from '../../hooks/useLeague'
 import type { DraftState } from '../../hooks/useLeague'
 import type { DraftProspect, DraftPick } from '../../utils/draft-engine'
-import type { Position } from '../../types'
+import type { Position, Player } from '../../types'
 
 type PositionFilter = Position | 'ALL'
 const POSITION_FILTERS: PositionFilter[] = ['ALL', 'PG', 'SG', 'SF', 'PF', 'C']
@@ -164,6 +165,98 @@ function ProspectCard({
   )
 }
 
+function DraftTradePanel({
+  teams,
+  players,
+  userTeamId,
+  pickNumber,
+  onAccept,
+  onCancel,
+}: {
+  teams: { id: string; info: { city: string; name: string } }[]
+  players: Player[]
+  userTeamId: string
+  pickNumber: number
+  onAccept: (partnerTeamId: string, inPlayerIds: string[]) => void
+  onCancel: () => void
+}) {
+  const [selectedTeam, setSelectedTeam] = useState<string | null>(null)
+
+  const interestedTeams = useMemo(() => {
+    return teams
+      .filter(t => t.id !== userTeamId)
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 6)
+  }, [teams, userTeamId])
+
+  const selectedPlayers = useMemo(() => {
+    if (!selectedTeam) return []
+    return players
+      .filter(p => p.teamId === selectedTeam)
+      .sort((a, b) => (b.ratings.overall ?? 0) - (a.ratings.overall ?? 0))
+      .slice(0, 5)
+  }, [selectedTeam, players])
+
+  return (
+    <GlassCard className="p-5 mb-4 border border-yellow-500/20">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-yellow-400" />
+          Trade Pick #{pickNumber}
+        </h3>
+        <button onClick={onCancel} className="text-xs text-gray-500 hover:text-white transition-colors">
+          Cancel
+        </button>
+      </div>
+
+      {!selectedTeam ? (
+        <div>
+          <p className="text-xs text-gray-500 mb-3">Select a team to trade with:</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            {interestedTeams.map(t => (
+              <button
+                key={t.id}
+                onClick={() => setSelectedTeam(t.id)}
+                className="px-3 py-2 rounded-lg text-xs text-left bg-white/[0.03] border border-white/[0.06] hover:border-[oklch(64.6%_0.222_41.116)]/30 hover:bg-white/[0.06] transition-all"
+              >
+                <div className="text-white font-medium">{t.info.city}</div>
+                <div className="text-gray-500">{t.info.name}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div>
+          <p className="text-xs text-gray-500 mb-3">
+            {teams.find(t => t.id === selectedTeam)?.info.city} offers — select a player to receive for your pick:
+          </p>
+          <div className="space-y-1.5 mb-4">
+            {selectedPlayers.map(p => (
+              <button
+                key={p.id}
+                onClick={() => onAccept(selectedTeam, [p.id])}
+                className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg bg-white/[0.03] border border-white/[0.06] hover:border-[oklch(64.6%_0.222_41.116)]/30 hover:bg-white/[0.06] transition-all text-left"
+              >
+                <div>
+                  <div className="text-sm text-white">{p.bio.firstName} {p.bio.lastName}</div>
+                  <div className="text-xs text-gray-500">{p.bio.position} &middot; OVR {p.ratings.overall}</div>
+                </div>
+                <span className="text-xs text-[oklch(64.6%_0.222_41.116)]">Accept</span>
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={() => setSelectedTeam(null)}
+            className="text-xs text-gray-500 hover:text-white transition-colors"
+          >
+            ← Back to teams
+          </button>
+        </div>
+      )}
+    </GlassCard>
+  )
+}
+
 function LotteryResultsPanel({
   draftState,
   teams,
@@ -269,11 +362,14 @@ export default function DraftPage() {
     userDraftPick,
     advanceDraftPick,
     completeDraft,
+    executeTrade,
   } = useLeague()
 
   const [search, setSearch] = useState('')
   const [posFilter, setPosFilter] = useState<PositionFilter>('ALL')
   const [autoAdvancing, setAutoAdvancing] = useState(false)
+  const [showTradePanel, setShowTradePanel] = useState(false)
+  const [tradeMessage, setTradeMessage] = useState<string | null>(null)
   const autoAdvanceRef = useRef(false)
   const picksEndRef = useRef<HTMLDivElement>(null)
 
@@ -339,6 +435,16 @@ export default function DraftPage() {
     await userDraftPick(prospectId)
     setTimeout(() => runAutoAdvance(), 300)
   }, [userDraftPick, runAutoAdvance])
+
+  const handleDraftTrade = useCallback(async (partnerTeamId: string, inPlayerIds: string[]) => {
+    const userPlayerIds: string[] = []
+    const result = await executeTrade(userPlayerIds, inPlayerIds, partnerTeamId)
+    if (result.executed) {
+      setShowTradePanel(false)
+      setTradeMessage('Trade completed!')
+      setTimeout(() => setTradeMessage(null), 3000)
+    }
+  }, [executeTrade])
 
   // Auto-start CPU picks after draft loads if user doesn't have pick #1
   useEffect(() => {
@@ -440,8 +546,16 @@ export default function DraftPage() {
                       </span>
                     </div>
                     {isUserTurn && (
-                      <div className="text-xs text-[oklch(64.6%_0.222_41.116)] mt-1">
-                        Your pick — select a prospect from the board
+                      <div className="flex items-center justify-between mt-1">
+                        <div className="text-xs text-[oklch(64.6%_0.222_41.116)]">
+                          Your pick — select a prospect from the board
+                        </div>
+                        <button
+                          onClick={() => setShowTradePanel(true)}
+                          className="px-3 py-1 rounded-lg text-xs font-medium bg-yellow-400/10 text-yellow-400 hover:bg-yellow-400/20 transition-colors"
+                        >
+                          Trade This Pick
+                        </button>
                       </div>
                     )}
                     {!isUserTurn && autoAdvancing && (
@@ -481,6 +595,22 @@ export default function DraftPage() {
 
             {/* Right: Prospect board */}
             <div className="lg:col-span-3">
+              {tradeMessage && (
+                <div className="mb-4 px-4 py-2.5 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-sm font-medium">
+                  {tradeMessage}
+                </div>
+              )}
+
+              {showTradePanel && isUserTurn && currentPick && (
+                <DraftTradePanel
+                  teams={teams}
+                  players={players}
+                  userTeamId={userTeamId}
+                  pickNumber={currentPick.pickNumber}
+                  onAccept={(partnerTeamId, inPlayerIds) => handleDraftTrade(partnerTeamId, inPlayerIds)}
+                  onCancel={() => setShowTradePanel(false)}
+                />
+              )}
               <div className="flex flex-col sm:flex-row gap-3 mb-4">
                 <input
                   type="text"

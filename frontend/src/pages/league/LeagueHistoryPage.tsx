@@ -4,7 +4,6 @@ import PageTransition from '../../components/layout/PageTransition'
 import GlassCard from '../../components/common/GlassCard'
 import { useLeague } from '../../hooks/useLeague'
 import type { Player } from '../../types'
-import type { SeasonPhase } from '../../types/league'
 
 const PHASE_LABELS: Record<string, string> = {
   preseason: 'Preseason',
@@ -82,6 +81,11 @@ export default function LeagueHistoryPage() {
   const topRebounders = useMemo(() => buildLeaders(players, teamMap, 'rpg', 5), [players, teamMap])
   const topAssisters = useMemo(() => buildLeaders(players, teamMap, 'apg', 5), [players, teamMap])
 
+  const playerNameMap = useMemo(
+    () => new Map(players.map(p => [p.id, `${p.bio.firstName} ${p.bio.lastName}`])),
+    [players],
+  )
+
   if (loading || !state) {
     return (
       <PageTransition>
@@ -96,8 +100,8 @@ export default function LeagueHistoryPage() {
 
   const phaseLabel = PHASE_LABELS[state.currentPhase] ?? state.currentPhase
 
-  // Completed seasons count (no seasonHistory on LeagueState, so infer from currentSeason)
-  const completedSeasons = state.currentSeason - 1
+  const history = state.seasonHistory ?? []
+  const completedSeasons = history.length
 
   return (
     <PageTransition>
@@ -193,20 +197,44 @@ export default function LeagueHistoryPage() {
 
         {/* Season History */}
         <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Season History</h2>
-        {completedSeasons === 0 ? (
+        {history.length === 0 ? (
           <GlassCard className="p-6 mb-8">
             <p className="text-gray-500 text-sm text-center">
               No completed seasons yet &mdash; history will be recorded as seasons finish.
             </p>
           </GlassCard>
         ) : (
-          <div className="space-y-4 mb-8">
-            {/* Future: render SeasonSummary cards here when seasonHistory is available */}
-            <GlassCard className="p-6">
-              <p className="text-gray-500 text-sm text-center">
-                {completedSeasons} completed season{completedSeasons > 1 ? 's' : ''} recorded.
-              </p>
-            </GlassCard>
+          <div className="space-y-3 mb-8">
+            {[...history].reverse().map(s => (
+              <GlassCard key={s.year} className="p-5">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                  <div>
+                    <div className="text-sm font-medium text-white">Season {s.year}</div>
+                    <div className="text-xs text-gray-500 mt-0.5">
+                      Champion: <span className="text-[oklch(64.6%_0.222_41.116)]">{teamMap.get(s.championTeamId) ?? 'Unknown'}</span>
+                      {s.finalistTeamId && <> &bull; Runner-up: {teamMap.get(s.finalistTeamId) ?? 'Unknown'}</>}
+                    </div>
+                  </div>
+                  <div className="flex gap-6 text-xs text-gray-400">
+                    <div>
+                      <span className="text-gray-600">MVP</span>{' '}
+                      <span className="text-white">{playerNameMap.get(s.mvpPlayerId) ?? 'Unknown'}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Scoring</span>{' '}
+                      <span className="text-white">{playerNameMap.get(s.topScorerPlayerId) ?? 'Unknown'}</span>
+                      <span className="text-gray-600 ml-1">{s.topScorerPPG.toFixed(1)}</span>
+                    </div>
+                    {s.rotyPlayerId && (
+                      <div>
+                        <span className="text-gray-600">ROTY</span>{' '}
+                        <span className="text-white">{playerNameMap.get(s.rotyPlayerId) ?? 'Unknown'}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </GlassCard>
+            ))}
           </div>
         )}
 

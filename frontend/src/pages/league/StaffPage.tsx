@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import PageTransition from '../../components/layout/PageTransition'
 import GlassCard from '../../components/common/GlassCard'
 import ProgressBar from '../../components/common/ProgressBar'
 import SectionLabel from '../../components/common/SectionLabel'
+import Button from '../../components/common/Button'
 import { useLeague } from '../../hooks/useLeague'
 import type {
   GeneralManager,
@@ -12,10 +13,28 @@ import type {
   Trainer,
   TeamPersonality,
   StaffRoster,
+  StaffContract,
 } from '../../types'
 
 const TABS = ['Front Office', 'Coaching', 'Scouts', 'Training'] as const
 type Tab = (typeof TABS)[number]
+
+interface ExtensionState {
+  staffId: string
+  baseSalary: number
+  years: number
+  salary: number
+}
+
+interface ExtensionActions {
+  extending: ExtensionState | null
+  successId: string | null
+  onExtendClick: (staffId: string, baseSalary: number) => void
+  onYearsChange: (years: number) => void
+  onSalaryChange: (salary: number) => void
+  onConfirm: () => void
+  onCancel: () => void
+}
 
 function formatSalary(salary: number): string {
   if (salary >= 1_000_000) return `$${(salary / 1_000_000).toFixed(1)}M`
@@ -53,17 +72,117 @@ function PersonalityTag({ label, value }: { label: string; value: number }) {
   )
 }
 
-function ContractBadge({ salary, years }: { salary: number; years: number }) {
+function ContractBadge({
+  salary,
+  years,
+  staffId,
+  ext,
+}: {
+  salary: number
+  years: number
+  staffId: string
+  ext: ExtensionActions
+}) {
   return (
-    <div className="text-xs text-gray-500">
-      {formatSalary(salary)}/yr · {years}yr{years !== 1 ? 's' : ''} left
+    <div className="flex items-center gap-2">
+      <div className="text-xs text-gray-500">
+        {formatSalary(salary)}/yr · {years}yr{years !== 1 ? 's' : ''} left
+      </div>
+      {years <= 1 && ext.extending?.staffId !== staffId && ext.successId !== staffId && (
+        <button
+          onClick={() => ext.onExtendClick(staffId, salary)}
+          className="px-2 py-0.5 text-[10px] uppercase tracking-wider rounded border bg-accent/15 text-accent border-accent/25 hover:bg-accent/25 transition-colors"
+        >
+          Extend
+        </button>
+      )}
+    </div>
+  )
+}
+
+function SuccessIndicator() {
+  return (
+    <div className="mt-3 p-3 rounded-lg bg-green-500/10 border border-green-500/20">
+      <span className="text-xs font-medium text-green-400 uppercase tracking-wider">Extended!</span>
+    </div>
+  )
+}
+
+function ExtensionPanel({ ext }: { ext: ExtensionActions }) {
+  if (!ext.extending) return null
+
+  const { baseSalary, years, salary } = ext.extending
+  const minSalary = Math.round(baseSalary * 0.8)
+  const maxSalary = Math.round(baseSalary * 1.2)
+  const step = Math.max(10_000, Math.round(baseSalary * 0.01))
+
+  return (
+    <div className="mt-3 p-3 rounded-lg bg-white/[0.03] border border-white/[0.06] space-y-3">
+      <div>
+        <span className="text-[10px] uppercase tracking-wider text-gray-500 block mb-1">Additional Years</span>
+        <div className="flex gap-1">
+          {[1, 2, 3].map(y => (
+            <button
+              key={y}
+              onClick={() => ext.onYearsChange(y)}
+              className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
+                years === y
+                  ? 'bg-accent/15 text-accent border border-accent/25'
+                  : 'bg-white/[0.04] text-gray-400 border border-white/[0.08] hover:text-white'
+              }`}
+            >
+              +{y}yr{y !== 1 ? 's' : ''}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div>
+        <span className="text-[10px] uppercase tracking-wider text-gray-500 block mb-1">
+          Annual Salary: {formatSalary(salary)}
+        </span>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => ext.onSalaryChange(Math.max(minSalary, salary - step))}
+            className="w-7 h-7 rounded-lg bg-white/[0.04] border border-white/[0.08] text-gray-400 hover:text-white text-sm font-medium transition-colors flex items-center justify-center"
+          >
+            -
+          </button>
+          <div className="flex-1 h-1.5 rounded-full bg-white/[0.06] relative">
+            <div
+              className="absolute inset-y-0 left-0 rounded-full"
+              style={{
+                width: `${Math.max(0, Math.min(100, ((salary - minSalary) / (maxSalary - minSalary)) * 100))}%`,
+                backgroundColor: 'oklch(64.6% 0.222 41.116)',
+              }}
+            />
+          </div>
+          <button
+            onClick={() => ext.onSalaryChange(Math.min(maxSalary, salary + step))}
+            className="w-7 h-7 rounded-lg bg-white/[0.04] border border-white/[0.08] text-gray-400 hover:text-white text-sm font-medium transition-colors flex items-center justify-center"
+          >
+            +
+          </button>
+        </div>
+        <div className="flex justify-between text-[10px] text-gray-600 mt-0.5">
+          <span>{formatSalary(minSalary)}</span>
+          <span>{formatSalary(maxSalary)}</span>
+        </div>
+      </div>
+      <div className="flex gap-2">
+        <Button size="sm" variant="primary" onClick={ext.onConfirm}>
+          Confirm Extension
+        </Button>
+        <Button size="sm" variant="ghost" onClick={ext.onCancel}>
+          Cancel
+        </Button>
+      </div>
     </div>
   )
 }
 
 // ── GM Card ─────────────────────────────────────────────────────
 
-function GMCard({ gm }: { gm: GeneralManager }) {
+function GMCard({ gm, ext }: { gm: GeneralManager; ext: ExtensionActions }) {
   return (
     <GlassCard className="p-5">
       <div className="flex items-start justify-between mb-4">
@@ -72,7 +191,7 @@ function GMCard({ gm }: { gm: GeneralManager }) {
           <div className="text-xl font-semibold text-white">{gm.name}</div>
           <div className="text-xs text-gray-500 mt-0.5">Age {gm.age} · {gm.yearsAsGM} years as GM</div>
         </div>
-        <ContractBadge salary={gm.contract.annualSalary} years={gm.contract.yearsRemaining} />
+        <ContractBadge salary={gm.contract.annualSalary} years={gm.contract.yearsRemaining} staffId={gm.id} ext={ext} />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1.5 mb-4">
@@ -91,13 +210,16 @@ function GMCard({ gm }: { gm: GeneralManager }) {
         <PersonalityTag label="Loyalty" value={gm.personality.loyalty} />
         <PersonalityTag label="Media" value={gm.personality.mediaPresence} />
       </div>
+
+      {ext.extending?.staffId === gm.id && <ExtensionPanel ext={ext} />}
+      {ext.successId === gm.id && <SuccessIndicator />}
     </GlassCard>
   )
 }
 
 // ── Head Coach Card ─────────────────────────────────────────────
 
-function HeadCoachCard({ coach }: { coach: HeadCoach }) {
+function HeadCoachCard({ coach, ext }: { coach: HeadCoach; ext: ExtensionActions }) {
   const { wins, losses } = coach.careerRecord
   const winPct = wins + losses > 0 ? ((wins / (wins + losses)) * 100).toFixed(1) : '0.0'
   return (
@@ -111,7 +233,7 @@ function HeadCoachCard({ coach }: { coach: HeadCoach }) {
           </div>
         </div>
         <div className="text-right">
-          <ContractBadge salary={coach.contract.annualSalary} years={coach.contract.yearsRemaining} />
+          <ContractBadge salary={coach.contract.annualSalary} years={coach.contract.yearsRemaining} staffId={coach.id} ext={ext} />
           {coach.hotSeatLevel > 40 && (
             <div className="text-[10px] text-red-400 mt-1 uppercase tracking-wider">
               Hot Seat: {coach.hotSeatLevel}
@@ -135,6 +257,9 @@ function HeadCoachCard({ coach }: { coach: HeadCoach }) {
         <PersonalityTag label="Media" value={coach.personality.mediaHandling} />
         <PersonalityTag label="Clutch" value={coach.personality.clutchCoaching} />
       </div>
+
+      {ext.extending?.staffId === coach.id && <ExtensionPanel ext={ext} />}
+      {ext.successId === coach.id && <SuccessIndicator />}
     </GlassCard>
   )
 }
@@ -150,7 +275,7 @@ const SPECIALTY_LABELS: Record<string, string> = {
   guards: 'Guards',
 }
 
-function AssistantCoachRow({ ac }: { ac: AssistantCoach }) {
+function AssistantCoachRow({ ac, ext }: { ac: AssistantCoach; ext: ExtensionActions }) {
   return (
     <GlassCard className="p-4">
       <div className="flex items-center justify-between mb-2">
@@ -160,19 +285,21 @@ function AssistantCoachRow({ ac }: { ac: AssistantCoach }) {
             Age {ac.age} · {SPECIALTY_LABELS[ac.specialty] ?? ac.specialty} Specialist
           </div>
         </div>
-        <ContractBadge salary={ac.contract.annualSalary} years={ac.contract.yearsRemaining} />
+        <ContractBadge salary={ac.contract.annualSalary} years={ac.contract.yearsRemaining} staffId={ac.id} ext={ext} />
       </div>
       <div className="grid grid-cols-2 gap-x-6 gap-y-1">
         <RatingBar label="Specialty" value={ac.specialtyRating} />
         <RatingBar label="General" value={ac.generalRating} />
       </div>
+      {ext.extending?.staffId === ac.id && <ExtensionPanel ext={ext} />}
+      {ext.successId === ac.id && <SuccessIndicator />}
     </GlassCard>
   )
 }
 
 // ── Scout Row ───────────────────────────────────────────────────
 
-function ScoutRow({ scout }: { scout: Scout }) {
+function ScoutRow({ scout, ext }: { scout: Scout; ext: ExtensionActions }) {
   return (
     <GlassCard className="p-4">
       <div className="flex items-center justify-between mb-2">
@@ -185,7 +312,7 @@ function ScoutRow({ scout }: { scout: Scout }) {
               : ' · Unassigned'}
           </div>
         </div>
-        <ContractBadge salary={scout.contract.annualSalary} years={scout.contract.yearsRemaining} />
+        <ContractBadge salary={scout.contract.annualSalary} years={scout.contract.yearsRemaining} staffId={scout.id} ext={ext} />
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-1">
         <RatingBar label="Domestic" value={scout.skills.domesticScouting} />
@@ -198,13 +325,15 @@ function ScoutRow({ scout }: { scout: Scout }) {
       <div className="mt-2">
         <RatingBar label="Accuracy" value={scout.accuracy} />
       </div>
+      {ext.extending?.staffId === scout.id && <ExtensionPanel ext={ext} />}
+      {ext.successId === scout.id && <SuccessIndicator />}
     </GlassCard>
   )
 }
 
 // ── Trainer Row ─────────────────────────────────────────────────
 
-function TrainerRow({ trainer }: { trainer: Trainer }) {
+function TrainerRow({ trainer, ext }: { trainer: Trainer; ext: ExtensionActions }) {
   return (
     <GlassCard className="p-4">
       <div className="flex items-center justify-between mb-2">
@@ -212,7 +341,7 @@ function TrainerRow({ trainer }: { trainer: Trainer }) {
           <div className="text-sm font-medium text-white">{trainer.name}</div>
           <div className="text-xs text-gray-500">Age {trainer.age}</div>
         </div>
-        <ContractBadge salary={trainer.contract.annualSalary} years={trainer.contract.yearsRemaining} />
+        <ContractBadge salary={trainer.contract.annualSalary} years={trainer.contract.yearsRemaining} staffId={trainer.id} ext={ext} />
       </div>
       <div className="grid grid-cols-2 gap-x-6 gap-y-1">
         <RatingBar label="Injury Prevention" value={trainer.skills.injuryPrevention} />
@@ -220,6 +349,8 @@ function TrainerRow({ trainer }: { trainer: Trainer }) {
         <RatingBar label="Strength" value={trainer.skills.strengthConditioning} />
         <RatingBar label="Load Management" value={trainer.skills.loadManagement} />
       </div>
+      {ext.extending?.staffId === trainer.id && <ExtensionPanel ext={ext} />}
+      {ext.successId === trainer.id && <SuccessIndicator />}
     </GlassCard>
   )
 }
@@ -267,25 +398,25 @@ function TeamPersonalityPanel({ personality }: { personality: TeamPersonality })
 
 // ── Tab Panels ──────────────────────────────────────────────────
 
-function FrontOfficeTab({ staff, personality }: { staff: StaffRoster; personality: TeamPersonality | null }) {
+function FrontOfficeTab({ staff, personality, ext }: { staff: StaffRoster; personality: TeamPersonality | null; ext: ExtensionActions }) {
   return (
     <div className="space-y-4">
-      {staff.generalManager && <GMCard gm={staff.generalManager} />}
+      {staff.generalManager && <GMCard gm={staff.generalManager} ext={ext} />}
       {personality && <TeamPersonalityPanel personality={personality} />}
     </div>
   )
 }
 
-function CoachingTab({ staff }: { staff: StaffRoster }) {
+function CoachingTab({ staff, ext }: { staff: StaffRoster; ext: ExtensionActions }) {
   return (
     <div className="space-y-4">
-      <HeadCoachCard coach={staff.headCoach} />
+      <HeadCoachCard coach={staff.headCoach} ext={ext} />
       {staff.assistantCoaches.length > 0 && (
         <div>
           <SectionLabel>Assistant Coaches</SectionLabel>
           <div className="space-y-3">
             {staff.assistantCoaches.map(ac => (
-              <AssistantCoachRow key={ac.id} ac={ac} />
+              <AssistantCoachRow key={ac.id} ac={ac} ext={ext} />
             ))}
           </div>
         </div>
@@ -294,26 +425,26 @@ function CoachingTab({ staff }: { staff: StaffRoster }) {
   )
 }
 
-function ScoutsTab({ staff }: { staff: StaffRoster }) {
+function ScoutsTab({ staff, ext }: { staff: StaffRoster; ext: ExtensionActions }) {
   return (
     <div>
       <SectionLabel>Scouting Department</SectionLabel>
       <div className="space-y-3">
         {staff.scouts.map(sc => (
-          <ScoutRow key={sc.id} scout={sc} />
+          <ScoutRow key={sc.id} scout={sc} ext={ext} />
         ))}
       </div>
     </div>
   )
 }
 
-function TrainingTab({ staff }: { staff: StaffRoster }) {
+function TrainingTab({ staff, ext }: { staff: StaffRoster; ext: ExtensionActions }) {
   return (
     <div>
       <SectionLabel>Training Staff</SectionLabel>
       <div className="space-y-3">
         {staff.trainers.map(tr => (
-          <TrainerRow key={tr.id} trainer={tr} />
+          <TrainerRow key={tr.id} trainer={tr} ext={ext} />
         ))}
       </div>
     </div>
@@ -323,8 +454,16 @@ function TrainingTab({ staff }: { staff: StaffRoster }) {
 // ── Main Page ───────────────────────────────────────────────────
 
 export default function StaffPage() {
-  const { teams, state, loading } = useLeague()
+  const { db, teams, state, loading, refreshTeams } = useLeague()
   const [activeTab, setActiveTab] = useState<Tab>('Front Office')
+  const [extending, setExtending] = useState<ExtensionState | null>(null)
+  const [successId, setSuccessId] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!successId) return
+    const timer = setTimeout(() => setSuccessId(null), 2000)
+    return () => clearTimeout(timer)
+  }, [successId])
 
   if (loading || !state) {
     return (
@@ -346,6 +485,89 @@ export default function StaffPage() {
         </div>
       </PageTransition>
     )
+  }
+
+  const handleExtendClick = (staffId: string, baseSalary: number) => {
+    setExtending({ staffId, baseSalary, years: 1, salary: baseSalary })
+    setSuccessId(null)
+  }
+
+  const handleYearsChange = (years: number) => {
+    if (!extending) return
+    setExtending({ ...extending, years })
+  }
+
+  const handleSalaryChange = (salary: number) => {
+    if (!extending) return
+    setExtending({ ...extending, salary })
+  }
+
+  const handleCancel = () => {
+    setExtending(null)
+  }
+
+  const handleConfirm = async () => {
+    if (!extending || !db || !userTeam?.staff) return
+
+    const applyExtension = (contract: StaffContract) => {
+      contract.yearsRemaining += extending.years
+      contract.totalYears += extending.years
+      contract.annualSalary = extending.salary
+    }
+
+    const s = userTeam.staff
+    let found = false
+
+    if (s.generalManager?.id === extending.staffId) {
+      applyExtension(s.generalManager.contract)
+      found = true
+    }
+
+    if (!found && s.headCoach.id === extending.staffId) {
+      applyExtension(s.headCoach.contract)
+      found = true
+    }
+
+    if (!found) {
+      const ac = s.assistantCoaches.find(a => a.id === extending.staffId)
+      if (ac) {
+        applyExtension(ac.contract)
+        found = true
+      }
+    }
+
+    if (!found) {
+      const scout = s.scouts.find(sc => sc.id === extending.staffId)
+      if (scout) {
+        applyExtension(scout.contract)
+        found = true
+      }
+    }
+
+    if (!found) {
+      const trainer = s.trainers.find(tr => tr.id === extending.staffId)
+      if (trainer) {
+        applyExtension(trainer.contract)
+        found = true
+      }
+    }
+
+    if (!found) return
+
+    await db.teams.put(userTeam)
+    await refreshTeams()
+    setSuccessId(extending.staffId)
+    setExtending(null)
+  }
+
+  const ext: ExtensionActions = {
+    extending,
+    successId,
+    onExtendClick: handleExtendClick,
+    onYearsChange: handleYearsChange,
+    onSalaryChange: handleSalaryChange,
+    onConfirm: handleConfirm,
+    onCancel: handleCancel,
   }
 
   return (
@@ -376,10 +598,10 @@ export default function StaffPage() {
           ))}
         </div>
 
-        {activeTab === 'Front Office' && <FrontOfficeTab staff={staff} personality={personality ?? null} />}
-        {activeTab === 'Coaching' && <CoachingTab staff={staff} />}
-        {activeTab === 'Scouts' && <ScoutsTab staff={staff} />}
-        {activeTab === 'Training' && <TrainingTab staff={staff} />}
+        {activeTab === 'Front Office' && <FrontOfficeTab staff={staff} personality={personality ?? null} ext={ext} />}
+        {activeTab === 'Coaching' && <CoachingTab staff={staff} ext={ext} />}
+        {activeTab === 'Scouts' && <ScoutsTab staff={staff} ext={ext} />}
+        {activeTab === 'Training' && <TrainingTab staff={staff} ext={ext} />}
       </div>
     </PageTransition>
   )

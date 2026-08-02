@@ -63,6 +63,7 @@ export async function createLeague(opts: CreateLeagueOptions): Promise<{ leagueI
     currentPhase: 'preseason',
     userTeamId: opts.userTeamId,
     settings: opts.settings,
+    seasonHistory: [],
   }
 
   await db.transaction('rw',

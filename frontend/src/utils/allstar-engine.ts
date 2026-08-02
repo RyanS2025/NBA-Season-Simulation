@@ -75,6 +75,38 @@ export function selectAllStars(
   }
 }
 
+export function selectAllStarsWithVotes(
+  players: Player[],
+  teams: Team[],
+  userStarters: { east: string[]; west: string[] },
+): AllStarSelection {
+  const teamConf = new Map<string, 'Eastern' | 'Western'>()
+  for (const t of teams) teamConf.set(t.id, t.info.conference)
+
+  const east = players.filter(p => teamConf.get(p.teamId) === 'Eastern')
+  const west = players.filter(p => teamConf.get(p.teamId) === 'Western')
+
+  const eastStarterSet = new Set(userStarters.east)
+  const westStarterSet = new Set(userStarters.west)
+
+  const eastReserves = east
+    .filter(p => !eastStarterSet.has(p.id))
+    .sort((a, b) => allStarScore(b) - allStarScore(a))
+    .slice(0, 7)
+    .map(p => p.id)
+
+  const westReserves = west
+    .filter(p => !westStarterSet.has(p.id))
+    .sort((a, b) => allStarScore(b) - allStarScore(a))
+    .slice(0, 7)
+    .map(p => p.id)
+
+  return {
+    starters: userStarters,
+    reserves: { east: eastReserves, west: westReserves },
+  }
+}
+
 export interface ContestResults {
   threePointWinnerId: string
   dunkWinnerId: string
@@ -167,8 +199,11 @@ export function runAllStarWeekend(
   players: Player[],
   teams: Team[],
   seasonYear: number,
+  userStarters?: { east: string[]; west: string[] },
 ): AllStarRecord {
-  const selection = selectAllStars(players, teams)
+  const selection = userStarters
+    ? selectAllStarsWithVotes(players, teams, userStarters)
+    : selectAllStars(players, teams)
   const contests = simulateContests(selection, players, seasonYear * 31337)
   const gameScore = simulateAllStarGame(selection, players, seasonYear * 7919)
 

@@ -406,6 +406,64 @@ export function generateBackgroundTrades(
   return results
 }
 
+// ── Trade Deadline Day ──────────────────────────────────────────
+
+export interface DeadlineHourBlock {
+  hour: number
+  label: string
+  trades: BackgroundTradeResult[]
+}
+
+export function simulateTradeDeadlineDay(
+  allTeams: Team[],
+  allPlayers: Player[],
+  allPicks: DraftPickAsset[],
+  currentSeason: number,
+  deadlineDate: string,
+  userTeamId: string,
+): DeadlineHourBlock[] {
+  const hours: DeadlineHourBlock[] = []
+  const tradedTeams = new Set<string>()
+  const cpuTeams = allTeams.filter(t => t.id !== userTeamId)
+
+  const blocks = [
+    { hour: 9,  label: 'Morning',      urgency: 0.06 },
+    { hour: 11, label: 'Late Morning',  urgency: 0.10 },
+    { hour: 13, label: 'Early Afternoon', urgency: 0.15 },
+    { hour: 15, label: 'Afternoon',     urgency: 0.22 },
+    { hour: 17, label: 'Evening Rush',  urgency: 0.30 },
+    { hour: 19, label: 'Final Hours',   urgency: 0.40 },
+    { hour: 21, label: 'Last Call',     urgency: 0.50 },
+    { hour: 23, label: 'Buzzer Beater', urgency: 0.60 },
+  ]
+
+  for (const block of blocks) {
+    const trades: BackgroundTradeResult[] = []
+    const shuffled = [...cpuTeams].sort(() => Math.random() - 0.5)
+
+    for (const team of shuffled) {
+      if (tradedTeams.has(team.id)) continue
+      if (Math.random() > block.urgency) continue
+
+      const proposal = generateCPUTradeProposal(
+        team, allTeams, allPlayers, allPicks, currentSeason, deadlineDate,
+      )
+
+      if (proposal) {
+        trades.push({ proposal, headline: proposal.headline, isBreaking: proposal.isBreaking })
+        tradedTeams.add(proposal.team1Id)
+        tradedTeams.add(proposal.team2Id)
+      }
+    }
+
+    if (trades.length > 0) {
+      hours.push({ hour: block.hour, label: block.label, trades })
+    }
+  }
+
+  return hours
+}
+
 // ── Prediction for UI ───────────────────────────────────────────
 
 export type TradeLikelihood = 'Likely Accept' | 'Possible' | 'Likely Counter' | 'Likely Reject' | 'Will Reject'

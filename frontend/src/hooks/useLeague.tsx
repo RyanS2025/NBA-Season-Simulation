@@ -821,6 +821,58 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
 
       setSimProgress('Updating player ratings...')
 
+      setSimProgress('Recording season history...')
+      const sortedByWins = [...allTeams].sort((a, b) => {
+        const wpA = a.seasonRecord.wins / Math.max(1, a.seasonRecord.wins + a.seasonRecord.losses)
+        const wpB = b.seasonRecord.wins / Math.max(1, b.seasonRecord.wins + b.seasonRecord.losses)
+        return wpB - wpA
+      })
+      const championTeamId = sortedByWins[0]?.id ?? ''
+      const finalistTeamId = sortedByWins[1]?.id ?? ''
+
+      let mvpPlayerId = ''
+      let topScorerPlayerId = ''
+      let topScorerPPG = 0
+      let rotyPlayerId: string | null = null
+      for (const p of currentPlayers) {
+        const stats = p.careerStats?.[p.careerStats.length - 1]
+        if (!stats || stats.gp < 5) continue
+        const value = stats.ppg + stats.rpg * 0.8 + stats.apg * 1.2 + stats.spg * 2 + stats.bpg * 2
+        if (!mvpPlayerId || value > ((): number => {
+          const mp = currentPlayers.find(x => x.id === mvpPlayerId)
+          const ms = mp?.careerStats?.[mp.careerStats.length - 1]
+          if (!ms) return 0
+          return ms.ppg + ms.rpg * 0.8 + ms.apg * 1.2 + ms.spg * 2 + ms.bpg * 2
+        })()) {
+          mvpPlayerId = p.id
+        }
+        if (stats.ppg > topScorerPPG) {
+          topScorerPPG = stats.ppg
+          topScorerPlayerId = p.id
+        }
+        if (p.bio.yearsInLeague === 0 || p.bio.yearsInLeague === 1) {
+          if (!rotyPlayerId) rotyPlayerId = p.id
+          else {
+            const cur = currentPlayers.find(x => x.id === rotyPlayerId)
+            const cs = cur?.careerStats?.[cur.careerStats.length - 1]
+            if (cs && stats.ppg + stats.rpg + stats.apg > cs.ppg + cs.rpg + cs.apg) {
+              rotyPlayerId = p.id
+            }
+          }
+        }
+      }
+
+      const seasonSummary: import('../types/league').SeasonSummary = {
+        year: state.currentSeason,
+        championTeamId,
+        finalistTeamId,
+        mvpPlayerId,
+        rotyPlayerId,
+        topScorerPlayerId,
+        topScorerPPG,
+      }
+      const prevHistory = state.seasonHistory ?? []
+
       setSimProgress('Coaching carousel...')
       const firedList = evaluateCoachesForFiring(allTeams, state.currentSeason)
       const firedTeamIds = new Set(firedList.map(f => f.teamId))
@@ -955,6 +1007,7 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
         await db.leagueState.update('singleton', {
           currentSeason: nextSeason,
           currentDate: startDate,
+          seasonHistory: [...prevHistory, seasonSummary],
           currentPhase: 'regular_season',
         })
       })
