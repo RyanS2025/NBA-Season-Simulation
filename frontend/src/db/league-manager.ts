@@ -171,5 +171,5 @@ export async function addGames(db: LeagueDB, games: import('../types').Game[]): 
 
 export async function addGameResult(db: LeagueDB, gameId: string, date: string, seasonYear: number, result: import('../types').GameResult): Promise<void> {
   await db.gameResults.add({ gameId, date, seasonYear, result })
-  await db.games.update(gameId, { result })
+  await db.games.update(gameId, { result, status: 'completed' })
 }

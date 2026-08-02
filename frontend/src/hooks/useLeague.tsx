@@ -27,6 +27,7 @@ import { generateSeasonSchedule } from '../utils/schedule-generator'
 import type { Team, Game, GameResult, Player, Transaction } from '../types'
 import type { SeasonPhase } from '../types'
 import type { TradeValidationResult } from '../utils/cba-engine'
+import { generateBackgroundTrades } from '../utils/cpu-trade-ai'
 
 export interface LeagueContextValue {
   db: LeagueDB | null
@@ -202,6 +203,91 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
     }
   }, [state, leagueId, refreshState])
 
+  const executeBackgroundTrades = useCallback(
+    async (forDate: string) => {
+      const db = dbRef.current
+      if (!db || !state) return
+      if (!state.settings.backgroundTradesEnabled) return
+
+      const currentTeams = await getAllTeams(db)
+      const currentPlayers = await getAllPlayers(db)
+      const userTeamId = state.userTeamId
+
+      const results = generateBackgroundTrades(
+        currentTeams.filter(t => t.id !== userTeamId),
+        currentPlayers,
+        [],
+        state.currentSeason,
+        forDate,
+        state.settings.tradeFrequency,
+      )
+
+      for (const result of results) {
+        const { proposal } = result
+        const t1Players = currentPlayers.filter(p => proposal.team1Players.includes(p.id))
+        const t2Players = currentPlayers.filter(p => proposal.team2Players.includes(p.id))
+        if (t1Players.length === 0 && t2Players.length === 0) continue
+
+        const team1 = currentTeams.find(t => t.id === proposal.team1Id)
+        const team2 = currentTeams.find(t => t.id === proposal.team2Id)
+        if (!team1 || !team2) continue
+
+        await db.transaction('rw', [db.players, db.teams, db.transactions], async () => {
+          for (const p of t1Players) {
+            const update: Record<string, unknown> = { teamId: proposal.team2Id }
+            if (p.status) update['status.teamId'] = proposal.team2Id
+            await db.players.update(p.id, update)
+          }
+          for (const p of t2Players) {
+            const update: Record<string, unknown> = { teamId: proposal.team1Id }
+            if (p.status) update['status.teamId'] = proposal.team1Id
+            await db.players.update(p.id, update)
+          }
+
+          const roster1 = team1.roster ?? []
+          const roster2 = team2.roster ?? []
+          team1.roster = roster1
+            .filter(r => !proposal.team1Players.includes(r.playerId))
+            .concat(proposal.team2Players.map((id, i) => ({ playerId: id, rosterStatus: 'active' as const, lineupPosition: roster1.length + i })))
+          team2.roster = roster2
+            .filter(r => !proposal.team2Players.includes(r.playerId))
+            .concat(proposal.team1Players.map((id, i) => ({ playerId: id, rosterStatus: 'active' as const, lineupPosition: roster2.length + i })))
+
+          const sal1Out = t1Players.reduce((s, p) => s + (p.contract?.annualSalary ?? 0), 0)
+          const sal2Out = t2Players.reduce((s, p) => s + (p.contract?.annualSalary ?? 0), 0)
+          if (team1.finances) team1.finances.totalPayroll = (team1.finances.totalPayroll ?? 0) - sal1Out + sal2Out
+          if (team2.finances) team2.finances.totalPayroll = (team2.finances.totalPayroll ?? 0) - sal2Out + sal1Out
+
+          await db.teams.put(team1)
+          await db.teams.put(team2)
+
+          const tx: Transaction = {
+            id: uuid(),
+            date: forDate,
+            type: 'trade',
+            details: {
+              team1: proposal.team1Id,
+              team2: proposal.team2Id,
+              team1PlayersOut: proposal.team1Players,
+              team1PlayersIn: proposal.team2Players,
+              salaryOut: sal1Out,
+              salaryIn: sal2Out,
+            },
+            description: result.headline,
+            seasonYear: state.currentSeason,
+          }
+          await addTransaction(db, tx)
+        })
+      }
+
+      if (results.length > 0) {
+        await refreshTeams()
+        await refreshPlayers()
+      }
+    },
+    [state, refreshTeams, refreshPlayers],
+  )
+
   const simDay = useCallback(async () => {
     const db = dbRef.current
     if (!db || !state || simming) return
@@ -219,6 +305,8 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
         await simGames(unplayed)
       }
 
+      try { await executeBackgroundTrades(currentDate) } catch (e) { console.warn('Background trades skipped:', e) }
+
       const nextDate = getNextDate(currentDate)
       await advanceDate(nextDate)
       await checkSeasonEnd()
@@ -226,7 +314,7 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
       setSimming(false)
       setSimProgress(null)
     }
-  }, [state, simming, simGames, advanceDate, checkSeasonEnd])
+  }, [state, simming, simGames, advanceDate, checkSeasonEnd, executeBackgroundTrades])
 
   const simWeek = useCallback(async () => {
     const db = dbRef.current
@@ -247,13 +335,15 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
         await simGames(unplayed)
       }
 
+      try { await executeBackgroundTrades(startDate) } catch (e) { console.warn('Background trades skipped:', e) }
+
       await advanceDate(endDate)
       await checkSeasonEnd()
     } finally {
       setSimming(false)
       setSimProgress(null)
     }
-  }, [state, simming, simGames, advanceDate, checkSeasonEnd])
+  }, [state, simming, simGames, advanceDate, checkSeasonEnd, executeBackgroundTrades])
 
   const simToDate = useCallback(
     async (targetDate: string) => {
@@ -297,10 +387,17 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
         .sort((a, b) => a.date.localeCompare(b.date))
 
       if (unplayed.length > 0) {
+        let lastTradeDate = ''
         for (let i = 0; i < unplayed.length; i += 15) {
           const batch = unplayed.slice(i, i + 15)
           setSimProgress(`Game ${i + 1}/${unplayed.length}`)
           await simGames(batch)
+
+          const batchDate = batch[batch.length - 1].date
+          if (batchDate !== lastTradeDate) {
+            try { await executeBackgroundTrades(batchDate) } catch (e) { console.warn('Background trades skipped:', e) }
+            lastTradeDate = batchDate
+          }
         }
 
         const lastDate = unplayed[unplayed.length - 1].date
@@ -312,7 +409,7 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
       setSimming(false)
       setSimProgress(null)
     }
-  }, [state, simming, simGames, advanceDate, checkSeasonEnd])
+  }, [state, simming, simGames, advanceDate, checkSeasonEnd, executeBackgroundTrades])
 
   const executeTrade = useCallback(
     async (

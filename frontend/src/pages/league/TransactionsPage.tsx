@@ -51,10 +51,10 @@ export default function TransactionsPage() {
       setTransactions(
         all.map((t: Record<string, unknown>) => ({
           id: t.id as string,
-          type: t.type as TransactionType,
+          type: (t.type === 'trade' ? 'Trade' : t.type === 'signing' ? 'Signing' : t.type === 'waiver' ? 'Waiver' : t.type === 'injury' ? 'Injury' : t.type) as TransactionType,
           date: t.date as string,
-          headline: t.headline as string,
-          details: t.details as string,
+          headline: (t.headline ?? t.description ?? '') as string,
+          details: (typeof t.details === 'string' ? t.details : t.description ?? '') as string,
           breaking: t.breaking as boolean | undefined,
           tradeSides: t.tradeSides as { team: string; sends: string }[] | undefined,
         }))
