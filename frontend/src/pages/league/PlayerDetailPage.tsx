@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
 import GlassCard from '../../components/common/GlassCard'
 import SectionLabel from '../../components/common/SectionLabel'
-import { loadPlayers, getPlayerById, loadTeamMap } from '../../data/players'
+import { useLeague } from '../../hooks/useLeague'
 import type {
   Player,
   SeasonStats,
@@ -1309,19 +1309,22 @@ function ShotChartLegend() {
 
 export default function PlayerDetailPage() {
   const { id: leagueId, playerId } = useParams()
+  const { players, teams, loading } = useLeague()
   const [activeSection, setActiveSection] = useState<PageSection>('overview')
-  const [player, setPlayer] = useState<Player | null>(null)
-  const [teamInfo, setTeamInfo] = useState<TeamInfo | null>(null)
-  const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    Promise.all([loadPlayers(), loadTeamMap()]).then(([all, teams]) => {
-      const found = getPlayerById(all, playerId ?? '')
-      setPlayer(found ?? null)
-      if (found) setTeamInfo(teams.get(found.teamId) ?? null)
-      setLoading(false)
-    })
-  }, [playerId])
+  const player = useMemo(
+    () => players.find(p => p.id === playerId) ?? null,
+    [players, playerId],
+  )
+
+  const teamInfo = useMemo(
+    () => {
+      if (!player) return null
+      const team = teams.find(t => t.id === player.teamId)
+      return team?.info ?? null
+    },
+    [player, teams],
+  )
 
   if (loading) {
     return (

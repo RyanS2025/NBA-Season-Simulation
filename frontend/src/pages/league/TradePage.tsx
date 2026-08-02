@@ -6,8 +6,6 @@ import Button from '../../components/common/Button'
 import { useLeague } from '../../hooks/useLeague'
 import type { Player } from '../../types'
 
-const SALARY_CAP = 141_000_000
-
 function formatSalary(salary: number): string {
   if (salary >= 1_000_000) return `$${(salary / 1_000_000).toFixed(1)}M`
   if (salary >= 1_000) return `$${(salary / 1_000).toFixed(0)}K`
@@ -20,11 +18,13 @@ function playerLabel(p: Player): string {
 
 export default function TradePage() {
   const { id: leagueId } = useParams()
-  const { teams, players, state, loading } = useLeague()
+  const { teams, players, state, loading, executeTrade } = useLeague()
 
   const [partnerTeamId, setPartnerTeamId] = useState<string>('')
   const [selectedUserPlayers, setSelectedUserPlayers] = useState<Set<string>>(new Set())
   const [selectedPartnerPlayers, setSelectedPartnerPlayers] = useState<Set<string>>(new Set())
+  const [tradeStatus, setTradeStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
+  const [executing, setExecuting] = useState(false)
 
   const userTeamId = state?.userTeamId ?? ''
 
@@ -92,6 +92,32 @@ export default function TradePage() {
   const handlePartnerChange = (newTeamId: string) => {
     setPartnerTeamId(newTeamId)
     setSelectedPartnerPlayers(new Set())
+    setTradeStatus(null)
+  }
+
+  const handleProposeTrade = async () => {
+    if (!validation.valid || executing) return
+    setExecuting(true)
+    setTradeStatus(null)
+    try {
+      const result = await executeTrade(
+        Array.from(selectedUserPlayers),
+        Array.from(selectedPartnerPlayers),
+        partnerTeamId,
+      )
+      if (result.executed) {
+        setTradeStatus({ type: 'success', message: 'Trade completed successfully!' })
+        setSelectedUserPlayers(new Set())
+        setSelectedPartnerPlayers(new Set())
+        setPartnerTeamId('')
+      } else {
+        setTradeStatus({ type: 'error', message: result.errors.join('. ') })
+      }
+    } catch {
+      setTradeStatus({ type: 'error', message: 'Trade failed unexpectedly' })
+    } finally {
+      setExecuting(false)
+    }
   }
 
   return (
@@ -202,6 +228,16 @@ export default function TradePage() {
           </GlassCard>
         </div>
 
+        {tradeStatus && (
+          <div className={`px-4 py-3 rounded-xl mb-4 text-sm font-medium ${
+            tradeStatus.type === 'success'
+              ? 'bg-green-500/10 border border-green-500/20 text-green-400'
+              : 'bg-red-500/10 border border-red-500/20 text-red-400'
+          }`}>
+            {tradeStatus.message}
+          </div>
+        )}
+
         <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Trade Summary</h2>
         <GlassCard className="p-5 mb-8">
           {!hasAssets ? (
@@ -270,8 +306,8 @@ export default function TradePage() {
                       {validation.reason}
                     </span>
                   )}
-                  <Button variant="primary" size="sm" disabled={!validation.valid}>
-                    Propose Trade
+                  <Button variant="primary" size="sm" disabled={!validation.valid || executing} onClick={handleProposeTrade}>
+                    {executing ? 'Processing...' : 'Propose Trade'}
                   </Button>
                 </div>
               </div>
