@@ -10,7 +10,9 @@ const LEAGUE_LINKS = [
   { path: 'trades', label: 'Trades' },
   { path: 'draft', label: 'Draft' },
   { path: 'free-agency', label: 'Free Agency' },
+  { path: 'transactions', label: 'Transactions' },
   { path: 'awards', label: 'Awards' },
+  { path: 'history', label: 'History' },
   { path: 'settings', label: 'Settings' },
 ]
 
