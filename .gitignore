@@ -5,3 +5,6 @@ node_modules/
 dist/
 .env
 *.local
+
+# Test/automation artifacts
+.playwright-mcp/
