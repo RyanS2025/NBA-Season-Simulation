@@ -57,6 +57,7 @@ export function getTeamStrategy(team: Team, teamPlayers: Player[]): TeamStrategy
 // ── Roster Needs ────────────────────────────────────────────────
 
 export function identifyNeeds(team: Team, teamPlayers: Player[]): RosterNeed[] {
+  const strategy = getTeamStrategy(team, teamPlayers)
   const needs: RosterNeed[] = []
   const posCounts: Record<Position, number> = { PG: 0, SG: 0, SF: 0, PF: 0, C: 0 }
 
@@ -64,7 +65,6 @@ export function identifyNeeds(team: Team, teamPlayers: Player[]): RosterNeed[] {
     posCounts[p.bio.position]++
   }
 
-  const strategy = getTeamStrategy(team, teamPlayers)
   const isContending = strategy === 'contending' || strategy === 'playoff'
 
   for (const [pos, count] of Object.entries(posCounts) as [Position, number][]) {
@@ -104,7 +104,7 @@ export function identifyNeeds(team: Team, teamPlayers: Player[]): RosterNeed[] {
 
 function getPersonalityMultipliers(
   personality: TeamPersonality | null,
-  strategy: TeamStrategy,
+  _strategy: TeamStrategy,
 ) {
   if (!personality) return { provenPlayerMult: 1, pickMult: 1, veteranMult: 1, noiseFactor: 0.15 }
 
@@ -268,12 +268,11 @@ export function generateCPUTradeProposal(
   team: Team,
   allTeams: Team[],
   allPlayers: Player[],
-  allPicks: DraftPickAsset[],
+  _allPicks: DraftPickAsset[],
   currentSeason: number,
   currentDate: string,
 ): TradeProposal | null {
   const teamPlayers = allPlayers.filter(p => p.teamId === team.id)
-  const strategy = getTeamStrategy(team, teamPlayers)
   const needs = identifyNeeds(team, teamPlayers)
 
   if (needs.length === 0) return null

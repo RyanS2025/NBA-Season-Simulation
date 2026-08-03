@@ -1,5 +1,5 @@
 import type { Team } from '../types'
-import type { HeadCoach, StaffRoster, StaffMarketEntry, CoachPersonality, StaffContract } from '../types/staff'
+import type { HeadCoach, StaffMarketEntry, CoachPersonality, StaffContract } from '../types/staff'
 import { v4 as uuid } from 'uuid'
 
 function mulberry32(seed: number) {
@@ -54,7 +54,7 @@ export function updateHotSeat(team: Team, won: boolean): number {
 
 export function evaluateCoachesForFiring(
   teams: Team[],
-  seasonYear: number,
+  _seasonYear: number,
 ): { teamId: string; coach: HeadCoach; reason: string }[] {
   const fired: { teamId: string; coach: HeadCoach; reason: string }[] = []
 

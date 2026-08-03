@@ -5,7 +5,9 @@ const GAP_MS = 1000
 
 let audio: HTMLAudioElement | null = null
 let currentTrack = 0
+// eslint-disable-next-line prefer-const
 let gapTimer: ReturnType<typeof setTimeout> | null = null
+void gapTimer
 let initialized = false
 
 function getAudio(): HTMLAudioElement {

@@ -478,8 +478,6 @@ export default function TradePage() {
                       const total = outgoingStarTotal + incomingStarTotal
                       if (total === 0) return null
                       const pct = (outgoingStarTotal / total) * 100
-                      const diff = Math.abs(pct - 50)
-                      const barColor = diff < 10 ? '#22c55e' : diff < 20 ? '#eab308' : '#ef4444'
                       return (
                         <>
                           <div

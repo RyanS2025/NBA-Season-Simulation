@@ -5,7 +5,6 @@ import GlassCard from '../../components/common/GlassCard'
 import SectionLabel from '../../components/common/SectionLabel'
 import { useLeague } from '../../hooks/useLeague'
 import type {
-  Player,
   SeasonStats,
   PlayerRatings,
   PlayerTendencies,
@@ -13,7 +12,6 @@ import type {
   ShotZone,
   PlayerContract,
 } from '../../types/player'
-import type { TeamInfo } from '../../types/team'
 
 /* ------------------------------------------------------------------ */
 /*  Local types                                                        */
@@ -1100,7 +1098,7 @@ function FullRatingsSection({ ratings }: { ratings: PlayerRatings }) {
       <GlassCard className="p-5">
         <div className="space-y-2.5">
           {items.map(item => (
-            <RatingRow key={item.key} label={item.label} value={ratings[item.key]} />
+            <RatingRow key={item.key} label={item.label} value={ratings[item.key] ?? 0} />
           ))}
         </div>
       </GlassCard>

@@ -3,7 +3,7 @@ import type { Player } from '../types/player'
 import type { Team } from '../types'
 import type { StaffRoster } from '../types/staff'
 import type { PlayoffSeries, PlayoffBracket } from './playoff-engine'
-import { quickSimGame, type CoachingContext } from './quick-sim'
+import { quickSimGame, playerComposite, type CoachingContext } from './quick-sim'
 import {
   conferenceStandings,
   generateFirstRound,
@@ -90,7 +90,7 @@ function computePlayoffPlayerModifier(
   const competitiveness = player.character.competitiveness ?? 50
   const leadership = player.character.leadership ?? 50
   const ego = player.character.ego ?? 50
-  const coachability = player.character.coachability ?? 50
+
   const age = player.bio.yearsInLeague
 
   // Playoff riser/faller: high competitiveness + clutch = riser, high ego + low clutch = faller
@@ -123,7 +123,7 @@ function computeTeamPlayoffStrength(
 ): number {
   if (players.length === 0) return 70
 
-  const sorted = [...players].sort((a, b) => b.ratings.overall - a.ratings.overall)
+  const sorted = [...players].sort((a, b) => playerComposite(b) - playerComposite(a))
   const top8 = sorted.slice(0, Math.min(8, sorted.length))
   const weights = [1.4, 1.3, 1.2, 1.1, 1.0, 0.9, 0.8, 0.7]
 
@@ -136,7 +136,7 @@ function computeTeamPlayoffStrength(
     const w = weights[i] ?? 0.7
     const mod = computePlayoffPlayerModifier(top8[i], rng)
 
-    const adjustedOvr = top8[i].ratings.overall + mod.playoffRiser + mod.veteranBoost
+    const adjustedOvr = playerComposite(top8[i]) + mod.playoffRiser + mod.veteranBoost
     weightedSum += adjustedOvr * w
     weightTotal += w
     totalLeadershipAura += mod.leadershipAura

@@ -1,4 +1,3 @@
-import type { ContractInfo } from './contract';
 
 export type Position = "PG" | "SG" | "SF" | "PF" | "C";
 

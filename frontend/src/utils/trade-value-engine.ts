@@ -149,7 +149,6 @@ function computeProduction(player: Player): number {
 function computeAgeTrajectory(player: Player): number {
   const age = player.bio.age
   const potential = player.ratings.potential
-  const current = computeSkillComposite(player)
   const potentialGap = Math.max(0, potential - player.ratings.overall)
 
   if (age <= 21) return 15 + potentialGap * 0.1
@@ -310,8 +309,8 @@ const SECOND_ROUND_CURVE: number[] = [
 function projectPickPosition(
   originalTeamId: string,
   teams: Team[],
-  currentSeason: number,
-  pickYear: number,
+  _currentSeason: number,
+  _pickYear: number,
 ): number {
   const team = teams.find(t => t.id === originalTeamId)
   if (!team) return 15

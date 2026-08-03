@@ -1,4 +1,4 @@
-import type { Player, Team, CBAConstants, CapSheet } from '../types'
+import type { Player, CBAConstants, CapSheet } from '../types'
 
 export const CBA_2026_27: CBAConstants = {
   salaryCap: 141_000_000,
@@ -163,7 +163,7 @@ export function validateTrade(
   }
 
   for (const p of outgoingPlayers) {
-    if (p.contract?.hasNoTradeClause) {
+    if (p.contract?.noTradeClause) {
       warnings.push(`${p.bio.firstName} ${p.bio.lastName} has a no-trade clause and must approve`)
     }
   }

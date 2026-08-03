@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
 import GlassCard from '../../components/common/GlassCard'
@@ -19,7 +19,7 @@ function formatShortDate(date: string): string {
 
 export default function LeagueDashboard() {
   const { id: leagueId } = useParams()
-  const { db, state, teams, players, simming, simProgress, simDay, simWeek, simSeason, advanceToNextSeason, playoffResults, startDraft, loading } = useLeague()
+  const { db, state, teams, players, simming, simProgress, simDay, simWeek, simSeason, playoffResults, loading } = useLeague()
   const [recentGames, setRecentGames] = useState<Game[]>([])
   const [upcomingGames, setUpcomingGames] = useState<Game[]>([])
 

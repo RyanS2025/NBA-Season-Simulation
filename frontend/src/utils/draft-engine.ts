@@ -9,7 +9,6 @@ import type {
   PlayerStatus,
   PlayerContract,
 } from '../types/player'
-import { v4 as uuid } from 'uuid'
 
 export interface DraftProspect {
   id: string
@@ -458,7 +457,7 @@ function generateBasicCharacter(): CharacterTraits {
 
 export function cpuAutoPick(
   prospects: DraftProspect[],
-  team: Team,
+  _team: Team,
   teamPlayers: Player[],
 ): DraftProspect | null {
   if (prospects.length === 0) return null

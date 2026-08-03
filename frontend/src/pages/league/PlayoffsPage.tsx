@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
 import GlassCard from '../../components/common/GlassCard'

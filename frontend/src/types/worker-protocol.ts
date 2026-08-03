@@ -46,7 +46,7 @@ export type SimWorkerResponse =
   | { type: "DRAFT_LOTTERY_RESULTS"; payload: DraftLotteryResults }
   | { type: "FREE_AGENCY_RESULTS"; payload: FreeAgencyResults }
   | { type: "ALLSTAR_RESULTS"; payload: AllStarResults }
-  | { type: "CAP_SHEET"; payload: CapSheet }
+  | { type: "CAP_SHEET"; payload: WorkerCapSheet }
   | { type: "AWARDS"; payload: SeasonAwards }
   | { type: "SCHEDULE"; payload: Game[] }
   | { type: "DEVELOPMENT_RESULTS"; payload: PlayerDevelopmentResult[] }
@@ -227,7 +227,7 @@ export interface AllStarResults {
   gameMvpId: string;
 }
 
-export interface CapSheet {
+export interface WorkerCapSheet {
   teamId: string;
   totalSalary: number;
   capSpace: number;

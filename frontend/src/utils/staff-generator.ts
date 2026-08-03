@@ -355,11 +355,11 @@ function pickSecondaryArchetype(c: CompositeScores, marketSize: number, primary:
 
 // ── CoachingStaff Derivation ────────────────────────────────────
 
-const OFFENSIVE_SCHEMES: readonly OffensiveScheme[] = [
+export const OFFENSIVE_SCHEMES: readonly OffensiveScheme[] = [
   'motion', 'iso_heavy', 'pick_and_roll', 'triangle', 'pace_and_space', 'princeton', 'drive_and_kick',
 ] as const
 
-const DEFENSIVE_SCHEMES: readonly DefensiveScheme[] = [
+export const DEFENSIVE_SCHEMES: readonly DefensiveScheme[] = [
   'man_to_man', 'switching', 'drop_coverage', 'blitz', 'zone_2_3', 'zone_3_2', 'pack_the_paint',
 ] as const
 

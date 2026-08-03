@@ -4,7 +4,7 @@ import PageTransition from '../../components/layout/PageTransition'
 import GlassCard from '../../components/common/GlassCard'
 import SearchInput from '../../components/common/SearchInput'
 import { useLeague } from '../../hooks/useLeague'
-import { computeCapSheet, CBA_2026_27 } from '../../utils/cba-engine'
+import { computeCapSheet } from '../../utils/cba-engine'
 import type { Player, Position } from '../../types'
 
 type PositionFilter = Position | 'ALL'

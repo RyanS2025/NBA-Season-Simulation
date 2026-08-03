@@ -9,6 +9,7 @@ import {
 } from 'react'
 import { useParams } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
+import type { UpdateSpec } from 'dexie'
 import { openLeagueDB } from '../db/league-db'
 import type { LeagueDB, LeagueState } from '../db/league-db'
 import {
@@ -51,7 +52,7 @@ import {
   getCpuPickAnalysis,
 } from '../utils/draft-engine'
 import type { DraftProspect, DraftPick, DraftLotteryResult } from '../utils/draft-engine'
-import type { HeadCoach, StaffRoster } from '../types/staff'
+import type { HeadCoach } from '../types/staff'
 
 export interface DraftState {
   prospects: DraftProspect[]
@@ -405,12 +406,12 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
           for (const p of t1Players) {
             const update: Record<string, unknown> = { teamId: proposal.team2Id }
             if (p.status) update['status.teamId'] = proposal.team2Id
-            await db.players.update(p.id, update)
+            await db.players.update(p.id, update as UpdateSpec<Player>)
           }
           for (const p of t2Players) {
             const update: Record<string, unknown> = { teamId: proposal.team1Id }
             if (p.status) update['status.teamId'] = proposal.team1Id
-            await db.players.update(p.id, update)
+            await db.players.update(p.id, update as UpdateSpec<Player>)
           }
 
           const roster1 = team1.roster ?? []
@@ -709,7 +710,7 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
           'contract.yearsRemaining': years,
           'contract.totalYears': years,
           'contract.contractType': 'standard',
-        })
+        } as unknown as UpdateSpec<Player>)
 
         const team = teams.find(t => t.id === teamId)
         if (team) {

@@ -212,7 +212,7 @@ export class SimBridge {
   async computeCapSheet(payload: ComputeCapSheetPayload): Promise<CapSheet> {
     this.assertReady()
     const res = await this.send({ type: 'COMPUTE_CAP_SHEET', payload })
-    return (res as { type: 'CAP_SHEET'; payload: CapSheet }).payload
+    return (res as unknown as { type: 'CAP_SHEET'; payload: CapSheet }).payload
   }
 
   async computeAwards(payload: ComputeAwardsPayload): Promise<SeasonAwards> {

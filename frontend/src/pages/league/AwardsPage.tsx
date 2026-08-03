@@ -37,11 +37,6 @@ const AWARD_LABELS: Record<string, string> = {
   eoty: 'Executive of the Year',
 }
 
-const AWARD_SHORT: Record<string, string> = {
-  mvp: 'MVP', dpoy: 'DPOY', roy: 'ROY', sixth_man: '6MOY',
-  mip: 'MIP', clutch_poy: 'CPOY', coty: 'COTY', eoty: 'EOTY',
-}
-
 const CEREMONY_ORDER = ['roy', 'sixth_man', 'mip', 'clutch_poy', 'coty', 'eoty', 'dpoy', 'mvp']
 
 const RACE_AWARDS: AwardType[] = ['mvp', 'dpoy', 'roy', 'sixth_man', 'mip', 'clutch_poy']
@@ -392,7 +387,7 @@ export default function AwardsPage() {
               const isWinner = result?.winnerId === c.player.id
               const votePoints = result?.voteTotals[c.player.id] ?? 0
               const firstPlace = result?.firstPlaceVotes[c.player.id] ?? 0
-              const isUserTeam = c.player.teamId === state.userTeamId
+              const isUserTeam = c.player.teamId === state?.userTeamId
               return (
                 <div
                   key={c.player.id}
