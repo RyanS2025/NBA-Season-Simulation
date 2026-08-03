@@ -1,11 +1,18 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import PageTransition from '../../components/layout/PageTransition'
 import Button from '../../components/common/Button'
 import { useLeague } from '../../hooks/useLeague'
-import type { Game } from '../../types'
+import { getSeasonMilestones, type SeasonMilestone, type MilestoneType } from '../../utils/season-dates'
+import type { Game, Team } from '../../types'
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+
+const MILESTONE_STYLES: Record<MilestoneType, string> = {
+  extension_deadline: 'text-sky-400',
+  trade_deadline: 'text-amber-400',
+  all_star: 'text-purple-400',
+}
 
 function getDaysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate()
@@ -19,13 +26,9 @@ function fmtDate(y: number, m: number, d: number) {
   return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
 }
 
-function teamName(teamId: string, teams: { id: string; info: { city: string; name: string } }[]): string {
+function teamName(teamId: string, teams: Team[]): string {
   const t = teams.find(x => x.id === teamId)
   return t ? `${t.info.city} ${t.info.name}` : teamId
-}
-
-function teamAbbr(teamId: string): string {
-  return teamId
 }
 
 export default function SchedulePage() {
@@ -39,6 +42,15 @@ export default function SchedulePage() {
   const [selectedDay, setSelectedDay] = useState<number | null>(null)
   const [games, setGames] = useState<Game[]>([])
   const [simToTarget, setSimToTarget] = useState('')
+
+  // The calendar mounts before league state loads, so snap to the
+  // league's actual current month once it arrives (and after sims).
+  useEffect(() => {
+    if (!state?.currentDate) return
+    const d = new Date(state.currentDate + 'T12:00:00')
+    setYear(d.getFullYear())
+    setMonth(d.getMonth())
+  }, [state?.currentDate])
 
   const loadMonthGames = useCallback(async () => {
     if (!db) return
@@ -58,6 +70,25 @@ export default function SchedulePage() {
   useEffect(() => {
     if (!simming) loadMonthGames()
   }, [simming, loadMonthGames])
+
+  const abbrMap = useMemo(
+    () => new Map(teams.map(t => [t.id, t.info.abbreviation])),
+    [teams],
+  )
+
+  const milestonesByDate = useMemo(() => {
+    const map = new Map<string, SeasonMilestone>()
+    if (state) {
+      // Milestones for the current season plus neighbors, so browsing
+      // across a season rollover still shows the right markers.
+      for (const sy of [state.currentSeason - 1, state.currentSeason, state.currentSeason + 1]) {
+        for (const m of getSeasonMilestones(sy)) {
+          map.set(m.date, m)
+        }
+      }
+    }
+    return map
+  }, [state])
 
   if (loading || !state) {
     return (
@@ -154,13 +185,21 @@ export default function SchedulePage() {
               const isToday = dateStr === currentDate
               const isSelected = day === selectedDay
               const isPast = dateStr < currentDate
-              const hasUserGame = dayGames?.some(g => g.homeTeamId === userTeamId || g.awayTeamId === userTeamId)
+              const userGame = dayGames?.find(g => g.homeTeamId === userTeamId || g.awayTeamId === userTeamId)
+              const milestone = milestonesByDate.get(dateStr)
+
+              let matchupLabel: string | null = null
+              if (userGame) {
+                const isHome = userGame.homeTeamId === userTeamId
+                const oppId = isHome ? userGame.awayTeamId : userGame.homeTeamId
+                matchupLabel = `${isHome ? 'vs' : '@'} ${abbrMap.get(oppId) ?? '???'}`
+              }
 
               return (
                 <button
                   key={day}
                   onClick={() => setSelectedDay(day === selectedDay ? null : day)}
-                  className={`relative p-2 md:p-3 text-sm rounded-lg transition-all ${
+                  className={`relative flex flex-col items-center justify-start gap-0.5 min-h-[52px] md:min-h-[60px] p-1.5 md:p-2 text-sm rounded-lg transition-all ${
                     isSelected
                       ? 'bg-accent/20 border border-accent/30 text-white'
                       : isToday
@@ -170,15 +209,37 @@ export default function SchedulePage() {
                           : 'text-gray-400 hover:bg-white/[0.04]'
                   }`}
                 >
-                  {day}
-                  {hasGames && (
-                    <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full ${
-                      hasUserGame ? 'bg-accent' : 'bg-gray-500'
-                    }`} />
+                  <span>{day}</span>
+                  {matchupLabel && (
+                    <span className={`text-[9px] md:text-[10px] font-medium leading-tight whitespace-nowrap ${
+                      isPast ? 'text-gray-600' : 'text-accent'
+                    }`}>
+                      {matchupLabel}
+                    </span>
+                  )}
+                  {milestone && (
+                    <span className={`text-[8px] md:text-[9px] uppercase tracking-wide leading-tight whitespace-nowrap ${MILESTONE_STYLES[milestone.type]}`}>
+                      {milestone.shortLabel}
+                    </span>
+                  )}
+                  {hasGames && !matchupLabel && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-gray-500 mt-auto" />
                   )}
                 </button>
               )
             })}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1 mt-4 pt-3 border-t border-white/[0.06]">
+            <span className="flex items-center gap-1.5 text-[10px] text-gray-500">
+              <span className="text-accent font-medium">vs / @</span> Your games
+            </span>
+            <span className="flex items-center gap-1.5 text-[10px] text-gray-500">
+              <span className="w-1.5 h-1.5 rounded-full bg-gray-500 inline-block" /> League games
+            </span>
+            <span className="text-[10px] text-sky-400 uppercase tracking-wide">Ext DL — Extension Deadline</span>
+            <span className="text-[10px] text-amber-400 uppercase tracking-wide">Trade DL — Trade Deadline</span>
+            <span className="text-[10px] text-purple-400 uppercase tracking-wide">All-Star — All-Star Break</span>
           </div>
         </div>
 
@@ -188,8 +249,13 @@ export default function SchedulePage() {
               {MONTHS[month]} {selectedDay}, {year}
               <span className="ml-3 text-gray-500">{selectedGames.length} game{selectedGames.length !== 1 ? 's' : ''}</span>
             </h3>
+            {selectedDate && milestonesByDate.has(selectedDate) && (
+              <div className={`mb-4 px-4 py-2.5 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm ${MILESTONE_STYLES[milestonesByDate.get(selectedDate)!.type]}`}>
+                {milestonesByDate.get(selectedDate)!.label}
+              </div>
+            )}
             {selectedGames.length === 0 ? (
-              <p className="text-gray-500 text-sm">No games scheduled</p>
+              <p className="text-gray-500 text-sm">No games scheduled — start a new season from the Dashboard to generate the schedule.</p>
             ) : (
               <div className="space-y-3">
                 {selectedGames.map(g => {
@@ -205,12 +271,12 @@ export default function SchedulePage() {
                     >
                       <div className="flex items-center gap-3 text-sm">
                         <span className={`font-mono text-xs ${isUserGame && g.awayTeamId === userTeamId ? 'text-accent' : 'text-gray-400'}`}>
-                          {teamAbbr(g.awayTeamId)}
+                          {abbrMap.get(g.awayTeamId) ?? '???'}
                         </span>
                         <span className="text-gray-300">{teamName(g.awayTeamId, teams)}</span>
                         <span className="text-gray-600">@</span>
                         <span className={`font-mono text-xs ${isUserGame && g.homeTeamId === userTeamId ? 'text-accent' : 'text-gray-400'}`}>
-                          {teamAbbr(g.homeTeamId)}
+                          {abbrMap.get(g.homeTeamId) ?? '???'}
                         </span>
                         <span className="text-white">{teamName(g.homeTeamId, teams)}</span>
                       </div>

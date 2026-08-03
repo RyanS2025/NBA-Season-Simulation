@@ -129,12 +129,22 @@ function generateDateSlots(seasonYear: number): string[] {
   const start = new Date(seasonYear, 9, 22) // Oct 22
   const end = new Date(seasonYear + 1, 3, 13) // Apr 13
 
+  // No games during the All-Star break (Feb 14-16)
+  const allStarBreak = new Set([
+    `${seasonYear + 1}-02-14`,
+    `${seasonYear + 1}-02-15`,
+    `${seasonYear + 1}-02-16`,
+  ])
+
   const current = new Date(start)
   while (current <= end) {
     const y = current.getFullYear()
     const m = String(current.getMonth() + 1).padStart(2, '0')
     const d = String(current.getDate()).padStart(2, '0')
-    dates.push(`${y}-${m}-${d}`)
+    const dateStr = `${y}-${m}-${d}`
+    if (!allStarBreak.has(dateStr)) {
+      dates.push(dateStr)
+    }
     current.setDate(current.getDate() + 1)
   }
   return dates
