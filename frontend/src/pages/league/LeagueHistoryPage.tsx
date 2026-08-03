@@ -62,11 +62,20 @@ function buildLeaders(
   return rows.slice(0, count)
 }
 
+interface GameRecord {
+  playerId: string
+  playerName: string
+  value: number
+  date: string
+  opponent: string
+}
+
 export default function LeagueHistoryPage() {
   const { id: leagueId } = useParams<{ id: string }>()
   const { db, state, teams, players, loading } = useLeague()
   const [hallOfFame, setHallOfFame] = useState<HallOfFameEntry[]>([])
   const [retirees, setRetirees] = useState<RetiredPlayer[]>([])
+  const [gameRecords, setGameRecords] = useState<{ points: GameRecord[]; rebounds: GameRecord[]; assists: GameRecord[] } | null>(null)
 
   useEffect(() => {
     if (!db) return
@@ -78,6 +87,59 @@ export default function LeagueHistoryPage() {
     })
     return () => { cancelled = true }
   }, [db, state?.currentSeason])
+
+  // Scan every stored box score once for the all-time single-game records
+  useEffect(() => {
+    if (!db || players.length === 0) return
+    let cancelled = false
+
+    const nameById = new Map(players.map(p => [p.id, `${p.bio.firstName} ${p.bio.lastName}`]))
+    const teamById = new Map(teams.map(t => [t.id, t.info.abbreviation]))
+
+    db.retiredPlayers.toArray().then(async retired => {
+      for (const r of retired) nameById.set(r.playerId, r.playerName)
+      const all = await db.gameResults.toArray()
+      if (cancelled) return
+
+      const tops: Record<'points' | 'rebounds' | 'assists', GameRecord[]> = { points: [], rebounds: [], assists: [] }
+      const consider = (list: GameRecord[], rec: GameRecord) => {
+        list.push(rec)
+        list.sort((a, b) => b.value - a.value)
+        if (list.length > 5) list.pop()
+      }
+
+      for (const r of all) {
+        for (const box of [r.result.homeBoxScore, r.result.awayBoxScore]) {
+          const oppId = box.teamId === r.result.homeBoxScore.teamId
+            ? r.result.awayBoxScore.teamId : r.result.homeBoxScore.teamId
+          const opp = teamById.get(oppId) ?? '???'
+          for (const ps of box.playerStats) {
+            const playerName = nameById.get(ps.playerId)
+            if (!playerName) continue
+            if (ps.points >= (tops.points[4]?.value ?? 0)) {
+              consider(tops.points, { playerId: ps.playerId, playerName, value: ps.points, date: r.date, opponent: opp })
+            }
+            if (ps.totalRebounds >= (tops.rebounds[4]?.value ?? 0)) {
+              consider(tops.rebounds, { playerId: ps.playerId, playerName, value: ps.totalRebounds, date: r.date, opponent: opp })
+            }
+            if (ps.assists >= (tops.assists[4]?.value ?? 0)) {
+              consider(tops.assists, { playerId: ps.playerId, playerName, value: ps.assists, date: r.date, opponent: opp })
+            }
+          }
+        }
+      }
+      if (!cancelled) setGameRecords(tops)
+    })
+    return () => { cancelled = true }
+  }, [db, players, teams, state?.currentSeason])
+
+  const titleCounts = useMemo(() => {
+    const counts = new Map<string, number>()
+    for (const s of state?.seasonHistory ?? []) {
+      counts.set(s.championTeamId, (counts.get(s.championTeamId) ?? 0) + 1)
+    }
+    return [...counts.entries()].sort((a, b) => b[1] - a[1])
+  }, [state?.seasonHistory])
 
   const teamMap = useMemo(
     () => new Map(teams.map(t => [t.id, `${t.info.city} ${t.info.name}`])),
@@ -269,6 +331,57 @@ export default function LeagueHistoryPage() {
           <LeaderCard title="Rebounds Per Game" rows={topRebounders} suffix="RPG" leagueId={leagueId} />
           <LeaderCard title="Assists Per Game" rows={topAssisters} suffix="APG" leagueId={leagueId} />
         </div>
+
+        {/* Records Book */}
+        {gameRecords && (gameRecords.points.length > 0 || titleCounts.length > 0) && (
+          <>
+            <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Records Book</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+              {([
+                ['Most Points, Game', gameRecords.points, 'PTS'],
+                ['Most Rebounds, Game', gameRecords.rebounds, 'REB'],
+                ['Most Assists, Game', gameRecords.assists, 'AST'],
+              ] as const).map(([title, records, suffix]) => (
+                <GlassCard key={title} className="p-5">
+                  <h3 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">{title}</h3>
+                  <div className="space-y-1.5">
+                    {records.map((rec, i) => (
+                      <div key={`${rec.playerId}-${rec.date}-${i}`} className="flex items-center justify-between text-sm">
+                        <span className="flex items-center gap-2 min-w-0">
+                          <span className={`text-xs w-4 text-center ${i === 0 ? 'text-accent font-semibold' : 'text-gray-600'}`}>{i + 1}</span>
+                          <span className={`truncate ${i === 0 ? 'text-white font-medium' : 'text-gray-300'}`}>{rec.playerName}</span>
+                        </span>
+                        <span className="shrink-0 flex items-baseline gap-1.5 ml-2">
+                          <span className={i === 0 ? 'text-accent font-semibold' : 'text-gray-300'}>{rec.value}</span>
+                          <span className="text-[9px] text-gray-600">{suffix} vs {rec.opponent}</span>
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </GlassCard>
+              ))}
+              <GlassCard className="p-5">
+                <h3 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Championships</h3>
+                <div className="space-y-1.5">
+                  {titleCounts.length === 0 ? (
+                    <p className="text-gray-600 text-sm italic">No champions crowned yet</p>
+                  ) : (
+                    titleCounts.slice(0, 5).map(([teamId, count], i) => (
+                      <div key={teamId} className="flex items-center justify-between text-sm">
+                        <span className={`truncate ${i === 0 ? 'text-white font-medium' : 'text-gray-300'}`}>
+                          {teamMap.get(teamId) ?? 'Unknown'}
+                        </span>
+                        <span className={`shrink-0 ml-2 ${i === 0 ? 'text-yellow-400 font-semibold' : 'text-gray-400'}`}>
+                          {count} {count === 1 ? 'title' : 'titles'}
+                        </span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </GlassCard>
+            </div>
+          </>
+        )}
 
         {/* Hall of Fame */}
         {hallOfFame.length > 0 && (

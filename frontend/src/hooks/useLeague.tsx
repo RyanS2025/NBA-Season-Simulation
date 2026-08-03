@@ -1420,6 +1420,33 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
             lineupPosition: i,
           }))
           team.finances.totalPayroll = computeTeamPayroll(teamPlayers)
+
+          // Archive this season in franchise history before the reset
+          let playoffResult: import('../types/team').PlayoffResult = 'missed_playoffs'
+          if (pr) {
+            if (team.id === pr.championId) playoffResult = 'champion'
+            else if (team.id === pr.finalsLoserId) playoffResult = 'finals_lost'
+            else {
+              let maxRound = 0
+              for (const s of pr.bracket.series) {
+                if (s.higherSeed.teamId === team.id || s.lowerSeed.teamId === team.id) {
+                  maxRound = Math.max(maxRound, s.round)
+                }
+              }
+              if (maxRound === 3) playoffResult = 'conference_finals'
+              else if (maxRound === 2) playoffResult = 'second_round'
+              else if (maxRound === 1) playoffResult = 'first_round'
+            }
+          }
+          team.history = team.history ?? []
+          team.history.push({
+            year: state.currentSeason,
+            wins: team.seasonRecord.wins,
+            losses: team.seasonRecord.losses,
+            playoffResult,
+            mvpId: mvpPlayerId && playersByTeam.get(team.id)?.some(p => p.id === mvpPlayerId) ? mvpPlayerId : null,
+          })
+
           team.seasonRecord = {
             wins: 0, losses: 0,
             conferenceWins: 0, conferenceLosses: 0,
