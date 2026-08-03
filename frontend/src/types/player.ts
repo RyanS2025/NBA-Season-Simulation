@@ -199,6 +199,8 @@ export interface PlayerStatus {
   formMomentum?: number;
   /** Player has formally demanded a trade (morale collapsed). */
   tradeRequested?: boolean;
+  /** Team games elapsed since the trade demand was made. */
+  tradeRequestGames?: number;
 }
 
 export interface SeasonStats {

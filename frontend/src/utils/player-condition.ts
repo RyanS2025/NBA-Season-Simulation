@@ -6,9 +6,21 @@ type Severity = ActiveInjury['severity']
 
 /** Whether a player can take the floor tonight. */
 export function isAvailable(p: Player): boolean {
+  if (isHoldingOut(p)) return false
   const inj = p.status.currentInjury
   if (!inj) return true
   return !!inj.playingThrough
+}
+
+/**
+ * An ignored trade demand eventually becomes a holdout: after ~20 team
+ * games, players without strong loyalty refuse to suit up until moved.
+ */
+export function isHoldingOut(p: Player): boolean {
+  if (!p.status.tradeRequested) return false
+  const games = p.status.tradeRequestGames ?? 0
+  const loyalty = p.character.loyalty ?? 50
+  return games >= 20 && loyalty < 55
 }
 
 /** Only mild injuries can be played through. */
@@ -264,8 +276,26 @@ export function updateMorale(
   }
   if (player.status.tradeRequested && morale > 55) {
     player.status.tradeRequested = false
+    player.status.tradeRequestGames = 0
     return 'demand_rescinded'
   }
+  return null
+}
+
+export type EscalationEvent = 'escalated' | 'holdout' | null
+
+/**
+ * Tick an active trade demand forward one game. An unresolved demand
+ * poisons the locker room (teammate contagion is handled by the caller)
+ * and escalates: public pressure at 10 games, a holdout at 20 for
+ * players without strong loyalty ties.
+ */
+export function advanceTradeDemand(player: Player): EscalationEvent {
+  if (!player.status.tradeRequested) return null
+  const games = (player.status.tradeRequestGames ?? 0) + 1
+  player.status.tradeRequestGames = games
+  if (games === 10) return 'escalated'
+  if (games === 20 && (player.character.loyalty ?? 50) < 55) return 'holdout'
   return null
 }
 

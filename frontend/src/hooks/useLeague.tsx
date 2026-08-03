@@ -26,7 +26,7 @@ import { accumulateGameStats } from '../utils/stat-accumulator'
 import {
   rollForInjury, canPlayThrough, isCareerAltering, applyPermanentEffects,
   advanceInjuryRecovery, updateForm, refreshDisplayedOverall, rebaseOverall,
-  updateMorale, expectedMinutesByRank,
+  updateMorale, expectedMinutesByRank, advanceTradeDemand,
 } from '../utils/player-condition'
 import { generateReporters } from '../utils/awards/reporter-generator'
 import { updateNarratives } from '../utils/awards/narrative-engine'
@@ -253,8 +253,32 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
               .forEach((p, rank) => compositeRank.set(p.id, rank))
             const sideWon = result.winningTeamId === box.teamId
 
+            // An unresolved trade demand poisons the whole locker room
+            const activeDemanders = sidePlayers.filter(p => p.status.tradeRequested)
+            const contagion = Math.min(activeDemanders.length, 2) * 0.12
+
             for (const p of sidePlayers) {
               let touched = false
+
+              if (contagion > 0 && !p.status.tradeRequested) {
+                p.status.morale = Math.max(5, (p.status.morale ?? 72) - contagion)
+              }
+
+              const escalation = advanceTradeDemand(p)
+              if (escalation) {
+                const teamLabel = team ? `${team.info.city} ${team.info.name}` : ''
+                const tx: Transaction = {
+                  id: uuid(),
+                  date: game.date,
+                  type: 'trade_request',
+                  details: { playerId: p.id, event: escalation },
+                  description: escalation === 'holdout'
+                    ? `${p.bio.firstName} ${p.bio.lastName} is HOLDING OUT — he will not play for the ${teamLabel} until he is traded`
+                    : `${p.bio.firstName} ${p.bio.lastName}'s camp goes public: pressure mounting on the ${teamLabel} to make a move`,
+                  seasonYear: state.currentSeason,
+                }
+                await addTransaction(db, tx)
+              }
 
               const moraleEvent = updateMorale(
                 p,
