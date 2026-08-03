@@ -1,10 +1,13 @@
+import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
 import DataTable from '../../components/common/DataTable'
 import GlassCard from '../../components/common/GlassCard'
 import ProgressBar from '../../components/common/ProgressBar'
+import Button from '../../components/common/Button'
 import { useLeague } from '../../hooks/useLeague'
 import { CBA_2026_27 } from '../../utils/cba-engine'
+import { isExtensionEligible, askingSalary, extensionDeadline } from '../../utils/contract-engine'
 import type { Player } from '../../types'
 
 const SALARY_CAP = CBA_2026_27.salaryCap
@@ -228,6 +231,8 @@ export default function MyTeamPage() {
           className="mb-8"
         />
 
+        <ExtensionsPanel teamPlayers={teamPlayers} />
+
         <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Cap Sheet</h2>
         <GlassCard className="p-6 mb-8">
           <div className="space-y-5">
@@ -362,4 +367,100 @@ function ordSuffix(n: number): string {
     case 3: return 'rd'
     default: return 'th'
   }
+}
+
+function ExtensionsPanel({ teamPlayers }: { teamPlayers: Player[] }) {
+  const { state, offerExtension } = useLeague()
+  const [openId, setOpenId] = useState<string | null>(null)
+  const [salary, setSalary] = useState(10_000_000)
+  const [years, setYears] = useState(3)
+  const [feedback, setFeedback] = useState<{ id: string; text: string; ok: boolean } | null>(null)
+
+  if (!state || state.currentPhase !== 'regular_season') return null
+
+  const eligible = teamPlayers.filter(p => isExtensionEligible(p, state.currentDate, state.currentSeason))
+  const deadline = extensionDeadline(state.currentSeason)
+  const pastDeadline = state.currentDate > deadline
+
+  if (pastDeadline || eligible.length === 0) return null
+
+  const openFor = (p: Player) => {
+    setOpenId(p.id)
+    setSalary(Math.round(askingSalary(p) / 1e6) * 1_000_000)
+    setYears(3)
+    setFeedback(null)
+  }
+
+  const submit = async (p: Player) => {
+    const verdict = await offerExtension(p.id, salary, years)
+    setFeedback({ id: p.id, text: verdict.feedback, ok: verdict.accepted })
+    if (verdict.accepted) setOpenId(null)
+  }
+
+  return (
+    <>
+      <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">
+        Contract Extensions
+        <span className="ml-3 text-amber-400 normal-case tracking-normal">deadline Dec 15</span>
+      </h2>
+      <GlassCard className="p-5 mb-8">
+        <div className="space-y-2">
+          {eligible.map(p => {
+            const isOpen = openId === p.id
+            const fb = feedback?.id === p.id ? feedback : null
+            return (
+              <div key={p.id} className="px-3 py-2.5 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                <div className="flex items-center justify-between gap-3 flex-wrap">
+                  <div>
+                    <span className="text-white text-sm font-medium">{p.bio.firstName} {p.bio.lastName}</span>
+                    <span className="text-gray-500 text-xs ml-2">
+                      expiring · {formatSalary(p.contract?.annualSalary ?? 0)}/yr · asking ~{formatSalary(askingSalary(p))}
+                    </span>
+                  </div>
+                  <Button variant={isOpen ? 'ghost' : 'secondary'} size="sm" onClick={() => isOpen ? setOpenId(null) : openFor(p)}>
+                    {isOpen ? 'Cancel' : 'Offer Extension'}
+                  </Button>
+                </div>
+                {fb && (
+                  <div className={`text-xs mt-2 ${fb.ok ? 'text-emerald-400' : 'text-amber-400'}`}>{fb.text}</div>
+                )}
+                {isOpen && (
+                  <div className="mt-3 pt-3 border-t border-white/[0.06] flex items-center gap-5 flex-wrap">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-gray-500">Salary</span>
+                      <input
+                        type="range" min={2_000_000} max={50_000_000} step={500_000}
+                        value={salary} onChange={e => setSalary(Number(e.target.value))}
+                        aria-label="Extension salary"
+                        className="w-40 accent-[oklch(64.6%_0.222_41.116)]"
+                      />
+                      <span className="text-sm text-white w-16 tabular-nums">{formatSalary(salary)}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs text-gray-500 mr-1">Years</span>
+                      {[1, 2, 3, 4].map(y => (
+                        <button
+                          key={y}
+                          onClick={() => setYears(y)}
+                          className={`w-7 h-7 rounded text-xs font-medium transition-colors ${
+                            years === y ? 'bg-accent text-white' : 'bg-white/[0.06] text-gray-400 hover:bg-white/[0.1]'
+                          }`}
+                        >
+                          {y}
+                        </button>
+                      ))}
+                    </div>
+                    <span className="text-xs text-gray-600">
+                      Total: {formatSalary(salary * years)}{years >= 3 ? ' · player option on final year' : ''}
+                    </span>
+                    <Button variant="primary" size="sm" onClick={() => submit(p)}>Submit Offer</Button>
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </GlassCard>
+    </>
+  )
 }

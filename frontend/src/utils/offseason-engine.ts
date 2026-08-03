@@ -155,10 +155,18 @@ export function runPlayerDevelopment(players: Player[], staffMap?: Map<string, S
       }
     }
 
+    // Player option: entering the option year, an underpaid or unhappy
+    // player opts out and hits the market instead
+    const optsOut = !!p.contract?.playerOption
+      && p.contract.yearsRemaining === 2
+      && estimateMarketSalary(updated) > p.contract.annualSalary * 1.15
+      && (p.status.morale ?? 72) < 68
+
     // Check contract expiration
-    if (p.contract && p.contract.yearsRemaining <= 1) {
+    if (p.contract && (p.contract.yearsRemaining <= 1 || optsOut)) {
       updated.status = { ...updated.status, isFreeAgent: true }
       updated.teamId = ''
+      updated.contract = null
       freeAgentIds.push(p.id)
     } else if (p.contract) {
       updated.contract = { ...p.contract, yearsRemaining: p.contract.yearsRemaining - 1 }

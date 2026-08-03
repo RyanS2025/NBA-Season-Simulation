@@ -26,6 +26,8 @@ export interface LeagueState {
   settings: LeagueSettings
   seasonHistory: import('../types/league').SeasonSummary[]
   playoffResults?: PlayoffResults | null
+  /** Season whose CPU extension pass has already run (Dec 15 deadline). */
+  extensionsProcessedSeason?: number
 }
 
 export interface PlayerSeasonStats {

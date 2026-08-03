@@ -34,6 +34,9 @@ import { computeAllAwards } from '../utils/awards/awards-engine'
 import {
   buildSeasonAwards, awardStringsForPlayers, careerTotals, hallOfFameScore, HOF_THRESHOLD,
 } from '../utils/legacy-engine'
+import {
+  extensionDeadline, isExtensionEligible, evaluateExtensionOffer, applyExtension, cpuExtendPlayers,
+} from '../utils/contract-engine'
 import { simulateEntirePlayoffs, type PlayoffResults } from '../utils/playoff-sim'
 import { validateTrade, computeTeamPayroll } from '../utils/cba-engine'
 import { runPlayerDevelopment, cpuSignFreeAgents } from '../utils/offseason-engine'
@@ -96,6 +99,7 @@ export interface LeagueContextValue {
     years: number,
   ) => Promise<boolean>
   releasePlayer: (playerId: string) => Promise<boolean>
+  offerExtension: (playerId: string, salary: number, years: number) => Promise<{ accepted: boolean; feedback: string }>
   advanceToNextSeason: () => Promise<boolean>
   updateSettings: (settings: LeagueSettings) => Promise<void>
   startDraft: () => Promise<void>
@@ -358,12 +362,41 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
         }
       }
 
+      // CPU front offices lock up expiring stars once the extension
+      // deadline passes (runs once per season)
+      const lastGameDate = games[games.length - 1]?.date ?? state.currentDate
+      if (
+        state.settings != null &&
+        lastGameDate >= extensionDeadline(state.currentSeason) &&
+        state.extensionsProcessedSeason !== state.currentSeason
+      ) {
+        setSimProgress('Extension deadline...')
+        const playerPool = await getAllPlayers(db)
+        const extensions = cpuExtendPlayers(teams, playerPool, state.currentSeason, state.userTeamId)
+        for (const ext of extensions) {
+          const player = playerPool.find(p => p.id === ext.playerId)
+          if (player) statUpdatedPlayers.set(player.id, player)
+          const team = teams.find(t => t.id === ext.teamId)
+          const tx: Transaction = {
+            id: uuid(),
+            date: lastGameDate,
+            type: 'extension',
+            details: { playerId: ext.playerId, salary: ext.salary, years: ext.years },
+            description: `${team?.info.city ?? ''} ${team?.info.name ?? ''} signed ${ext.playerName} to a ${ext.years}-year extension ($${(ext.salary / 1e6).toFixed(1)}M/yr)`,
+            seasonYear: state.currentSeason,
+          }
+          await addTransaction(db, tx)
+        }
+        await updateLeagueState(db, { extensionsProcessedSeason: state.currentSeason })
+        await refreshState()
+      }
+
       if (statUpdatedPlayers.size > 0) {
         await db.players.bulkPut([...statUpdatedPlayers.values()])
         await refreshPlayers()
       }
     },
-    [teams, state, getTeamPlayers, refreshPlayers],
+    [teams, state, getTeamPlayers, refreshPlayers, refreshState],
   )
 
   const advanceDate = useCallback(
@@ -1003,6 +1036,48 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
     await refreshState()
   }, [refreshState])
 
+  const offerExtension = useCallback(
+    async (playerId: string, salary: number, years: number): Promise<{ accepted: boolean; feedback: string }> => {
+      const db = dbRef.current
+      if (!db || !state) return { accepted: false, feedback: 'League not loaded' }
+
+      const player = players.find(p => p.id === playerId)
+      if (!player) return { accepted: false, feedback: 'Player not found' }
+      if (!isExtensionEligible(player, state.currentDate, state.currentSeason)) {
+        return { accepted: false, feedback: 'Not extension-eligible (needs an expiring contract before the Dec 15 deadline)' }
+      }
+
+      const team = teams.find(t => t.id === state.userTeamId)
+      const record = team?.seasonRecord
+      const totalGames = (record?.wins ?? 0) + (record?.losses ?? 0)
+      const winPct = totalGames > 0 ? (record?.wins ?? 0) / totalGames : 0.5
+
+      const verdict = evaluateExtensionOffer(player, salary, years, winPct)
+      if (verdict.accepted) {
+        applyExtension(player, salary, years)
+        await db.players.put(player)
+
+        const tx: Transaction = {
+          id: uuid(),
+          date: state.currentDate,
+          type: 'extension',
+          details: { playerId, salary, years },
+          description: `${team?.info.city ?? ''} ${team?.info.name ?? ''} signed ${player.bio.firstName} ${player.bio.lastName} to a ${years}-year extension ($${(salary / 1e6).toFixed(1)}M/yr)`,
+          seasonYear: state.currentSeason,
+        }
+        await addTransaction(db, tx)
+        await refreshPlayers()
+      } else {
+        // A lowball offer stings a little
+        player.status.morale = Math.max(5, (player.status.morale ?? 72) - 2)
+        await db.players.put(player)
+        await refreshPlayers()
+      }
+      return verdict
+    },
+    [state, players, teams, refreshPlayers],
+  )
+
   const advanceToNextSeason = useCallback(async (): Promise<boolean> => {
     const db = dbRef.current
     if (!db || !state) return false
@@ -1396,6 +1471,7 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
         executeTrade,
         signFreeAgent,
         releasePlayer,
+        offerExtension,
         advanceToNextSeason,
         updateSettings,
         startDraft,
