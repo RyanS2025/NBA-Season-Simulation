@@ -664,6 +664,65 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
         state.settings.playoffFormat ?? 'play_in',
       )
 
+      // A playoff run is part of a career: fold every playoff game into a
+      // dedicated "<year> Playoffs" stat line and roll injuries — a torn
+      // achilles in the Finals follows a player forever.
+      setSimProgress('Recording playoff stats...')
+      const abbrById = new Map(currentTeams.map(t => [t.id, t.info.abbreviation]))
+      const playoffTouched = new Map<string, Player>()
+      const playoffSeasonKey = `${state.currentSeason} Playoffs`
+
+      for (const series of results.seriesResults) {
+        for (const g of series.gameResults) {
+          for (const sideTeamId of [g.homeTeamId, g.awayTeamId]) {
+            const sidePlayers = currentPlayers.filter(p => p.teamId === sideTeamId)
+            const modified = accumulateGameStats(
+              sidePlayers, g.result, state.currentSeason,
+              sideTeamId, abbrById.get(sideTeamId) ?? '', playoffSeasonKey,
+            )
+            for (const p of modified) playoffTouched.set(p.id, p)
+
+            if (state.settings.injuriesEnabled) {
+              const box = g.result.homeBoxScore.teamId === sideTeamId ? g.result.homeBoxScore : g.result.awayBoxScore
+              for (const ps of box.playerStats) {
+                if (ps.minutes <= 0) continue
+                const player = sidePlayers.find(p => p.id === ps.playerId)
+                if (!player || player.status.currentInjury) continue
+                const injury = rollForInjury(player, ps.minutes, 60, state.settings.injuryFrequency)
+                if (!injury) continue
+                injury.dateInjured = state.currentDate
+                const permanent = isCareerAltering(injury)
+                player.durability.injuryHistory = player.durability.injuryHistory ?? []
+                player.durability.injuryHistory.push({
+                  type: injury.type, severity: injury.severity, gamesOut: injury.gamesRemaining,
+                  seasonYear: state.currentSeason, bodyPart: injury.bodyPart, permanentEffect: permanent,
+                })
+                if (permanent) {
+                  applyPermanentEffects(player, injury)
+                  rebaseOverall(player, (player.ratings.baseOverall ?? player.ratings.overall) - (injury.severity === 'season_ending' ? 4 : 3))
+                  const team = currentTeams.find(t => t.id === sideTeamId)
+                  const tx: Transaction = {
+                    id: uuid(),
+                    date: state.currentDate,
+                    type: 'injury',
+                    details: { playerId: player.id, bodyPart: injury.bodyPart, injuryType: injury.type, severity: injury.severity, permanent: true, playoffs: true },
+                    description: `${player.bio.firstName} ${player.bio.lastName} (${team?.info.city ?? ''} ${team?.info.name ?? ''}) suffered a devastating ${injury.bodyPart} ${injury.type} in the playoffs — a career-altering injury`,
+                    seasonYear: state.currentSeason,
+                  }
+                  await addTransaction(db, tx)
+                }
+                playoffTouched.set(player.id, player)
+              }
+            }
+          }
+        }
+      }
+
+      if (playoffTouched.size > 0) {
+        await db.players.bulkPut([...playoffTouched.values()])
+        await refreshPlayers()
+      }
+
       updatePlayoffResults(results)
 
       await updateLeagueState(db, { playoffResults: results })
@@ -672,7 +731,7 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
       setSimming(false)
       setSimProgress(null)
     }
-  }, [state, simming, refreshState, updatePlayoffResults])
+  }, [state, simming, refreshState, refreshPlayers, updatePlayoffResults])
 
   const executeTrade = useCallback(
     async (

@@ -9,9 +9,9 @@ function round3(v: number): number {
   return Math.round(v * 1000) / 1000
 }
 
-function emptySeasonEntry(seasonYear: number, teamAbbr: string): SeasonStats {
+function emptySeasonEntry(seasonKey: string, teamAbbr: string): SeasonStats {
   return {
-    season: String(seasonYear),
+    season: seasonKey,
     team: teamAbbr,
     gp: 0, gs: 0, mpg: 0,
     ppg: 0, rpg: 0, apg: 0, spg: 0, bpg: 0, topg: 0,
@@ -85,6 +85,7 @@ export function accumulateGameStats(
   seasonYear: number,
   teamId: string,
   teamAbbr: string,
+  seasonKey?: string,
 ): Player[] {
   const box = gameResult.homeBoxScore.teamId === teamId
     ? gameResult.homeBoxScore
@@ -94,7 +95,7 @@ export function accumulateGameStats(
   if (!box) return []
 
   const playerMap = new Map(players.map(p => [p.id, p]))
-  const season = String(seasonYear)
+  const season = seasonKey ?? String(seasonYear)
 
   // Starters = the five players who logged the most minutes in this game.
   const starterIds = new Set(
@@ -114,7 +115,7 @@ export function accumulateGameStats(
     if (!player.careerStats) player.careerStats = []
     let entry = player.careerStats.find(s => s.season === season)
     if (!entry) {
-      entry = emptySeasonEntry(seasonYear, teamAbbr)
+      entry = emptySeasonEntry(season, teamAbbr)
       player.careerStats.push(entry)
     }
 
