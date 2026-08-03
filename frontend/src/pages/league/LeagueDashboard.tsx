@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
 import GlassCard from '../../components/common/GlassCard'
 import Button from '../../components/common/Button'
+import OffseasonHub from '../../components/league/OffseasonHub'
 import { useLeague } from '../../hooks/useLeague'
 import type { Game, Team } from '../../types'
 
@@ -124,7 +125,10 @@ export default function LeagueDashboard() {
           </GlassCard>
         )}
 
+        <OffseasonHub />
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          {(state.currentPhase === 'regular_season' || state.currentPhase === 'preseason') && (
           <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl p-6">
             <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Sim Controls</h2>
             <div className="flex flex-wrap gap-3">
@@ -137,16 +141,12 @@ export default function LeagueDashboard() {
               <Button variant="secondary" size="sm" onClick={simSeason} disabled={simming}>
                 Sim Season
               </Button>
-              {(state.currentPhase === 'playoffs' || state.currentPhase === 'offseason' || state.currentPhase === 'champion') && (
-                <Button variant="primary" size="sm" onClick={advanceToNextSeason} disabled={simming}>
-                  {simming ? simProgress ?? 'Processing...' : 'Next Season'}
-                </Button>
-              )}
               <Link to={`/league/${leagueId}/schedule`}>
                 <Button variant="secondary" size="sm">Full Schedule</Button>
               </Link>
             </div>
           </div>
+          )}
 
           <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl p-6">
             <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Season Record</h2>

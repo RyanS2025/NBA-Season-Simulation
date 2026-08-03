@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
 import GlassCard from '../../components/common/GlassCard'
@@ -9,9 +9,9 @@ import { computeAllAwards, scoreMVPCandidate, scoreDPOYCandidate, scoreROYCandid
 import type { Player, Team } from '../../types'
 import type { AwardType, AwardResult, Reporter, AwardBallot } from '../../types'
 
-type AwardsTab = 'races' | 'results' | 'ballots' | 'reporters'
+type AwardsTab = 'ceremony' | 'races' | 'reporters'
 
-const ACCENT = 'oklch(64.6% 0.222 41.116)'
+const OFFSEASON_PHASES = new Set(['playoffs', 'champion', 'draft', 'draft_lottery', 'free_agency', 'coaching_carousel', 'offseason'])
 
 function pName(p: Player): string {
   return `${p.bio.firstName} ${p.bio.lastName}`
@@ -37,6 +37,13 @@ const AWARD_LABELS: Record<string, string> = {
   eoty: 'Executive of the Year',
 }
 
+const AWARD_SHORT: Record<string, string> = {
+  mvp: 'MVP', dpoy: 'DPOY', roy: 'ROY', sixth_man: '6MOY',
+  mip: 'MIP', clutch_poy: 'CPOY', coty: 'COTY', eoty: 'EOTY',
+}
+
+const CEREMONY_ORDER = ['roy', 'sixth_man', 'mip', 'clutch_poy', 'coty', 'eoty', 'dpoy', 'mvp']
+
 const RACE_AWARDS: AwardType[] = ['mvp', 'dpoy', 'roy', 'sixth_man', 'mip', 'clutch_poy']
 
 type ScorerFn = (p: Player, t: Team, season: string) => number
@@ -49,12 +56,44 @@ const SCORER_MAP: Record<string, ScorerFn> = {
   clutch_poy: scoreClutchPOYCandidate,
 }
 
+function Headshot({ player, size = 72 }: { player: Player | null; size?: number }) {
+  const [failed, setFailed] = useState(false)
+  const initials = player ? `${player.bio.firstName[0] ?? ''}${player.bio.lastName[0] ?? ''}` : '—'
+
+  if (!player || !player.headshotUrl || failed) {
+    return (
+      <div
+        className="rounded-full bg-gradient-to-br from-white/[0.1] to-white/[0.02] border border-white/[0.1] flex items-center justify-center font-display text-white/70"
+        style={{ width: size, height: size, fontSize: size * 0.32 }}
+      >
+        {initials}
+      </div>
+    )
+  }
+  return (
+    <img
+      src={player.headshotUrl}
+      alt={pName(player)}
+      onError={() => setFailed(true)}
+      className="rounded-full object-cover border border-white/[0.1] bg-white/[0.04]"
+      style={{ width: size, height: size }}
+    />
+  )
+}
+
 export default function AwardsPage() {
   const { id: leagueId } = useParams()
   const { players, teams, state, loading } = useLeague()
-  const [activeTab, setActiveTab] = useState<AwardsTab>('races')
-  const [selectedAward, setSelectedAward] = useState<string>('mvp')
+
+  const seasonOver = !!state && OFFSEASON_PHASES.has(state.currentPhase)
+
+  const [activeTab, setActiveTab] = useState<AwardsTab | null>(null)
+  const [expandedAward, setExpandedAward] = useState<string | null>(null)
   const [ballotFilter, setBallotFilter] = useState<string>('all')
+  const [showBallots, setShowBallots] = useState(false)
+  const carouselRef = useRef<HTMLDivElement>(null)
+
+  const tab: AwardsTab = activeTab ?? (seasonOver ? 'ceremony' : 'races')
 
   const playerMap = useMemo(() => new Map(players.map(p => [p.id, p])), [players])
   const teamMap = useMemo(() => new Map(teams.map(t => [t.id, t])), [teams])
@@ -74,7 +113,7 @@ export default function AwardsPage() {
   const results = useMemo(() => {
     if (players.length === 0 || reporters.length === 0 || !state) return null
     return computeAllAwards(players, teams, reporters, narratives, state?.currentSeason ?? 0)
-  }, [players, teams, reporters, narratives])
+  }, [players, teams, reporters, narratives, state])
 
   const raceData = useMemo(() => {
     const data: Record<string, Array<{ player: Player; team: Team; score: number; statLine: string }>> = {}
@@ -109,12 +148,232 @@ export default function AwardsPage() {
     )
   }
 
-  const tabs: { id: AwardsTab; label: string }[] = [
-    { id: 'races', label: 'Award Races' },
-    { id: 'results', label: 'Results' },
-    { id: 'ballots', label: 'Ballots' },
-    { id: 'reporters', label: 'Reporters' },
-  ]
+  const tabs: { id: AwardsTab; label: string }[] = seasonOver
+    ? [
+        { id: 'ceremony', label: 'Awards Ceremony' },
+        { id: 'races', label: 'Final Standings' },
+        { id: 'reporters', label: 'Reporters' },
+      ]
+    : [
+        { id: 'races', label: 'Award Races' },
+        { id: 'reporters', label: 'Reporters' },
+      ]
+
+  function winnerDisplay(awardType: string, result: AwardResult): {
+    player: Player | null
+    title: string
+    subtitle: string
+    statLine: string
+  } {
+    const isTeamAward = awardType === 'coty' || awardType === 'eoty'
+    if (isTeamAward) {
+      const team = teamMap.get(result.winnerId)
+      const staffName = awardType === 'coty'
+        ? team?.staff?.headCoach?.name
+        : team?.staff?.generalManager?.name
+      return {
+        player: null,
+        title: staffName ?? (team ? teamName(team) : 'Unknown'),
+        subtitle: team ? teamName(team) : '',
+        statLine: team ? `${team.seasonRecord.wins}-${team.seasonRecord.losses} record` : '',
+      }
+    }
+    const player = playerMap.get(result.winnerId) ?? null
+    const team = player ? teamMap.get(player.teamId) : undefined
+    const s = player ? seasonStats(player, state?.currentSeason) : null
+    const statLine = s
+      ? awardType === 'dpoy'
+        ? `${s.bpg.toFixed(1)} BPG · ${s.spg.toFixed(1)} SPG · ${s.rpg.toFixed(1)} RPG`
+        : `${s.ppg.toFixed(1)} PPG · ${s.rpg.toFixed(1)} RPG · ${s.apg.toFixed(1)} APG`
+      : ''
+    return {
+      player,
+      title: player ? pName(player) : 'Unknown',
+      subtitle: team ? teamName(team) : '',
+      statLine,
+    }
+  }
+
+  function scrollCarousel(dir: -1 | 1) {
+    carouselRef.current?.scrollBy({ left: dir * 300, behavior: 'smooth' })
+  }
+
+  function CeremonyCard({ awardType, result }: { awardType: string; result: AwardResult }) {
+    const info = winnerDisplay(awardType, result)
+    const firstPlace = result.firstPlaceVotes[result.winnerId] ?? 0
+    const isExpanded = expandedAward === awardType
+    const isMvp = awardType === 'mvp'
+
+    return (
+      <button
+        onClick={() => { setExpandedAward(isExpanded ? null : awardType); setShowBallots(false); setBallotFilter('all') }}
+        className={`snap-start shrink-0 w-[260px] text-left rounded-2xl border p-5 transition-all duration-200 ${
+          isExpanded
+            ? 'border-accent/50 bg-accent/[0.08] shadow-[0_0_30px_rgba(255,100,30,0.15)]'
+            : isMvp
+              ? 'border-yellow-500/25 bg-gradient-to-b from-yellow-500/[0.06] to-transparent hover:border-yellow-500/40'
+              : 'border-white/[0.08] bg-white/[0.03] hover:border-white/[0.16] hover:bg-white/[0.05]'
+        }`}
+      >
+        <div className={`text-[9px] uppercase tracking-[2px] mb-4 ${isMvp ? 'text-yellow-400' : 'text-accent'}`}>
+          {AWARD_LABELS[awardType]}
+        </div>
+        <div className="flex flex-col items-center text-center">
+          <Headshot player={info.player} size={84} />
+          <div className="mt-3 text-lg font-display text-white leading-tight">{info.title}</div>
+          <div className="text-xs text-gray-500 mt-0.5">{info.subtitle}</div>
+          {info.statLine && (
+            <div className="text-[11px] text-gray-400 mt-2 font-medium">{info.statLine}</div>
+          )}
+          <div className="flex items-center gap-2 mt-3">
+            {result.wasUnanimous ? (
+              <span className="px-2 py-0.5 rounded text-[9px] uppercase tracking-wider bg-yellow-500/15 text-yellow-400 border border-yellow-500/30">
+                Unanimous
+              </span>
+            ) : (
+              <span className="text-[10px] text-gray-500">{firstPlace}/{reporters.length} first-place votes</span>
+            )}
+          </div>
+          <div className={`mt-3 text-[10px] uppercase tracking-wider ${isExpanded ? 'text-accent' : 'text-gray-600'}`}>
+            {isExpanded ? 'Showing votes ▾' : 'Click for voting ▸'}
+          </div>
+        </div>
+      </button>
+    )
+  }
+
+  function VotingTable({ awardType, result }: { awardType: string; result: AwardResult }) {
+    const sorted = Object.entries(result.voteTotals).sort((a, b) => b[1] - a[1])
+    const maxPoints = sorted[0]?.[1] ?? 1
+    const isTeamAward = awardType === 'coty' || awardType === 'eoty'
+
+    const filteredBallots = result.ballots.filter(b => {
+      if (ballotFilter === 'all') return true
+      if (ballotFilter === 'homer') return b.picks.some(p => p.isHomerPick)
+      return b.reporterType === ballotFilter
+    })
+
+    return (
+      <GlassCard className="p-6 mt-6">
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <h3 className="font-display text-xl text-white">
+            {AWARD_LABELS[awardType]} <span className="text-gray-600 text-sm ml-1">Media Voting</span>
+          </h3>
+          <div className="text-xs text-gray-500">
+            {reporters.length} voters · 10-7-5-3-1 point ballots · won by {result.marginOfVictory} pts
+          </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-white/[0.08] text-[10px] uppercase tracking-[1.5px] text-gray-600">
+                <th className="text-left py-2 pr-3 font-medium w-8">#</th>
+                <th className="text-left py-2 pr-3 font-medium">{isTeamAward ? 'Winner' : 'Player'}</th>
+                <th className="text-left py-2 pr-3 font-medium hidden md:table-cell">Team</th>
+                <th className="text-center py-2 px-3 font-medium">1st</th>
+                <th className="text-center py-2 px-3 font-medium">Points</th>
+                <th className="text-left py-2 pl-3 font-medium w-[30%]">Share</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sorted.map(([id, points], i) => {
+                const p = playerMap.get(id)
+                const t = p ? teamMap.get(p.teamId) : teamMap.get(id)
+                const isWinner = id === result.winnerId
+                let name: string
+                if (isTeamAward) {
+                  const team = teamMap.get(id)
+                  name = (awardType === 'coty' ? team?.staff?.headCoach?.name : team?.staff?.generalManager?.name)
+                    ?? (team ? teamName(team) : id)
+                } else {
+                  name = p ? pName(p) : id
+                }
+                return (
+                  <tr key={id} className={`border-b border-white/[0.04] ${isWinner ? 'bg-accent/[0.06]' : ''}`}>
+                    <td className={`py-2.5 pr-3 text-xs ${isWinner ? 'text-accent font-semibold' : 'text-gray-600'}`}>{i + 1}</td>
+                    <td className={`py-2.5 pr-3 ${isWinner ? 'text-white font-medium' : 'text-gray-300'}`}>
+                      <span className="flex items-center gap-2">
+                        {!isTeamAward && <Headshot player={p ?? null} size={26} />}
+                        {name}
+                        {isWinner && <span className="text-[9px] uppercase tracking-wider text-accent">Winner</span>}
+                      </span>
+                    </td>
+                    <td className="py-2.5 pr-3 text-xs text-gray-500 hidden md:table-cell">{t ? teamName(t) : ''}</td>
+                    <td className="py-2.5 px-3 text-center text-gray-400">{result.firstPlaceVotes[id] ?? 0}</td>
+                    <td className={`py-2.5 px-3 text-center font-medium ${isWinner ? 'text-white' : 'text-gray-400'}`}>{points}</td>
+                    <td className="py-2.5 pl-3">
+                      <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+                        <div
+                          className={`h-full rounded-full ${isWinner ? 'bg-accent' : 'bg-gray-600'}`}
+                          style={{ width: `${(points / maxPoints) * 100}%` }}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        {result.controversialVotes.length > 0 && (
+          <div className="mt-4 p-3 rounded-lg bg-amber-500/[0.05] border border-amber-500/15">
+            <div className="text-[10px] uppercase tracking-[2px] text-amber-400 mb-2">Controversial Votes</div>
+            <div className="space-y-1">
+              {result.controversialVotes.slice(0, 6).map((cv, i) => (
+                <div key={i} className="text-xs text-gray-400">
+                  <span className="text-amber-300">{cv.reporterName}</span> ({cv.outlet}) — {cv.reason}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="mt-4">
+          <button
+            onClick={() => setShowBallots(!showBallots)}
+            className="text-xs text-gray-500 hover:text-white transition-colors"
+          >
+            {showBallots ? '▾ Hide individual ballots' : `▸ Show all ${result.ballots.length} individual ballots`}
+          </button>
+
+          {showBallots && (
+            <div className="mt-3">
+              <div className="flex gap-1 flex-wrap mb-3">
+                {[
+                  { id: 'all', label: 'All' },
+                  { id: 'homer', label: 'Homer Picks' },
+                  { id: 'beat_writer', label: 'Beat Writers' },
+                  { id: 'national_writer', label: 'National' },
+                  { id: 'analytics_writer', label: 'Analytics' },
+                  { id: 'tv_analyst', label: 'TV' },
+                ].map(f => (
+                  <button
+                    key={f.id}
+                    onClick={() => setBallotFilter(f.id)}
+                    className={`px-2.5 py-1 rounded text-[10px] font-medium transition-colors ${
+                      ballotFilter === f.id ? 'text-white bg-white/[0.08]' : 'text-gray-600 hover:text-gray-400'
+                    }`}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+                {filteredBallots.slice(0, 30).map(ballot => (
+                  <BallotCard key={ballot.reporterId} ballot={ballot} />
+                ))}
+              </div>
+              {filteredBallots.length > 30 && (
+                <p className="text-gray-600 text-xs text-center mt-3">Showing 30 of {filteredBallots.length} ballots</p>
+              )}
+            </div>
+          )}
+        </div>
+      </GlassCard>
+    )
+  }
 
   function RaceCard({ awardType }: { awardType: string }) {
     const candidates = raceData[awardType] ?? []
@@ -138,27 +397,24 @@ export default function AwardsPage() {
                 <div
                   key={c.player.id}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
-                    isWinner ? `bg-[${ACCENT}]/8 border border-[${ACCENT}]/20` :
+                    isWinner ? 'bg-accent/[0.08] border border-accent/20' :
                     isUserTeam ? 'bg-white/[0.03]' : 'hover:bg-white/[0.02]'
                   }`}
                 >
-                  <span className={`text-xs w-5 text-center font-medium ${
-                    isWinner ? `text-[${ACCENT}]` : 'text-gray-600'
-                  }`}>
+                  <span className={`text-xs w-5 text-center font-medium ${isWinner ? 'text-accent' : 'text-gray-600'}`}>
                     {i + 1}
                   </span>
+                  <Headshot player={c.player} size={28} />
                   <div className="flex-1 min-w-0">
                     <span className={`text-sm font-medium ${
-                      isWinner ? 'text-white' : isUserTeam ? `text-[${ACCENT}]` : 'text-gray-200'
+                      isWinner ? 'text-white' : isUserTeam ? 'text-accent' : 'text-gray-200'
                     }`}>
                       {pName(c.player)}
                     </span>
-                    <span className="text-gray-500 text-xs ml-2">
-                      {teamName(c.team)}
-                    </span>
+                    <span className="text-gray-500 text-xs ml-2">{teamName(c.team)}</span>
                   </div>
                   <div className="flex items-center gap-3 shrink-0">
-                    <span className="text-gray-400 text-xs">{c.statLine}</span>
+                    <span className="text-gray-400 text-xs hidden sm:block">{c.statLine}</span>
                     {result && votePoints > 0 && (
                       <span className="text-[10px] text-gray-500">
                         {votePoints} pts{firstPlace > 0 ? ` (${firstPlace} 1st)` : ''}
@@ -169,77 +425,6 @@ export default function AwardsPage() {
               )
             })
           )}
-        </div>
-      </GlassCard>
-    )
-  }
-
-  function ResultCard({ awardType, result }: { awardType: string; result: AwardResult }) {
-    const winner = playerMap.get(result.winnerId) ?? (awardType === 'coty' || awardType === 'eoty' ? null : null)
-    const winnerTeam = winner ? teamMap.get(winner.teamId) : teamMap.get(result.winnerId)
-
-    const sortedVotes = Object.entries(result.voteTotals)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5)
-
-    const maxPoints = result.maxPossiblePoints
-
-    return (
-      <GlassCard className="p-5">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[10px] uppercase tracking-[2px] text-gray-600">
-            {AWARD_LABELS[awardType] ?? awardType}
-          </h3>
-          {result.wasUnanimous && (
-            <span className="px-2 py-0.5 rounded text-[9px] uppercase tracking-wider bg-yellow-500/15 text-yellow-400 border border-yellow-500/30">
-              Unanimous
-            </span>
-          )}
-        </div>
-
-        <div className="mb-4">
-          <div className="text-lg font-display text-white">
-            {winner ? pName(winner) : winnerTeam ? teamName(winnerTeam) : result.winnerId}
-          </div>
-          {winnerTeam && winner && (
-            <div className="text-xs text-gray-500">
-              {teamName(winnerTeam)} — {seasonStats(winner, state?.currentSeason)?.ppg.toFixed(1) ?? '—'} PPG
-            </div>
-          )}
-          <div className="text-xs text-gray-600 mt-1">
-            Won by {result.marginOfVictory} points • {result.firstPlaceVotes[result.winnerId] ?? 0}/{reporters.length} first-place votes
-          </div>
-          {result.controversialVotes.length > 0 && (
-            <div className="text-[10px] text-amber-400 mt-1">
-              {result.controversialVotes.length} controversial vote{result.controversialVotes.length > 1 ? 's' : ''}
-            </div>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          {sortedVotes.map(([id, points]) => {
-            const p = playerMap.get(id)
-            const t = p ? teamMap.get(p.teamId) : teamMap.get(id)
-            const pct = maxPoints > 0 ? (points / maxPoints) * 100 : 0
-            return (
-              <div key={id}>
-                <div className="flex items-center justify-between text-xs mb-1">
-                  <span className={`${id === result.winnerId ? 'text-white font-medium' : 'text-gray-400'}`}>
-                    {p ? pName(p) : t ? teamName(t) : id}
-                  </span>
-                  <span className="text-gray-500">
-                    {points} pts ({result.firstPlaceVotes[id] ?? 0} 1st)
-                  </span>
-                </div>
-                <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
-                  <div
-                    className={`h-full rounded-full ${id === result.winnerId ? `bg-[${ACCENT}]` : 'bg-gray-600'}`}
-                    style={{ width: `${pct}%` }}
-                  />
-                </div>
-              </div>
-            )
-          })}
         </div>
       </GlassCard>
     )
@@ -281,13 +466,11 @@ export default function AwardsPage() {
               <div
                 key={pick.candidateId}
                 className={`flex items-center justify-between px-2 py-1.5 rounded text-xs ${
-                  pick.isHomerPick ? 'bg-amber-500/8 border border-amber-500/15' : ''
+                  pick.isHomerPick ? 'bg-amber-500/[0.08] border border-amber-500/15' : ''
                 }`}
               >
                 <div className="flex items-center gap-2">
-                  <span className={`w-4 text-center font-medium ${
-                    pick.rank === 1 ? `text-[${ACCENT}]` : 'text-gray-600'
-                  }`}>
+                  <span className={`w-4 text-center font-medium ${pick.rank === 1 ? 'text-accent' : 'text-gray-600'}`}>
                     {pick.rank}
                   </span>
                   <span className={pick.rank === 1 ? 'text-white' : 'text-gray-300'}>
@@ -344,9 +527,7 @@ export default function AwardsPage() {
         </div>
 
         {beatTeam && (
-          <div className="text-[10px] text-amber-400/70 mb-2">
-            Covers {teamName(beatTeam)}
-          </div>
+          <div className="text-[10px] text-amber-400/70 mb-2">Covers {teamName(beatTeam)}</div>
         )}
 
         <div className="text-[10px] text-gray-600 mb-2">{reporter.yearsExperience} years experience</div>
@@ -357,9 +538,7 @@ export default function AwardsPage() {
               <span className="text-[10px] text-gray-500 w-20 shrink-0">{trait.label}</span>
               <div className="flex-1 h-1 bg-white/[0.06] rounded-full overflow-hidden">
                 <div
-                  className={`h-full rounded-full ${
-                    trait.label === 'Homer Bias' ? 'bg-amber-500' : `bg-[${ACCENT}]`
-                  }`}
+                  className={`h-full rounded-full ${trait.label === 'Homer Bias' ? 'bg-amber-500' : 'bg-accent'}`}
                   style={{ width: `${trait.value * 100}%` }}
                 />
               </div>
@@ -373,131 +552,85 @@ export default function AwardsPage() {
     )
   }
 
-  const selectedResult = results?.[selectedAward]
-  const filteredBallots = selectedResult?.ballots.filter(b => {
-    if (ballotFilter === 'all') return true
-    if (ballotFilter === 'homer') return b.picks.some(p => p.isHomerPick)
-    return b.reporterType === ballotFilter
-  }) ?? []
+  const ceremonyAwards = results
+    ? CEREMONY_ORDER.filter(k => results[k]).map(k => [k, results[k]] as const)
+    : []
 
   return (
     <PageTransition>
       <div>
-        <h1 className="font-display text-4xl tracking-wide text-white mb-6">Awards</h1>
-
-        <div className="flex gap-1 mb-6 flex-wrap">
-          {tabs.map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2 rounded-lg text-xs font-medium transition-colors ${
-                activeTab === tab.id
-                  ? `text-[${ACCENT}] bg-[${ACCENT}]/10`
-                  : 'text-gray-500 hover:text-white hover:bg-white/[0.04]'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        {activeTab === 'races' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {RACE_AWARDS.map(a => (
-              <RaceCard key={a} awardType={a} />
+        <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+          <h1 className="font-display text-4xl tracking-wide text-white">Awards</h1>
+          <div className="flex gap-1 flex-wrap">
+            {tabs.map(t => (
+              <button
+                key={t.id}
+                onClick={() => setActiveTab(t.id)}
+                className={`px-4 py-2 rounded-lg text-xs font-medium transition-colors ${
+                  tab === t.id
+                    ? 'text-accent bg-accent/10'
+                    : 'text-gray-500 hover:text-white hover:bg-white/[0.04]'
+                }`}
+              >
+                {t.label}
+              </button>
             ))}
           </div>
+        </div>
+
+        {tab === 'ceremony' && results && (
+          <div>
+            <div className="mb-6">
+              <div className="text-[9px] uppercase tracking-[2px] text-accent mb-1">Season {state.currentSeason}</div>
+              <h2 className="font-display text-2xl tracking-wide text-white">Awards Ceremony</h2>
+              <p className="text-gray-500 text-sm mt-1">The media has voted. Click any award to see the full ballot breakdown.</p>
+            </div>
+
+            <div className="relative">
+              <button
+                onClick={() => scrollCarousel(-1)}
+                aria-label="Scroll awards left"
+                className="absolute -left-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full backdrop-blur-md bg-slate-950/80 border border-white/[0.1] text-gray-300 hover:text-white hover:border-white/[0.25] transition-colors flex items-center justify-center"
+              >
+                ‹
+              </button>
+              <div
+                ref={carouselRef}
+                className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-3 px-1 scroll-smooth [scrollbar-width:thin]"
+              >
+                {ceremonyAwards.map(([key, result]) => (
+                  <CeremonyCard key={key} awardType={key} result={result} />
+                ))}
+              </div>
+              <button
+                onClick={() => scrollCarousel(1)}
+                aria-label="Scroll awards right"
+                className="absolute -right-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full backdrop-blur-md bg-slate-950/80 border border-white/[0.1] text-gray-300 hover:text-white hover:border-white/[0.25] transition-colors flex items-center justify-center"
+              >
+                ›
+              </button>
+            </div>
+
+            {expandedAward && results[expandedAward] && (
+              <VotingTable awardType={expandedAward} result={results[expandedAward]} />
+            )}
+          </div>
         )}
 
-        {activeTab === 'results' && results && (
-          <div className="space-y-6">
-            {results.mvp?.controversialVotes.length > 0 && (
-              <GlassCard className="p-5 border-amber-500/20">
-                <h3 className="text-[10px] uppercase tracking-[2px] text-amber-400 mb-3">
-                  Controversial Votes
-                </h3>
-                <div className="space-y-2">
-                  {Object.values(results).flatMap(r => r.controversialVotes).slice(0, 10).map((cv, i) => (
-                    <div key={i} className="flex items-center justify-between text-xs px-2 py-1.5 rounded bg-amber-500/5">
-                      <span className="text-amber-300">{cv.reporterName}</span>
-                      <span className="text-gray-400">{cv.reason}</span>
-                    </div>
-                  ))}
-                </div>
-              </GlassCard>
+        {tab === 'races' && (
+          <div>
+            {seasonOver && (
+              <p className="text-gray-500 text-sm mb-4">Final regular season standings for each award race.</p>
             )}
-
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {Object.entries(results).map(([key, result]) => (
-                <ResultCard key={key} awardType={key} result={result} />
+              {RACE_AWARDS.map(a => (
+                <RaceCard key={a} awardType={a} />
               ))}
             </div>
           </div>
         )}
 
-        {activeTab === 'ballots' && results && (
-          <div className="space-y-4">
-            <div className="flex gap-2 flex-wrap">
-              <div className="flex gap-1">
-                {Object.keys(AWARD_LABELS).filter(k => results[k]).map(key => (
-                  <button
-                    key={key}
-                    onClick={() => setSelectedAward(key)}
-                    className={`px-3 py-1.5 rounded-lg text-[10px] uppercase tracking-wider font-medium transition-colors ${
-                      selectedAward === key
-                        ? `text-[${ACCENT}] bg-[${ACCENT}]/10`
-                        : 'text-gray-500 hover:text-white hover:bg-white/[0.04]'
-                    }`}
-                  >
-                    {key === 'mvp' ? 'MVP' : key === 'dpoy' ? 'DPOY' : key === 'roy' ? 'ROY' :
-                     key === 'sixth_man' ? '6MOY' : key === 'mip' ? 'MIP' :
-                     key === 'clutch_poy' ? 'CPOY' : key === 'coty' ? 'COTY' : 'EOTY'}
-                  </button>
-                ))}
-              </div>
-              <div className="flex gap-1 border-l border-white/[0.08] pl-2">
-                {[
-                  { id: 'all', label: 'All' },
-                  { id: 'homer', label: 'Homer Picks' },
-                  { id: 'beat_writer', label: 'Beat Writers' },
-                  { id: 'national_writer', label: 'National' },
-                  { id: 'analytics_writer', label: 'Analytics' },
-                  { id: 'tv_analyst', label: 'TV' },
-                ].map(f => (
-                  <button
-                    key={f.id}
-                    onClick={() => setBallotFilter(f.id)}
-                    className={`px-2 py-1 rounded text-[10px] font-medium transition-colors ${
-                      ballotFilter === f.id
-                        ? 'text-white bg-white/[0.08]'
-                        : 'text-gray-600 hover:text-gray-400'
-                    }`}
-                  >
-                    {f.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="text-xs text-gray-500 mb-2">
-              Showing {filteredBallots.length} of {selectedResult?.ballots.length ?? 0} ballots for {AWARD_LABELS[selectedAward] ?? selectedAward}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-              {filteredBallots.slice(0, 30).map(ballot => (
-                <BallotCard key={ballot.reporterId} ballot={ballot} />
-              ))}
-            </div>
-
-            {filteredBallots.length > 30 && (
-              <p className="text-gray-600 text-xs text-center">
-                Showing 30 of {filteredBallots.length} ballots
-              </p>
-            )}
-          </div>
-        )}
-
-        {activeTab === 'reporters' && (
+        {tab === 'reporters' && (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
             {reporters.map(r => (
               <ReporterCard key={r.id} reporter={r} />
