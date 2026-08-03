@@ -19,9 +19,10 @@ export interface PlayoffBracket {
   championId: string | null
 }
 
-export function seedTeamsByConference(
+export function conferenceStandings(
   teams: Team[],
   conference: 'Eastern' | 'Western',
+  count: number,
 ): { teamId: string; seed: number; wins: number; losses: number }[] {
   return teams
     .filter(t => t.info.conference === conference)
@@ -31,13 +32,20 @@ export function seedTeamsByConference(
       if (winPctB !== winPctA) return winPctB - winPctA
       return b.seasonRecord.conferenceWins - a.seasonRecord.conferenceWins
     })
-    .slice(0, 8)
+    .slice(0, count)
     .map((t, i) => ({
       teamId: t.id,
       seed: i + 1,
       wins: t.seasonRecord.wins,
       losses: t.seasonRecord.losses,
     }))
+}
+
+export function seedTeamsByConference(
+  teams: Team[],
+  conference: 'Eastern' | 'Western',
+): { teamId: string; seed: number; wins: number; losses: number }[] {
+  return conferenceStandings(teams, conference, 8)
 }
 
 export function generateFirstRound(

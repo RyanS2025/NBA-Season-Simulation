@@ -26,6 +26,12 @@ import {
   rollForInjury, canPlayThrough, isCareerAltering, applyPermanentEffects,
   advanceInjuryRecovery, updateForm, refreshDisplayedOverall, rebaseOverall,
 } from '../utils/player-condition'
+import { generateReporters } from '../utils/awards/reporter-generator'
+import { updateNarratives } from '../utils/awards/narrative-engine'
+import { computeAllAwards } from '../utils/awards/awards-engine'
+import {
+  buildSeasonAwards, awardStringsForPlayers, careerTotals, hallOfFameScore, HOF_THRESHOLD,
+} from '../utils/legacy-engine'
 import { simulateEntirePlayoffs, type PlayoffResults } from '../utils/playoff-sim'
 import { validateTrade, computeTeamPayroll } from '../utils/cba-engine'
 import { runPlayerDevelopment, cpuSignFreeAgents } from '../utils/offseason-engine'
@@ -591,6 +597,7 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
         state.currentSeason,
         state.currentDate,
         seed,
+        state.settings.playoffFormat ?? 'play_in',
       )
 
       updatePlayoffResults(results)
@@ -931,6 +938,22 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
     const db = dbRef.current
     if (!db || !state) return
 
+    // Auto-complete any unmade picks (CPU picks best available, including
+    // the user's remaining picks) so leaving the draft early never means
+    // rookies silently vanish from the league.
+    let guard = 0
+    while (draftStateRef.current?.isActive && guard < 130) {
+      const ds = draftStateRef.current
+      const pick = ds.draftOrder[ds.currentPickIndex]
+      if (!pick) break
+      const team = teams.find(t => t.id === pick.teamId)
+      const teamPlayers = players.filter(p => p.teamId === pick.teamId)
+      const chosen = team ? (cpuAutoPick(ds.prospects, team, teamPlayers) ?? ds.prospects[0]) : ds.prospects[0]
+      if (!chosen) break
+      await executeDraftSelection(chosen.id, false)
+      guard++
+    }
+
     await updateLeagueState(db, { currentPhase: 'free_agency' })
     if (leagueId) {
       await saveLeagueMeta(leagueId, { currentPhase: 'free_agency' as SeasonPhase })
@@ -940,7 +963,7 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
     await refreshState()
     await refreshTeams()
     await refreshPlayers()
-  }, [state, leagueId, refreshState, refreshTeams, refreshPlayers])
+  }, [state, teams, players, leagueId, executeDraftSelection, refreshState, refreshTeams, refreshPlayers])
 
   const updateSettings = useCallback(async (settings: LeagueSettings) => {
     const db = dbRef.current
@@ -959,6 +982,41 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
     try {
       const currentPlayers = await getAllPlayers(db)
       const allTeams = await db.teams.toArray()
+
+      // The league never skips a draft: if no rookie class entered this
+      // season (user bypassed the draft), the CPU runs the whole thing.
+      const rookiesThisSeason = currentPlayers.filter(p => p.bio.draftYear === state.currentSeason).length
+      if (rookiesThisSeason === 0) {
+        setSimProgress('Running CPU draft...')
+        let prospects = await loadDraftClassFromJSON(state.currentSeason)
+        if (prospects.length === 0) prospects = generateDraftClass(state.currentSeason)
+        const lotteryResults = runDraftLottery(allTeams)
+        const draftOrder = buildDraftOrder(lotteryResults, allTeams)
+        let available = [...prospects]
+        for (const pick of draftOrder) {
+          const team = allTeams.find(t => t.id === pick.teamId)
+          if (!team || available.length === 0) break
+          const teamPlayers = currentPlayers.filter(p => p.teamId === pick.teamId)
+          const chosen = cpuAutoPick(available, team, teamPlayers) ?? available[0]
+          available = available.filter(p => p.id !== chosen.id)
+          const rookie = convertProspectToPlayer(chosen, pick.teamId, pick.pickNumber, pick.round, state.currentSeason)
+          await db.players.put(rookie)
+          currentPlayers.push(rookie)
+          if (pick.round === 1) {
+            const tx: Transaction = {
+              id: uuid(),
+              date: state.currentDate,
+              type: 'draft' as Transaction['type'],
+              details: { pickNumber: pick.pickNumber, round: pick.round, prospectName: `${chosen.firstName} ${chosen.lastName}` },
+              description: `${team.info.city} ${team.info.name} select ${chosen.firstName} ${chosen.lastName} (${chosen.position}) with pick #${pick.pickNumber}`,
+              seasonYear: state.currentSeason,
+            }
+            await addTransaction(db, tx)
+          }
+        }
+      }
+
+      setSimProgress('Running player development...')
       const staffMap = new Map<string, import('../types/staff').StaffRoster>()
       for (const t of allTeams) {
         if (t.staff) staffMap.set(t.id, t.staff)
@@ -1057,22 +1115,68 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
       }
       const prevHistory = state.seasonHistory ?? []
 
+      // Persist the full media-voted award slate and stamp each winner's
+      // legacy — this is what future narratives and HoF resumes read.
+      setSimProgress('Recording season awards...')
+      const reporters = generateReporters(leagueId ?? '', state.currentSeason, allTeams)
+      const narratives = updateNarratives(currentPlayers, allTeams, [], 26, state.currentSeason)
+      const awardResults = computeAllAwards(currentPlayers, allTeams, reporters, narratives, state.currentSeason)
+      const allStarRecord = await db.allStarHistory.get(state.currentSeason)
+      const seasonAwards = buildSeasonAwards(
+        awardResults, currentPlayers, allTeams, state.currentSeason,
+        playoffMvpId, allStarRecord?.gameScore?.mvpId ?? null,
+      )
+      const championRosterIds = currentPlayers
+        .filter(p => p.teamId === championTeamId)
+        .map(p => p.id)
+      const accoladeMap = awardStringsForPlayers(seasonAwards, state.currentSeason, championRosterIds)
+      for (const p of updatedPlayers) {
+        const earned = accoladeMap.get(p.id)
+        if (earned) p.awards = [...(p.awards ?? []), ...earned]
+      }
+
       setSimProgress('Coaching carousel...')
       const firedList = evaluateCoachesForFiring(allTeams, state.currentSeason)
       const firedTeamIds = new Set(firedList.map(f => f.teamId))
       const marketplace = generateCoachMarketplace(firedList, state.currentSeason, state.currentSeason * 7919)
       const cpuHires = cpuHireCoaches(allTeams, marketplace, firedTeamIds, state.userTeamId)
 
-      await db.transaction('rw', [db.players, db.teams, db.leagueState, db.games, db.transactions, db.staffMarket], async () => {
+      await db.transaction('rw', [db.players, db.teams, db.leagueState, db.games, db.transactions, db.staffMarket, db.awards, db.retiredPlayers, db.hallOfFame], async () => {
+        await db.awards.put({ seasonYear: state.currentSeason, awards: seasonAwards })
+
         for (const retired of retiredPlayerIds) {
           const p = currentPlayers.find(x => x.id === retired)
           if (p) {
+            const playerName = `${p.bio.firstName} ${p.bio.lastName}`
+            const accolades = [...(p.awards ?? []), ...(accoladeMap.get(p.id) ?? [])]
+            const career = careerTotals(p)
+
+            await db.retiredPlayers.put({
+              playerId: p.id,
+              playerName,
+              retirementYear: state.currentSeason,
+              lastTeamId: p.teamId || '',
+              careerStats: career,
+              accolades,
+            })
+
+            const inducted = hallOfFameScore(accolades, career) >= HOF_THRESHOLD
+            if (inducted) {
+              await db.hallOfFame.put({
+                playerId: p.id,
+                playerName,
+                inductionYear: state.currentSeason + 1,
+                careerStats: career,
+                accolades,
+              })
+            }
+
             const tx: Transaction = {
               id: uuid(),
               date: state.currentDate,
               type: 'release',
-              details: { playerId: retired, reason: 'retirement' },
-              description: `${p.bio.firstName} ${p.bio.lastName} has retired`,
+              details: { playerId: retired, reason: 'retirement', hallOfFame: inducted },
+              description: `${playerName} has retired after ${career.seasons} seasons (${career.points.toLocaleString()} career points)${inducted ? ' — a future Hall of Famer' : ''}`,
               seasonYear: state.currentSeason,
             }
             await addTransaction(db, tx)

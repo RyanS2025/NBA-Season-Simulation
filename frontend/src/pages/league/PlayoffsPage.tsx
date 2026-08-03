@@ -388,6 +388,41 @@ export default function PlayoffsPage() {
           </GlassCard>
         )}
 
+        {/* Play-In Tournament */}
+        {hasResults && playoffResults.playInResults && playoffResults.playInResults.length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-[10px] uppercase tracking-[3px] text-purple-400 mb-4">Play-In Tournament</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {(['Eastern', 'Western'] as const).map(conf => (
+                <GlassCard key={conf} className="p-5">
+                  <h3 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">{conf} Conference</h3>
+                  <div className="space-y-2">
+                    {playoffResults.playInResults!.filter(g => g.conference === conf).map((g, i) => {
+                      const homeTeam = teams.find(t => t.id === g.homeTeamId)
+                      const awayTeam = teams.find(t => t.id === g.awayTeamId)
+                      const homeWon = g.winnerId === g.homeTeamId
+                      return (
+                        <div key={i} className="px-3 py-2.5 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                          <div className="text-[9px] uppercase tracking-wider text-purple-400/80 mb-1">{g.label}</div>
+                          <div className="flex items-center justify-between text-sm">
+                            <span className={homeWon ? 'text-white font-medium' : 'text-gray-500'}>
+                              {homeTeam ? `${homeTeam.info.city} ${homeTeam.info.name}` : g.homeTeamId}
+                            </span>
+                            <span className="text-gray-300 font-mono text-xs mx-3">{g.homeScore}—{g.awayScore}</span>
+                            <span className={!homeWon ? 'text-white font-medium' : 'text-gray-500'}>
+                              {awayTeam ? `${awayTeam.info.city} ${awayTeam.info.name}` : g.awayTeamId}
+                            </span>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </GlassCard>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Bracket Results */}
         {hasResults && (
           <div className="space-y-8">

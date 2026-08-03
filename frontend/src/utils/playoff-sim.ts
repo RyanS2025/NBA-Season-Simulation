@@ -5,7 +5,7 @@ import type { StaffRoster } from '../types/staff'
 import type { PlayoffSeries, PlayoffBracket } from './playoff-engine'
 import { quickSimGame, type CoachingContext } from './quick-sim'
 import {
-  seedTeamsByConference,
+  conferenceStandings,
   generateFirstRound,
   generateNextRoundSeries,
 } from './playoff-engine'
@@ -46,12 +46,23 @@ export interface SeriesResult {
   mvpId: string | null
 }
 
+export interface PlayInGameResult {
+  conference: 'Eastern' | 'Western'
+  label: string
+  homeTeamId: string
+  awayTeamId: string
+  homeScore: number
+  awayScore: number
+  winnerId: string
+}
+
 export interface PlayoffResults {
   bracket: PlayoffBracket
   seriesResults: SeriesResult[]
   championId: string
   finalsLoserId: string
   playoffMvpId: string | null
+  playInResults?: PlayInGameResult[]
 }
 
 function seededRandom(seed: number): () => number {
@@ -418,12 +429,83 @@ export function simulatePlayoffSeries(
   }
 }
 
+/**
+ * NBA-style play-in for one conference: 7 hosts 8 (winner takes the 7
+ * seed), 9 hosts 10 (loser eliminated), and the 7/8 loser hosts the
+ * 9/10 winner for the 8 seed. Single elimination games.
+ */
+function simulatePlayInForConference(
+  standings: { teamId: string; seed: number; wins: number; losses: number }[],
+  conference: 'Eastern' | 'Western',
+  getPlayers: (teamId: string) => Player[],
+  getStaff: (teamId: string) => StaffRoster | null,
+  seasonYear: number,
+  startDate: string,
+): { finalSeeds: { teamId: string; seed: number; wins: number; losses: number }[]; games: PlayInGameResult[] } {
+  if (standings.length < 10) {
+    return { finalSeeds: standings.slice(0, 8), games: [] }
+  }
+
+  const games: PlayInGameResult[] = []
+
+  const playGame = (homeId: string, awayId: string, label: string, dayOffset: number): PlayInGameResult => {
+    const game: Game = {
+      id: `play-in-${conference}-${label}-${seasonYear}`,
+      homeTeamId: homeId,
+      awayTeamId: awayId,
+      seasonYear,
+      gameNumber: 0,
+      gameType: 'playoff',
+      playoffSeries: null,
+      date: addDays(startDate, dayOffset),
+      status: 'scheduled',
+      result: null,
+    }
+    const coaching: CoachingContext = {
+      homeStaff: getStaff(homeId),
+      awayStaff: getStaff(awayId),
+    }
+    const result = quickSimGame(game, getPlayers(homeId), getPlayers(awayId), coaching)
+    const record: PlayInGameResult = {
+      conference,
+      label,
+      homeTeamId: homeId,
+      awayTeamId: awayId,
+      homeScore: result.homeScore,
+      awayScore: result.awayScore,
+      winnerId: result.winningTeamId,
+    }
+    games.push(record)
+    return record
+  }
+
+  const s7 = standings[6], s8 = standings[7], s9 = standings[8], s10 = standings[9]
+
+  const g1 = playGame(s7.teamId, s8.teamId, '7th vs 8th', 0)
+  const g2 = playGame(s9.teamId, s10.teamId, '9th vs 10th', 0)
+  const g1Loser = g1.winnerId === s7.teamId ? s8 : s7
+  const g3 = playGame(g1Loser.teamId, g2.winnerId, '8th Seed Game', 2)
+
+  const byId = new Map(standings.map(s => [s.teamId, s]))
+  const seed7Team = byId.get(g1.winnerId)!
+  const seed8Team = byId.get(g3.winnerId)!
+
+  const finalSeeds = [
+    ...standings.slice(0, 6),
+    { ...seed7Team, seed: 7 },
+    { ...seed8Team, seed: 8 },
+  ]
+
+  return { finalSeeds, games }
+}
+
 export function simulateEntirePlayoffs(
   teams: Team[],
   players: Player[],
   seasonYear: number,
   startDate: string,
   seed: number,
+  playoffFormat: 'traditional_16' | 'play_in' = 'play_in',
 ): PlayoffResults {
   const playersByTeam = new Map<string, Player[]>()
   for (const p of players) {
@@ -440,8 +522,24 @@ export function simulateEntirePlayoffs(
   const getPlayers = (teamId: string) => playersByTeam.get(teamId) ?? []
   const getStaff = (teamId: string) => staffByTeam.get(teamId) ?? null
 
-  const eastSeeds = seedTeamsByConference(teams, 'Eastern')
-  const westSeeds = seedTeamsByConference(teams, 'Western')
+  let eastSeeds: { teamId: string; seed: number; wins: number; losses: number }[]
+  let westSeeds: { teamId: string; seed: number; wins: number; losses: number }[]
+  const playInResults: PlayInGameResult[] = []
+
+  if (playoffFormat === 'play_in') {
+    const eastPlayIn = simulatePlayInForConference(
+      conferenceStandings(teams, 'Eastern', 10), 'Eastern', getPlayers, getStaff, seasonYear, startDate,
+    )
+    const westPlayIn = simulatePlayInForConference(
+      conferenceStandings(teams, 'Western', 10), 'Western', getPlayers, getStaff, seasonYear, startDate,
+    )
+    eastSeeds = eastPlayIn.finalSeeds
+    westSeeds = westPlayIn.finalSeeds
+    playInResults.push(...eastPlayIn.games, ...westPlayIn.games)
+  } else {
+    eastSeeds = conferenceStandings(teams, 'Eastern', 8)
+    westSeeds = conferenceStandings(teams, 'Western', 8)
+  }
 
   const allSeries: PlayoffSeries[] = []
   const allResults: SeriesResult[] = []
@@ -491,9 +589,10 @@ export function simulateEntirePlayoffs(
     return winners
   }
 
-  // Round 1
-  const eastR1 = generateFirstRound(eastSeeds, 'Eastern', seasonYear, startDate)
-  const westR1 = generateFirstRound(westSeeds, 'Western', seasonYear, startDate)
+  // Round 1 (pushed back a few days when the play-in ran)
+  const r1Start = playInResults.length > 0 ? addDays(startDate, 4) : startDate
+  const eastR1 = generateFirstRound(eastSeeds, 'Eastern', seasonYear, r1Start)
+  const westR1 = generateFirstRound(westSeeds, 'Western', seasonYear, r1Start)
   const eastR1Winners = simRound(eastR1, seed)
   const westR1Winners = simRound(westR1, seed + 100000)
 
@@ -536,6 +635,7 @@ export function simulateEntirePlayoffs(
     championId,
     finalsLoserId,
     playoffMvpId,
+    playInResults: playInResults.length > 0 ? playInResults : undefined,
   }
 }
 

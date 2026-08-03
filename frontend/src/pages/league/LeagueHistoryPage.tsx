@@ -1,9 +1,10 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
 import GlassCard from '../../components/common/GlassCard'
 import { useLeague } from '../../hooks/useLeague'
 import type { Player } from '../../types'
+import type { HallOfFameEntry, RetiredPlayer } from '../../db/league-db'
 
 const PHASE_LABELS: Record<string, string> = {
   preseason: 'Preseason',
@@ -63,7 +64,20 @@ function buildLeaders(
 
 export default function LeagueHistoryPage() {
   const { id: leagueId } = useParams<{ id: string }>()
-  const { state, teams, players, loading } = useLeague()
+  const { db, state, teams, players, loading } = useLeague()
+  const [hallOfFame, setHallOfFame] = useState<HallOfFameEntry[]>([])
+  const [retirees, setRetirees] = useState<RetiredPlayer[]>([])
+
+  useEffect(() => {
+    if (!db) return
+    let cancelled = false
+    Promise.all([db.hallOfFame.toArray(), db.retiredPlayers.toArray()]).then(([hof, ret]) => {
+      if (cancelled) return
+      setHallOfFame(hof.sort((a, b) => b.inductionYear - a.inductionYear))
+      setRetirees(ret.sort((a, b) => b.retirementYear - a.retirementYear))
+    })
+    return () => { cancelled = true }
+  }, [db, state?.currentSeason])
 
   const teamMap = useMemo(
     () => new Map(teams.map(t => [t.id, `${t.info.city} ${t.info.name}`])),
@@ -250,11 +264,78 @@ export default function LeagueHistoryPage() {
 
         {/* All-Time Leaders (current season data) */}
         <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Statistical Leaders</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <LeaderCard title="Points Per Game" rows={topScorers} suffix="PPG" leagueId={leagueId} />
           <LeaderCard title="Rebounds Per Game" rows={topRebounders} suffix="RPG" leagueId={leagueId} />
           <LeaderCard title="Assists Per Game" rows={topAssisters} suffix="APG" leagueId={leagueId} />
         </div>
+
+        {/* Hall of Fame */}
+        {hallOfFame.length > 0 && (
+          <>
+            <h2 className="text-[10px] uppercase tracking-[2px] text-yellow-500 mb-3">Hall of Fame</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+              {hallOfFame.map(entry => (
+                <GlassCard key={entry.playerId} className="p-5 border-yellow-500/15 bg-gradient-to-br from-yellow-500/[0.04] to-transparent">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <div className="font-display text-lg text-white">{entry.playerName}</div>
+                      <div className="text-xs text-gray-500 mt-0.5">
+                        Class of {entry.inductionYear} &middot; {entry.careerStats.seasons} seasons
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-lg font-semibold text-yellow-400">{entry.careerStats.ppg}</div>
+                      <div className="text-[9px] uppercase tracking-[2px] text-gray-600">Career PPG</div>
+                    </div>
+                  </div>
+                  <div className="flex gap-4 mt-3 text-xs text-gray-400">
+                    <span>{entry.careerStats.points.toLocaleString()} PTS</span>
+                    <span>{entry.careerStats.rebounds.toLocaleString()} REB</span>
+                    <span>{entry.careerStats.assists.toLocaleString()} AST</span>
+                  </div>
+                  {entry.accolades.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-3">
+                      {entry.accolades.slice(0, 8).map((a, i) => (
+                        <span key={i} className="px-1.5 py-0.5 rounded text-[9px] bg-yellow-500/10 text-yellow-400/90 border border-yellow-500/20">
+                          {a}
+                        </span>
+                      ))}
+                      {entry.accolades.length > 8 && (
+                        <span className="text-[9px] text-gray-600 self-center">+{entry.accolades.length - 8} more</span>
+                      )}
+                    </div>
+                  )}
+                </GlassCard>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* Recent Retirements */}
+        {retirees.length > 0 && (
+          <>
+            <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Recent Retirements</h2>
+            <GlassCard className="p-5">
+              <div className="space-y-1">
+                {retirees.slice(0, 15).map(r => (
+                  <div key={r.playerId} className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/[0.02]">
+                    <div className="flex items-center gap-3">
+                      <span className="text-white text-sm">{r.playerName}</span>
+                      <span className="text-gray-600 text-xs">retired {r.retirementYear}</span>
+                      {hallOfFame.some(h => h.playerId === r.playerId) && (
+                        <span className="px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wider bg-yellow-500/15 text-yellow-400 border border-yellow-500/30">HOF</span>
+                      )}
+                    </div>
+                    <span className="text-xs text-gray-500">
+                      {r.careerStats.seasons} seasons &middot; {r.careerStats.ppg} PPG &middot; {r.careerStats.points.toLocaleString()} PTS
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </GlassCard>
+          </>
+        )}
       </div>
     </PageTransition>
   )
