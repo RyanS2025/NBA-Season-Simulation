@@ -1,10 +1,13 @@
 import type { Game, GameResult, PlayerGameStats, TeamBoxScore, TeamGameStats } from '../types'
 import type { Player } from '../types/player'
 import type { StaffRoster } from '../types/staff'
+import type { CoachingStaff } from '../types/team'
 
 export interface CoachingContext {
   homeStaff: StaffRoster | null
   awayStaff: StaffRoster | null
+  homeCoaching?: CoachingStaff | null
+  awayCoaching?: CoachingStaff | null
 }
 
 function coachingBonus(staff: StaffRoster | null, players: Player[]): number {

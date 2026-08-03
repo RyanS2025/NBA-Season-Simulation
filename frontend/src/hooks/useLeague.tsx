@@ -21,6 +21,7 @@ import {
   addTransaction,
 } from '../db/league-manager'
 import { quickSimGame } from '../utils/quick-sim'
+import { accumulateGameStats } from '../utils/stat-accumulator'
 import { simulateEntirePlayoffs, type PlayoffResults } from '../utils/playoff-sim'
 import { validateTrade, computeTeamPayroll } from '../utils/cba-engine'
 import { runPlayerDevelopment } from '../utils/offseason-engine'
@@ -184,6 +185,7 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
       if (!db || !state) return
 
       const teamMap = new Map(teams.map(t => [t.id, t]))
+      const statUpdatedPlayers = new Map<string, Player>()
 
       for (let i = 0; i < games.length; i++) {
         const game = games[i]
@@ -197,9 +199,24 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
         const result = quickSimGame(game, homePlayers, awayPlayers, {
           homeStaff: homeTeamData?.staff ?? null,
           awayStaff: awayTeamData?.staff ?? null,
+          homeCoaching: homeTeamData?.coaching ?? null,
+          awayCoaching: awayTeamData?.coaching ?? null,
         })
 
         await addGameResult(db, game.id, game.date, state.currentSeason, result)
+
+        if (game.gameType === 'regular_season') {
+          const homeModified = accumulateGameStats(
+            homePlayers, result, state.currentSeason,
+            game.homeTeamId, homeTeamData?.info.abbreviation ?? '',
+          )
+          const awayModified = accumulateGameStats(
+            awayPlayers, result, state.currentSeason,
+            game.awayTeamId, awayTeamData?.info.abbreviation ?? '',
+          )
+          for (const p of homeModified) statUpdatedPlayers.set(p.id, p)
+          for (const p of awayModified) statUpdatedPlayers.set(p.id, p)
+        }
 
         const homeTeam = teamMap.get(game.homeTeamId)
         const awayTeam = teamMap.get(game.awayTeamId)
@@ -221,8 +238,13 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
           await db.teams.put(awayTeam)
         }
       }
+
+      if (statUpdatedPlayers.size > 0) {
+        await db.players.bulkPut([...statUpdatedPlayers.values()])
+        await refreshPlayers()
+      }
     },
-    [teams, state, getTeamPlayers],
+    [teams, state, getTeamPlayers, refreshPlayers],
   )
 
   const advanceDate = useCallback(
