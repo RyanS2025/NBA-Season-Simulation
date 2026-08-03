@@ -274,6 +274,10 @@ export function calculatePlayerValue(
     positionalScarcity + teamFit + character + durability
 
   rawValue *= computeDeadlinePremium(ctx)
+
+  // The league knows an unhappy star wants out — you're selling low
+  if (player.status.tradeRequested) rawValue -= 6
+
   rawValue = Math.max(0, Math.min(100, rawValue))
 
   return {

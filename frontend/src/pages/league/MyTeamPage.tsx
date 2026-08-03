@@ -34,6 +34,8 @@ interface RosterRow {
   age: number
   overall: number
   form: number
+  morale: number
+  tradeRequested: boolean
   injuryLabel: string | null
   injurySeverity: string | null
   ppg: number
@@ -59,6 +61,8 @@ function playerToRow(p: Player): RosterRow {
     age: p.bio.age,
     overall: p.ratings.overall,
     form: p.status.form ?? 0,
+    morale: Math.round(p.status.morale ?? 72),
+    tradeRequested: !!p.status.tradeRequested,
     injuryLabel,
     injurySeverity: inj?.severity ?? null,
     ppg, rpg, apg,
@@ -131,6 +135,11 @@ export default function MyTeamPage() {
               {row.injuryLabel}
             </span>
           )}
+          {row.tradeRequested && (
+            <span className="px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wider bg-red-500/20 text-red-300 border border-red-500/40">
+              Wants Out
+            </span>
+          )}
         </span>
       ),
     },
@@ -148,6 +157,19 @@ export default function MyTeamPage() {
           </span>
           {row.form > 0 && <span title={`Hot streak +${row.form}`} className="text-[10px] text-orange-400">{'▲'.repeat(Math.min(2, row.form))}</span>}
           {row.form < 0 && <span title={`Cold streak ${row.form}`} className="text-[10px] text-sky-400">{'▼'.repeat(Math.min(2, -row.form))}</span>}
+        </span>
+      ),
+    },
+    {
+      key: 'morale',
+      label: 'MOR',
+      sortable: true,
+      align: 'center',
+      render: (row) => (
+        <span className={
+          row.morale >= 70 ? 'text-emerald-400' : row.morale >= 45 ? 'text-gray-300' : row.morale >= 30 ? 'text-yellow-400' : 'text-red-400'
+        }>
+          {row.morale}
         </span>
       ),
     },

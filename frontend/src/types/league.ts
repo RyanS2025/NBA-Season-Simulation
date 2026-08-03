@@ -120,6 +120,7 @@ export type TransactionType =
   | "option_declined"
   | "injured_reserve"
   | "injury"
+  | "trade_request"
   | "recalled"
   | "buyout"
   | "ten_day_signing"

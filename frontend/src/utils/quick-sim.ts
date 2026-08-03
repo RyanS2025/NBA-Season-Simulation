@@ -292,10 +292,11 @@ function computeDemands(
   const guardBoost = isGuard ? mods.guardFgaMult : 1
   const formBoost = 1 + (player.status.form ?? 0) * 0.02
   const hurtPenalty = player.status.currentInjury?.playingThrough ? 0.90 : 1
+  const moraleBoost = 1 + ((player.status.morale ?? 72) - 70) * 0.0012
   const skill = scoringSkill(player)
   const fga = minuteFactor
     * (2 + Math.max(0, skill - 55) * 0.40)
-    * usage * isoBoost * pnrFgaBoost * guardBoost * formBoost * hurtPenalty
+    * usage * isoBoost * pnrFgaBoost * guardBoost * formBoost * hurtPenalty * moraleBoost
 
   const driveBoost = 1 + ((t.driveFrequency ?? 50) - 50) * 0.004
   const fta = minuteFactor * (0.4 + Math.max(0, r.drawFoul - 55) * 0.14) * driveBoost
@@ -364,9 +365,10 @@ function finalizePlayerStats(
   const tpa = Math.round(fga * threeRate)
   const twoA = fga - tpa
 
-  // Hot/cold streaks and playing hurt nudge shooting efficiency
+  // Hot/cold streaks, playing hurt, and locker-room mood nudge efficiency
   const conditionAdd = (player.status.form ?? 0) * 0.006
     + (player.status.currentInjury?.playingThrough ? -0.018 : 0)
+    + ((player.status.morale ?? 72) - 70) * 0.0003
 
   const twoPct = clamp(
     0.53 + (interiorSkill(player) - 72) * 0.0035 + mods.twoPctAdd + conditionAdd + gauss() * 0.05,

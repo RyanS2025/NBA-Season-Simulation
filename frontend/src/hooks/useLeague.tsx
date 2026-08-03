@@ -21,11 +21,12 @@ import {
   addGameResult,
   addTransaction,
 } from '../db/league-manager'
-import { quickSimGame } from '../utils/quick-sim'
+import { quickSimGame, playerComposite } from '../utils/quick-sim'
 import { accumulateGameStats } from '../utils/stat-accumulator'
 import {
   rollForInjury, canPlayThrough, isCareerAltering, applyPermanentEffects,
   advanceInjuryRecovery, updateForm, refreshDisplayedOverall, rebaseOverall,
+  updateMorale, expectedMinutesByRank,
 } from '../utils/player-condition'
 import { generateReporters } from '../utils/awards/reporter-generator'
 import { updateNarratives } from '../utils/awards/narrative-engine'
@@ -241,8 +242,37 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
               ? trainers.reduce((s, t) => s + t.skills.rehabilitation, 0) / trainers.length : 50
             const statsById = new Map(box.playerStats.map(ps => [ps.playerId, ps]))
 
+            // Talent-rank expectations drive minutes-based morale
+            const compositeRank = new Map<string, number>()
+            ;[...sidePlayers]
+              .sort((a, b) => playerComposite(b) - playerComposite(a))
+              .forEach((p, rank) => compositeRank.set(p.id, rank))
+            const sideWon = result.winningTeamId === box.teamId
+
             for (const p of sidePlayers) {
               let touched = false
+
+              const moraleEvent = updateMorale(
+                p,
+                statsById.get(p.id)?.minutes ?? 0,
+                expectedMinutesByRank(compositeRank.get(p.id) ?? 14),
+                sideWon,
+              )
+              touched = true
+              if (moraleEvent) {
+                const teamLabel = team ? `${team.info.city} ${team.info.name}` : ''
+                const tx: Transaction = {
+                  id: uuid(),
+                  date: game.date,
+                  type: 'trade_request',
+                  details: { playerId: p.id, event: moraleEvent, morale: p.status.morale },
+                  description: moraleEvent === 'trade_demand'
+                    ? `${p.bio.firstName} ${p.bio.lastName} has demanded a trade from the ${teamLabel}`
+                    : `${p.bio.firstName} ${p.bio.lastName} has rescinded his trade request`,
+                  seasonYear: state.currentSeason,
+                }
+                await addTransaction(db, tx)
+              }
 
               if (p.status.currentInjury) {
                 advanceInjuryRecovery(p, trainerRehab, state.currentSeason)

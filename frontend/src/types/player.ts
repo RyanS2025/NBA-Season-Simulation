@@ -197,6 +197,8 @@ export interface PlayerStatus {
   form?: number;
   /** Smoothed performance-vs-norm signal that drives form. */
   formMomentum?: number;
+  /** Player has formally demanded a trade (morale collapsed). */
+  tradeRequested?: boolean;
 }
 
 export interface SeasonStats {

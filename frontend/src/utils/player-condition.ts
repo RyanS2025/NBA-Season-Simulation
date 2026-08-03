@@ -216,6 +216,68 @@ export function updateForm(player: Player, gamePoints: number, seasonEntry: Seas
   else player.status.form = 0
 }
 
+// ── Morale ──────────────────────────────────────────────────────
+
+export type MoraleEvent = 'trade_demand' | 'demand_rescinded' | null
+
+/**
+ * Update morale after a team game. Winning helps (more for competitive
+ * players), getting benched below your talent level hurts (more for big
+ * egos), and everything slowly drifts back toward content. Returns a
+ * trade-demand event when morale crosses a threshold.
+ */
+export function updateMorale(
+  player: Player,
+  minutesPlayed: number,
+  expectedMinutes: number,
+  teamWon: boolean,
+): MoraleEvent {
+  const competitiveness = player.character.competitiveness ?? 50
+  const ego = player.character.ego ?? 50
+  const loyalty = player.character.loyalty ?? 50
+
+  let morale = player.status.morale ?? 72
+
+  morale += teamWon ? 0.4 * (competitiveness / 100 + 0.4) : -0.55 * (competitiveness / 100 + 0.4)
+
+  // Role satisfaction: playing well below your talent level stings.
+  // Injured players sitting out don't blame the coach.
+  if (!player.status.currentInjury) {
+    const gap = minutesPlayed - expectedMinutes
+    if (gap < -8) {
+      morale -= 1.1 * (0.5 + ego / 100)
+    } else if (gap > -3) {
+      morale += 0.15
+    }
+  }
+
+  // Slow drift back toward a content baseline
+  morale += (72 - morale) * 0.012
+  morale = Math.max(5, Math.min(99, morale))
+  player.status.morale = Math.round(morale * 10) / 10
+
+  // Trade demands: loyalty raises the pain threshold
+  const demandThreshold = 22 + (loyalty / 100) * 12
+  if (!player.status.tradeRequested && morale < demandThreshold) {
+    player.status.tradeRequested = true
+    return 'trade_demand'
+  }
+  if (player.status.tradeRequested && morale > 55) {
+    player.status.tradeRequested = false
+    return 'demand_rescinded'
+  }
+  return null
+}
+
+/**
+ * What a player of this caliber expects to play, given where they rank
+ * on the roster — mirrors the sim's auto-rotation ladder.
+ */
+export function expectedMinutesByRank(rank: number): number {
+  const targets = [34, 32, 31, 30, 28, 20, 16, 12, 8, 4, 2, 1, 1, 0, 0]
+  return targets[Math.min(rank, targets.length - 1)]
+}
+
 // ── Displayed overall ───────────────────────────────────────────
 
 function injuryOverallPenalty(p: Player): number {
