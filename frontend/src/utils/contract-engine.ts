@@ -85,7 +85,7 @@ export interface CpuExtension {
 export function cpuExtendPlayers(
   teams: Team[],
   players: Player[],
-  seasonYear: number,
+  _seasonYear: number,
   userTeamId: string,
 ): CpuExtension[] {
   const extensions: CpuExtension[] = []

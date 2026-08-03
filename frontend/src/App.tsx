@@ -22,12 +22,15 @@ import PlayerDetailPage from './pages/league/PlayerDetailPage'
 import PlayoffsPage from './pages/league/PlayoffsPage'
 import StaffPage from './pages/league/StaffPage'
 import CoachingPage from './pages/league/CoachingPage'
+import NotFoundPage from './pages/NotFoundPage'
+import ErrorBoundary from './components/common/ErrorBoundary'
 import AllStarPage from './pages/league/AllStarPage'
 import TradeDeadlinePage from './pages/league/TradeDeadlinePage'
 
 export default function App() {
   return (
     <BrowserRouter>
+      <ErrorBoundary>
       <Routes>
         <Route element={<SiteLayout />}>
           <Route path="/" element={<HomePage />} />
@@ -57,7 +60,9 @@ export default function App() {
           <Route path="history" element={<LeagueHistoryPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      </ErrorBoundary>
     </BrowserRouter>
   )
 }
