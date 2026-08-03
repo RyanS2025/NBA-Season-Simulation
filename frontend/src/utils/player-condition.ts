@@ -238,7 +238,7 @@ export function updateMorale(
 
   let morale = player.status.morale ?? 72
 
-  morale += teamWon ? 0.4 * (competitiveness / 100 + 0.4) : -0.55 * (competitiveness / 100 + 0.4)
+  morale += teamWon ? 0.5 * (competitiveness / 100 + 0.4) : -0.85 * (competitiveness / 100 + 0.4)
 
   // Role satisfaction: playing well below your talent level stings.
   // Injured players sitting out don't blame the coach.

@@ -4,6 +4,7 @@ import PageTransition from '../../components/layout/PageTransition'
 import GlassCard from '../../components/common/GlassCard'
 import Button from '../../components/common/Button'
 import OffseasonHub from '../../components/league/OffseasonHub'
+import NewsFeed from '../../components/league/NewsFeed'
 import { useLeague } from '../../hooks/useLeague'
 import type { Game, Team } from '../../types'
 
@@ -194,6 +195,8 @@ export default function LeagueDashboard() {
             )}
           </div>
         </div>
+
+        <NewsFeed />
 
         {recentGames.length > 0 && (
           <div className="mb-8">
