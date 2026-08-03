@@ -95,9 +95,9 @@ export function awardStringsForPlayers(
   add(awards.clutchPoy, 'Clutch Player of the Year')
   if (awards.finalsMvp) add(awards.finalsMvp, 'Finals MVP')
   if (awards.allStarMvp) add(awards.allStarMvp, 'All-Star MVP')
-  for (const id of awards.allNBA.first) add(id, 'All-NBA First Team')
-  for (const id of awards.allNBA.second) add(id, 'All-NBA Second Team')
-  for (const id of awards.allNBA.third) add(id, 'All-NBA Third Team')
+  for (const id of awards.allNBA.first) add(id, 'All-League First Team')
+  for (const id of awards.allNBA.second) add(id, 'All-League Second Team')
+  for (const id of awards.allNBA.third) add(id, 'All-League Third Team')
   for (const id of awards.allDefensive.first) add(id, 'All-Defensive First Team')
   for (const id of awards.allDefensive.second) add(id, 'All-Defensive Second Team')
   for (const id of awards.allRookie.first) add(id, 'All-Rookie First Team')
@@ -139,9 +139,9 @@ const ACCOLADE_POINTS: [RegExp, number][] = [
   [/(?<!Finals |All-Star )MVP$/, 40],
   [/Finals MVP/, 25],
   [/Defensive Player of the Year/, 15],
-  [/All-NBA First Team/, 12],
-  [/All-NBA Second Team/, 8],
-  [/All-NBA Third Team/, 5],
+  [/All-(NBA|League) First Team/, 12],
+  [/All-(NBA|League) Second Team/, 8],
+  [/All-(NBA|League) Third Team/, 5],
   [/Champion/, 10],
   [/Rookie of the Year/, 8],
   [/All-Defensive First Team/, 5],

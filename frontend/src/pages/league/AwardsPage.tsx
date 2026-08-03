@@ -595,9 +595,9 @@ export default function AwardsPage() {
     ]
 
     const teamLists: [string, string[]][] = [
-      ['All-NBA First Team', awards.allNBA.first],
-      ['All-NBA Second Team', awards.allNBA.second],
-      ['All-NBA Third Team', awards.allNBA.third],
+      ['All-League First Team', awards.allNBA.first],
+      ['All-League Second Team', awards.allNBA.second],
+      ['All-League Third Team', awards.allNBA.third],
       ['All-Defensive First Team', awards.allDefensive.first],
       ['All-Defensive Second Team', awards.allDefensive.second],
       ['All-Rookie First Team', awards.allRookie.first],

@@ -17,7 +17,7 @@ const ROUND_LABELS: Record<number, string> = {
   1: 'First Round',
   2: 'Conference Semis',
   3: 'Conference Finals',
-  4: 'NBA Finals',
+  4: 'League Finals',
 }
 
 function teamName(teams: Team[], id: string): string {

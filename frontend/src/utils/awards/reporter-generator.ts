@@ -72,19 +72,20 @@ const LAST_NAMES = [
 ]
 
 const NATIONAL_OUTLETS = [
-  'The Athletic', 'ESPN', 'Sports Illustrated', 'CBS Sports',
-  'NBC Sports', 'Fox Sports', 'Bleacher Report', 'Yahoo Sports',
-  'The Ringer', 'Slam Magazine', 'USA Today Sports', 'AP Sports',
+  'The Hardwood Ledger', 'Courtside Report', 'Full Court Press',
+  'The Fadeaway', 'Baseline Weekly', 'Hoop Digest',
+  'The Fast Break', 'Fourth Quarter Media', 'Pivot Sports',
+  'The Rotation', 'Glass Cleaners Journal', 'Backcourt Bulletin',
 ]
 
 const ANALYTICS_OUTLETS = [
-  'FiveThirtyEight', 'Cleaning The Glass', 'The Ringer Analytics',
-  'BBall Index', 'Thinking Basketball', 'StatMuse', 'PBP Stats',
+  'The Numbers Game', 'Efficiency Report', 'Shot Quality Quarterly',
+  'Pace & Space Analytics', 'Expected Value Sports', 'The Model Room',
 ]
 
 const TV_NETWORKS = [
-  'ESPN', 'TNT', 'NBA TV', 'Fox Sports', 'NBC Sports', 'CBS Sports',
-  'FS1', 'ESPN2',
+  'Courtside Network', 'Prime Hoops TV', 'The Basketball Channel',
+  'National Sports One', 'Hardwood Broadcasting', 'Overtime Network',
 ]
 
 function getBeatOutlet(rng: RNG, teamCity: string): string {

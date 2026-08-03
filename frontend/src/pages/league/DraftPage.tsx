@@ -471,7 +471,7 @@ export default function DraftPage() {
           <div>
             <h1 className="font-display text-4xl tracking-wide text-white">Draft Center</h1>
             <p className="text-gray-500 text-sm mt-1">
-              {state.currentSeason} NBA Draft
+              {state.currentSeason} Draft
               {isDraftActive && currentPick && ` — Pick #${currentPick.pickNumber}`}
               {isDraftComplete && ' — Complete'}
             </p>

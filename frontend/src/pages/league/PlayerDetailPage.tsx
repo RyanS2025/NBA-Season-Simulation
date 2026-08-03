@@ -228,7 +228,7 @@ function parseAwards(rawAwards: string[]): Award[] {
     let category: Award['category'] = 'other'
     if (name.includes('MVP')) category = 'mvp'
     else if (name.includes('All-Star')) category = 'allStar'
-    else if (name.includes('All-NBA')) category = 'allNba'
+    else if ((name.includes('All-NBA') || name.includes('All-League'))) category = 'allNba'
     else if (name.includes('All-Defensive')) category = 'allDefense'
     else if (name.includes('All-Rookie')) category = 'allRookie'
     else if (name.includes('Champion')) category = 'champion'
