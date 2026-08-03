@@ -140,7 +140,7 @@ export default function SchedulePage() {
           </div>
         </div>
 
-        <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl p-5 mb-6">
+        <div className="panel p-5 mb-6">
           <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Sim Controls</h2>
           <div className="flex flex-wrap items-center gap-3">
             <Button variant="primary" size="sm" onClick={simDay} disabled={simming}>
@@ -164,7 +164,7 @@ export default function SchedulePage() {
           </div>
         </div>
 
-        <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl p-5 mb-6">
+        <div className="panel p-5 mb-6">
           <div className="flex items-center justify-between mb-5">
             <button onClick={prevMonth} className="text-gray-400 hover:text-white transition-colors text-lg px-2">&lt;</button>
             <h2 className="font-display text-xl tracking-wide text-white">{MONTHS[month]} {year}</h2>
@@ -245,7 +245,7 @@ export default function SchedulePage() {
         </div>
 
         {selectedDay && (
-          <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl p-5">
+          <div className="panel p-5">
             <h3 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">
               {MONTHS[month]} {selectedDay}, {year}
               <span className="ml-3 text-gray-500">{selectedGames.length} game{selectedGames.length !== 1 ? 's' : ''}</span>

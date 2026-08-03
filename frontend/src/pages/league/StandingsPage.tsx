@@ -89,7 +89,7 @@ const columns = (_userTeamId: string): {
 function PlayoffBracket({ standings, conference }: { standings: TeamStanding[]; conference: string }) {
   const top10 = standings.slice(0, 10)
   return (
-    <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl p-5">
+    <div className="panel p-5">
       <h3 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-4">{conference} Playoff Picture</h3>
       <div className="space-y-1">
         {top10.map((t, i) => (

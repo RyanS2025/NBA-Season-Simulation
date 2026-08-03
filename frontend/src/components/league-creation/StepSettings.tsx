@@ -54,7 +54,7 @@ export default function StepSettings({ leagueName, onLeagueNameChange, settings,
     <div className="space-y-6">
       <h1 className="font-display text-4xl tracking-wide text-white">Create League</h1>
 
-      <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl p-6">
+      <div className="panel p-6">
         <SectionLabel>League Name</SectionLabel>
         <SearchInput
           placeholder="My League"
@@ -63,7 +63,7 @@ export default function StepSettings({ leagueName, onLeagueNameChange, settings,
         />
       </div>
 
-      <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl p-6 space-y-1">
+      <div className="panel p-6 space-y-1">
         <SectionLabel>Gameplay</SectionLabel>
         <Toggle label="Injuries" checked={settings.injuriesEnabled} onChange={v => update({ injuriesEnabled: v })} />
         <Toggle label="Fatigue" checked={settings.fatigueEnabled} onChange={v => update({ fatigueEnabled: v })} />
@@ -72,7 +72,7 @@ export default function StepSettings({ leagueName, onLeagueNameChange, settings,
         <Toggle label="Storylines" checked={settings.storylinesEnabled} onChange={v => update({ storylinesEnabled: v })} />
       </div>
 
-      <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl p-6 space-y-1">
+      <div className="panel p-6 space-y-1">
         <SectionLabel>League Rules</SectionLabel>
         <Toggle label="CBA Rules (Salary Cap)" checked={settings.cbaRulesEnabled} onChange={v => update({ cbaRulesEnabled: v })} />
         <Toggle label="Trade Deadline" checked={settings.tradeDeadlineEnabled} onChange={v => update({ tradeDeadlineEnabled: v })} />
@@ -81,7 +81,7 @@ export default function StepSettings({ leagueName, onLeagueNameChange, settings,
         <Toggle label="All-Star Weekend" checked={settings.allStarWeekendEnabled} onChange={v => update({ allStarWeekendEnabled: v })} />
       </div>
 
-      <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl p-6 space-y-1">
+      <div className="panel p-6 space-y-1">
         <SectionLabel>Simulation</SectionLabel>
         <Select label="Difficulty" value={settings.difficulty} onChange={v => update({ difficulty: v })} options={[
           { value: 'easy', label: 'Easy' }, { value: 'normal', label: 'Normal' },
@@ -105,7 +105,7 @@ export default function StepSettings({ leagueName, onLeagueNameChange, settings,
         ]} />
       </div>
 
-      <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl p-6 space-y-1">
+      <div className="panel p-6 space-y-1">
         <SectionLabel>Auto-Stop Points</SectionLabel>
         <p className="text-xs text-gray-600 mb-2">Simulation pauses at these events so you can take action</p>
         <Toggle label="Extension Deadline" checked={settings.autoStopPoints.extensionDeadline} onChange={v => update({ autoStopPoints: { ...settings.autoStopPoints, extensionDeadline: v } })} />

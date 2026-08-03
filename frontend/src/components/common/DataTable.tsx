@@ -53,7 +53,7 @@ export default function DataTable<T>({ columns, data, keyExtractor, onRowClick, 
     align === 'right' ? 'text-right' : align === 'center' ? 'text-center' : 'text-left'
 
   return (
-    <div className={`bg-white/[0.04] border border-white/[0.08] rounded-xl overflow-hidden ${className}`}>
+    <div className={`panel overflow-hidden ${className}`}>
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>

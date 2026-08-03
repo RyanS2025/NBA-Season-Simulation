@@ -295,7 +295,7 @@ export default function TradePage() {
             <select
               value={partnerTeamId}
               onChange={(e) => handlePartnerChange(e.target.value)}
-              className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-white/[0.15] transition-colors mb-4 appearance-none cursor-pointer"
+              className="w-full panel px-4 py-2.5 text-sm text-white outline-none focus:border-white/[0.15] transition-colors mb-4 appearance-none cursor-pointer"
             >
               <option value="" className="bg-slate-900">Select a team...</option>
               {partnerTeams.map(t => (

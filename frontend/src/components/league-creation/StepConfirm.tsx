@@ -179,7 +179,7 @@ export default function StepConfirm({ leagueName, settings, selectedTeamId, onBa
         </div>
       </div>
 
-      <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl p-6">
+      <div className="panel p-6">
         <SectionLabel>League Details</SectionLabel>
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
@@ -209,7 +209,7 @@ export default function StepConfirm({ leagueName, settings, selectedTeamId, onBa
         </div>
       </div>
 
-      <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl p-6">
+      <div className="panel p-6">
         <SectionLabel>Active Features</SectionLabel>
         <div className="flex flex-wrap gap-2">
           {settings.injuriesEnabled && <FeatureTag>Injuries</FeatureTag>}

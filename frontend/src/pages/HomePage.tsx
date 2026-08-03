@@ -72,7 +72,7 @@ export default function HomePage() {
             {importing ? 'Importing...' : 'Import Save'}
           </button>
 
-          <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl p-6">
+          <div className="panel p-6">
             <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-4">Saved Leagues</h2>
             {loading ? (
               <p className="text-gray-600 text-sm">Loading...</p>

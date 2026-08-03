@@ -3,13 +3,22 @@
 @theme {
   --font-display: 'Bebas Neue', sans-serif;
   --font-body: 'Inter', sans-serif;
-  --color-accent: oklch(64.6% 0.222 41.116);
+  --color-accent: oklch(68% 0.21 45);
+  --color-accent-2: oklch(78% 0.16 70);
+  --color-navy-950: #080d18;
+  --color-navy-900: #0b1220;
+  --color-navy-800: #101a2e;
+  --color-navy-700: #16233c;
 }
 
 body {
   margin: 0;
   font-family: var(--font-body);
-  background: #020617;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(37, 64, 122, 0.25), transparent),
+    radial-gradient(ellipse 60% 40% at 85% 100%, rgba(194, 65, 12, 0.07), transparent),
+    #080d18;
+  background-attachment: fixed;
   color: #e2e8f0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -17,4 +26,52 @@ body {
 
 #root {
   min-height: 100dvh;
+}
+
+@layer components {
+  /* HUD panel: navy card with a crisp edge and faint inner sheen */
+  .panel {
+    background: linear-gradient(180deg, rgba(22, 35, 60, 0.55), rgba(11, 18, 32, 0.75));
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    border-radius: 0.6rem;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 4px 18px rgba(0, 0, 0, 0.35);
+  }
+
+  /* Featured panel with the orange glow edge */
+  .panel-glow {
+    background: linear-gradient(180deg, rgba(22, 35, 60, 0.6), rgba(11, 18, 32, 0.8));
+    border: 1px solid rgba(249, 115, 22, 0.45);
+    border-radius: 0.6rem;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 0 18px rgba(249, 115, 22, 0.12),
+      0 4px 18px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Section header strip inside panels */
+  .panel-title {
+    font-family: var(--font-display);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #f1f5f9;
+  }
+
+  /* The signature orange gradient CTA */
+  .btn-hud {
+    background: linear-gradient(180deg, #fb923c, #ea580c);
+    border: 1px solid rgba(255, 200, 150, 0.5);
+    box-shadow: 0 0 14px rgba(249, 115, 22, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  }
+  .btn-hud:hover {
+    filter: brightness(1.08);
+  }
+
+  .text-gradient {
+    background: linear-gradient(180deg, #fdba74, #f97316);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
 }

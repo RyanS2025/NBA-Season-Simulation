@@ -131,7 +131,7 @@ export default function LeagueDashboard() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           {(state.currentPhase === 'regular_season' || state.currentPhase === 'preseason') && (
-          <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl p-6">
+          <div className="panel p-6">
             <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Sim Controls</h2>
             <div className="flex flex-wrap gap-3">
               <Button variant="primary" size="sm" onClick={simDay} disabled={simming}>
@@ -150,13 +150,13 @@ export default function LeagueDashboard() {
           </div>
           )}
 
-          <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl p-6">
+          <div className="panel p-6">
             <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Season Record</h2>
             <p className="text-3xl font-semibold text-white">{wins}-{losses}</p>
             <p className="text-gray-500 text-sm mt-1">{winPct} WIN%</p>
           </div>
 
-          <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl p-6">
+          <div className="panel p-6">
             <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">League Rank</h2>
             <div className="flex items-baseline gap-4">
               <div>
@@ -170,7 +170,7 @@ export default function LeagueDashboard() {
             </div>
           </div>
 
-          <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl p-6">
+          <div className="panel p-6">
             <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Next Game</h2>
             {upcomingGames.length > 0 ? (() => {
               const next = upcomingGames[0]
@@ -240,7 +240,7 @@ export default function LeagueDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <div>
             <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Upcoming Schedule</h2>
-            <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl divide-y divide-white/[0.06]">
+            <div className="panel divide-y divide-white/[0.06]">
               {upcomingGames.length === 0 ? (
                 <div className="px-5 py-4 text-gray-500 text-sm">No upcoming games</div>
               ) : (
@@ -275,7 +275,7 @@ export default function LeagueDashboard() {
             <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">
               {userTeam?.info.conference} Conference Standings
             </h2>
-            <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl divide-y divide-white/[0.06]">
+            <div className="panel divide-y divide-white/[0.06]">
               {topStandings.map((t, i) => {
                 const isUser = t.id === state.userTeamId
                 return (
