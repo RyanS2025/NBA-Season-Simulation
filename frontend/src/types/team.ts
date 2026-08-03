@@ -41,6 +41,10 @@ export interface CoachingStaff {
   pacePreference: number;
   threePointEmphasis: number;
   starterMinutes: [number, number, number, number, number];
+  /** Per-player minutes set by the user on the Coaching page (playerId -> minutes). */
+  rotationMinutes?: Record<string, number>;
+  /** When true the sim uses rotationMinutes instead of auto-assigning by skill. */
+  manualRotation?: boolean;
 }
 
 export interface TeamInfo {
