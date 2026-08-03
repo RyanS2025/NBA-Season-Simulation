@@ -248,12 +248,14 @@ interface PlayerRole {
 }
 
 function scoringSkill(p: Player): number {
+  // Foul-drawing and rim pressure carry real scoring loads; pure
+  // spot-up shooting alone doesn't make a volume scorer
   const r = p.ratings
   const pos = p.bio.position
   if (pos === 'C' || pos === 'PF') {
-    return r.finishing * 0.35 + r.closeRange * 0.25 + r.postGame * 0.25 + r.midRange * 0.15
+    return r.finishing * 0.32 + r.closeRange * 0.20 + r.postGame * 0.20 + r.midRange * 0.13 + r.drawFoul * 0.15
   }
-  return r.finishing * 0.28 + r.midRange * 0.27 + r.threePoint * 0.30 + r.closeRange * 0.15
+  return r.finishing * 0.32 + r.midRange * 0.22 + r.threePoint * 0.21 + r.closeRange * 0.10 + r.drawFoul * 0.15
 }
 
 function interiorSkill(p: Player): number {
@@ -286,7 +288,7 @@ function computeDemands(
   const pos = player.bio.position
   const isGuard = pos === 'PG' || pos === 'SG'
 
-  const usage = 0.85 + (t.usageDesire ?? 50) * 0.003
+  const usage = 0.72 + (t.usageDesire ?? 50) * 0.0055
   const isoBoost = role.isTopUsage ? mods.isoTopBoost : 1
   const pnrFgaBoost = mods.pnrBoost && (pos === 'PG' || pos === 'C') ? 1.08 : 1
   const guardBoost = isGuard ? mods.guardFgaMult : 1
@@ -375,7 +377,7 @@ function finalizePlayerStats(
     0.35, 0.70,
   )
   const threePct = tpa > 0
-    ? clamp(0.34 + (r.threePoint - 74) * 0.003 + mods.threePctAdd + conditionAdd + gauss() * 0.07, 0.15, 0.48)
+    ? clamp(0.335 + (r.threePoint - 74) * 0.0026 + mods.threePctAdd + conditionAdd + gauss() * 0.07, 0.15, 0.44)
     : 0
 
   const twoM = Math.round(twoA * twoPct)
