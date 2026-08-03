@@ -1,5 +1,6 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
 import PageTransition from '../../components/layout/PageTransition'
+import LoadingSpinner from '../../components/common/LoadingSpinner'
 import GlassCard from '../../components/common/GlassCard'
 import Button from '../../components/common/Button'
 import { useLeague } from '../../hooks/useLeague'
@@ -137,6 +138,23 @@ export default function AllStarPage() {
   const [phase, setPhase] = useState<'voting' | 'locked' | 'simulated'>('voting')
   const [eastVotes, setEastVotes] = useState<Map<Position, string>>(new Map())
   const [westVotes, setWestVotes] = useState<Map<Position, string>>(new Map())
+  const [pastRecords, setPastRecords] = useState<AllStarRecord[]>([])
+
+  // Resume a weekend that already ran this season and load history
+  useEffect(() => {
+    if (!db || !state) return
+    let cancelled = false
+    db.allStarHistory.toArray().then(all => {
+      if (cancelled) return
+      setPastRecords(all.filter(r => r.seasonYear !== state.currentSeason).sort((a, b) => b.seasonYear - a.seasonYear))
+      const current = all.find(r => r.seasonYear === state.currentSeason)
+      if (current) {
+        setRecord(current)
+        setPhase('simulated')
+      }
+    })
+    return () => { cancelled = true }
+  }, [db, state])
 
   const playerMap = useMemo(
     () => new Map(players.map(p => [p.id, p])),
@@ -204,7 +222,7 @@ export default function AllStarPage() {
   if (!state) {
     return (
       <PageTransition>
-        <div className="text-gray-400 text-center py-20">Loading...</div>
+        <LoadingSpinner message="Loading..." />
       </PageTransition>
     )
   }
@@ -243,6 +261,15 @@ export default function AllStarPage() {
               Lock Votes
             </Button>
           </div>
+
+          <AllStarHistorySection
+            records={pastRecords}
+            getName={(id) => {
+              if (!id) return 'N/A'
+              const p = playerMap.get(id)
+              return p ? `${p.bio.firstName} ${p.bio.lastName}` : 'Unknown'
+            }}
+          />
         </div>
       </PageTransition>
     )
@@ -349,7 +376,39 @@ export default function AllStarPage() {
             playerMap={playerMap}
           />
         </div>
+
+        <AllStarHistorySection records={pastRecords} getName={getName} />
       </div>
     </PageTransition>
+  )
+}
+
+function AllStarHistorySection({ records, getName }: { records: AllStarRecord[]; getName: (id: string | undefined) => string }) {
+  if (records.length === 0) return null
+  return (
+    <div className="mt-8">
+      <h2 className="text-[10px] uppercase tracking-[2px] text-gray-600 mb-3">Past All-Star Weekends</h2>
+      <GlassCard className="divide-y divide-white/[0.05]">
+        {records.map(r => (
+          <div key={r.seasonYear} className="flex items-center justify-between px-5 py-3 flex-wrap gap-2">
+            <div className="flex items-center gap-4">
+              <span className="font-display text-white">{r.seasonYear}</span>
+              {r.gameScore && (
+                <span className="text-sm text-gray-400">
+                  East <span className={r.gameScore.eastScore > r.gameScore.westScore ? 'text-accent font-medium' : 'text-gray-300'}>{r.gameScore.eastScore}</span>
+                  {' — '}
+                  <span className={r.gameScore.westScore > r.gameScore.eastScore ? 'text-accent font-medium' : 'text-gray-300'}>{r.gameScore.westScore}</span> West
+                </span>
+              )}
+            </div>
+            <div className="flex items-center gap-4 text-xs text-gray-500">
+              {r.gameScore?.mvpId && <span>MVP: <span className="text-gray-300">{getName(r.gameScore.mvpId)}</span></span>}
+              {r.contestWinners?.threePoint && <span>3PT: <span className="text-gray-300">{getName(r.contestWinners.threePoint)}</span></span>}
+              {r.contestWinners?.dunk && <span>Dunk: <span className="text-gray-300">{getName(r.contestWinners.dunk)}</span></span>}
+            </div>
+          </div>
+        ))}
+      </GlassCard>
+    </div>
   )
 }

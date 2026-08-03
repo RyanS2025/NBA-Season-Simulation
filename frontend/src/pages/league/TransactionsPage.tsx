@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import PageTransition from '../../components/layout/PageTransition'
+import LoadingSpinner from '../../components/common/LoadingSpinner'
 import GlassCard from '../../components/common/GlassCard'
 import { useLeague } from '../../hooks/useLeague'
 
@@ -71,7 +72,7 @@ export default function TransactionsPage() {
   if (loading || !state) {
     return (
       <PageTransition>
-        <div className="text-gray-400 text-center py-20">Loading transactions...</div>
+        <LoadingSpinner message="Loading transactions..." />
       </PageTransition>
     )
   }

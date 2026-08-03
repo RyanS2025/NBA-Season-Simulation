@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
+import LoadingSpinner from '../../components/common/LoadingSpinner'
 import GlassCard from '../../components/common/GlassCard'
 import { useLeague } from '../../hooks/useLeague'
 import type { DraftState } from '../../hooks/useLeague'
@@ -458,7 +459,7 @@ export default function DraftPage() {
   if (loading || !state) {
     return (
       <PageTransition>
-        <div className="text-gray-400 text-center py-20">Loading draft center...</div>
+        <LoadingSpinner message="Loading draft center..." />
       </PageTransition>
     )
   }

@@ -5,25 +5,50 @@ const GAP_MS = 1000
 
 let audio: HTMLAudioElement | null = null
 let currentTrack = 0
-// eslint-disable-next-line prefer-const
 let gapTimer: ReturnType<typeof setTimeout> | null = null
-void gapTimer
 let initialized = false
+
+function playTrack(index: number) {
+  if (!audio) return
+  if (gapTimer) {
+    clearTimeout(gapTimer)
+    gapTimer = null
+  }
+  currentTrack = index
+  audio.src = TRACKS[index]
+  audio.play().catch(() => {})
+}
+
+function queueNextTrack() {
+  if (gapTimer) clearTimeout(gapTimer)
+  gapTimer = setTimeout(() => {
+    gapTimer = null
+    playTrack((currentTrack + 1) % TRACKS.length)
+  }, GAP_MS)
+}
 
 function getAudio(): HTMLAudioElement {
   if (!audio) {
     audio = new Audio()
     audio.volume = 1.0
-    audio.addEventListener('ended', () => {
-      currentTrack = (currentTrack + 1) % TRACKS.length
-      gapTimer = setTimeout(() => {
-        audio!.src = TRACKS[currentTrack]
-        audio!.play().catch(() => {})
-      }, GAP_MS)
-    })
+    audio.preload = 'auto'
+    audio.addEventListener('ended', queueNextTrack)
+    // If a track stalls or errors out mid-play, move on rather than dying
+    audio.addEventListener('error', queueNextTrack)
     audio.src = TRACKS[0]
   }
   return audio
+}
+
+/** Resume playback safely: a finished track advances instead of re-firing 'ended'. */
+function resume() {
+  const el = getAudio()
+  el.muted = false
+  if (el.ended) {
+    playTrack((currentTrack + 1) % TRACKS.length)
+  } else if (!gapTimer) {
+    el.play().catch(() => {})
+  }
 }
 
 function tryAutoplay() {
@@ -65,9 +90,7 @@ export default function BackgroundMusic() {
       initialized = true
       const saved = localStorage.getItem('bbalsim-muted')
       if (saved !== 'true') {
-        const el = getAudio()
-        el.muted = false
-        el.play().catch(() => {})
+        resume()
       }
       cleanup()
     }
@@ -90,10 +113,13 @@ export default function BackgroundMusic() {
   useEffect(() => {
     const el = getAudio()
     if (paused) {
+      if (gapTimer) {
+        clearTimeout(gapTimer)
+        gapTimer = null
+      }
       el.pause()
     } else if (initialized) {
-      el.muted = false
-      el.play().catch(() => {})
+      resume()
     }
     localStorage.setItem('bbalsim-muted', String(paused))
   }, [paused])

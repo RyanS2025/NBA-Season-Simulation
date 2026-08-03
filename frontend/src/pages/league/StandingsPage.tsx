@@ -1,4 +1,5 @@
 import PageTransition from '../../components/layout/PageTransition'
+import LoadingSpinner from '../../components/common/LoadingSpinner'
 import DataTable from '../../components/common/DataTable'
 import { useLeague } from '../../hooks/useLeague'
 import type { Team } from '../../types'
@@ -118,7 +119,7 @@ export default function StandingsPage() {
   if (loading || !state) {
     return (
       <PageTransition>
-        <div className="text-gray-400 text-center py-20">Loading standings...</div>
+        <LoadingSpinner message="Loading standings..." />
       </PageTransition>
     )
   }

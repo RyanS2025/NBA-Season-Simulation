@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import PageTransition from '../../components/layout/PageTransition'
+import LoadingSpinner from '../../components/common/LoadingSpinner'
 import Button from '../../components/common/Button'
 import { useLeague } from '../../hooks/useLeague'
 import { getSeasonMilestones, type SeasonMilestone, type MilestoneType } from '../../utils/season-dates'
@@ -93,7 +94,7 @@ export default function SchedulePage() {
   if (loading || !state) {
     return (
       <PageTransition>
-        <div className="text-gray-400 text-center py-20">Loading schedule...</div>
+        <LoadingSpinner message="Loading schedule..." />
       </PageTransition>
     )
   }

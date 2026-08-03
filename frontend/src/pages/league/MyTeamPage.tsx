@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
+import LoadingSpinner from '../../components/common/LoadingSpinner'
 import DataTable from '../../components/common/DataTable'
 import GlassCard from '../../components/common/GlassCard'
 import ProgressBar from '../../components/common/ProgressBar'
@@ -8,6 +9,7 @@ import Button from '../../components/common/Button'
 import { useLeague } from '../../hooks/useLeague'
 import { CBA_2026_27 } from '../../utils/cba-engine'
 import { isExtensionEligible, askingSalary, extensionDeadline } from '../../utils/contract-engine'
+import { isHoldingOut } from '../../utils/player-condition'
 import type { Player } from '../../types'
 
 const SALARY_CAP = CBA_2026_27.salaryCap
@@ -39,6 +41,7 @@ interface RosterRow {
   form: number
   morale: number
   tradeRequested: boolean
+  holdingOut: boolean
   injuryLabel: string | null
   injurySeverity: string | null
   ppg: number
@@ -66,6 +69,7 @@ function playerToRow(p: Player): RosterRow {
     form: p.status.form ?? 0,
     morale: Math.round(p.status.morale ?? 72),
     tradeRequested: !!p.status.tradeRequested,
+    holdingOut: isHoldingOut(p),
     injuryLabel,
     injurySeverity: inj?.severity ?? null,
     ppg, rpg, apg,
@@ -81,7 +85,7 @@ export default function MyTeamPage() {
   if (loading || !state) {
     return (
       <PageTransition>
-        <div className="text-gray-400 text-center py-20">Loading team...</div>
+        <LoadingSpinner message="Loading team..." />
       </PageTransition>
     )
   }
@@ -140,7 +144,7 @@ export default function MyTeamPage() {
           )}
           {row.tradeRequested && (
             <span className="px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wider bg-red-500/20 text-red-300 border border-red-500/40">
-              Wants Out
+              {row.holdingOut ? 'Holding Out' : 'Wants Out'}
             </span>
           )}
         </span>

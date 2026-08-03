@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import PageTransition from '../../components/layout/PageTransition'
+import LoadingSpinner from '../../components/common/LoadingSpinner'
 import GlassCard from '../../components/common/GlassCard'
 import SectionLabel from '../../components/common/SectionLabel'
 import { useLeague } from '../../hooks/useLeague'
@@ -88,7 +89,7 @@ export default function CoachingPage() {
   if (loading || !state || !coaching) {
     return (
       <PageTransition>
-        <div className="text-gray-400 text-center py-20">Loading coaching...</div>
+        <LoadingSpinner message="Loading coaching..." />
       </PageTransition>
     )
   }

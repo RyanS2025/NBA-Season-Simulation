@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
+import LoadingSpinner from '../../components/common/LoadingSpinner'
 import GlassCard from '../../components/common/GlassCard'
 import Button from '../../components/common/Button'
 import StarRating from '../../components/common/StarRating'
@@ -143,7 +144,7 @@ export default function TradePage() {
   if (loading || !state) {
     return (
       <PageTransition>
-        <div className="text-gray-400 text-center py-20">Loading trade center...</div>
+        <LoadingSpinner message="Loading trade center..." />
       </PageTransition>
     )
   }

@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
+import LoadingSpinner from '../../components/common/LoadingSpinner'
 import GlassCard from '../../components/common/GlassCard'
 import SearchInput from '../../components/common/SearchInput'
 import { useLeague } from '../../hooks/useLeague'
@@ -261,7 +262,7 @@ export default function FreeAgencyPage() {
   if (loading || !state) {
     return (
       <PageTransition>
-        <div className="text-gray-400 text-center py-20">Loading free agency...</div>
+        <LoadingSpinner message="Loading free agency..." />
       </PageTransition>
     )
   }

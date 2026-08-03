@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
+import LoadingSpinner from '../../components/common/LoadingSpinner'
 import GlassCard from '../../components/common/GlassCard'
 import { useLeague } from '../../hooks/useLeague'
 import type { Player } from '../../types'
@@ -165,7 +166,7 @@ export default function LeagueHistoryPage() {
   if (loading || !state) {
     return (
       <PageTransition>
-        <div className="text-gray-400 text-center py-20">Loading history...</div>
+        <LoadingSpinner message="Loading history..." />
       </PageTransition>
     )
   }

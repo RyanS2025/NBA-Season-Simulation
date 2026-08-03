@@ -1,15 +1,17 @@
-import { useState, useMemo, useRef } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
+import LoadingSpinner from '../../components/common/LoadingSpinner'
 import GlassCard from '../../components/common/GlassCard'
 import { useLeague } from '../../hooks/useLeague'
 import { generateReporters } from '../../utils/awards/reporter-generator'
 import { updateNarratives } from '../../utils/awards/narrative-engine'
 import { computeAllAwards, scoreMVPCandidate, scoreDPOYCandidate, scoreROYCandidate, scoreSixthManCandidate, scoreMIPCandidate, scoreClutchPOYCandidate } from '../../utils/awards/awards-engine'
 import type { Player, Team } from '../../types'
-import type { AwardType, AwardResult, Reporter, AwardBallot } from '../../types'
+import type { AwardType, AwardResult, Reporter, AwardBallot, SeasonAwards } from '../../types'
+import type { AwardRecord, RetiredPlayer } from '../../db/league-db'
 
-type AwardsTab = 'ceremony' | 'races' | 'reporters'
+type AwardsTab = 'ceremony' | 'races' | 'reporters' | 'archive'
 
 const OFFSEASON_PHASES = new Set(['playoffs', 'champion', 'draft', 'draft_lottery', 'free_agency', 'coaching_carousel', 'offseason'])
 
@@ -78,7 +80,7 @@ function Headshot({ player, size = 72 }: { player: Player | null; size?: number 
 
 export default function AwardsPage() {
   const { id: leagueId } = useParams()
-  const { players, teams, state, loading } = useLeague()
+  const { db, players, teams, state, loading } = useLeague()
 
   const seasonOver = !!state && OFFSEASON_PHASES.has(state.currentPhase)
 
@@ -92,6 +94,23 @@ export default function AwardsPage() {
 
   const playerMap = useMemo(() => new Map(players.map(p => [p.id, p])), [players])
   const teamMap = useMemo(() => new Map(teams.map(t => [t.id, t])), [teams])
+
+  const [archives, setArchives] = useState<AwardRecord[]>([])
+  const [archiveYear, setArchiveYear] = useState<number | null>(null)
+  const [retiredNames, setRetiredNames] = useState<Map<string, string>>(new Map())
+
+  useEffect(() => {
+    if (!db) return
+    let cancelled = false
+    Promise.all([db.awards.toArray(), db.retiredPlayers.toArray()]).then(([recs, retired]: [AwardRecord[], RetiredPlayer[]]) => {
+      if (cancelled) return
+      const sorted = recs.sort((a, b) => b.seasonYear - a.seasonYear)
+      setArchives(sorted)
+      if (sorted.length > 0) setArchiveYear(y => y ?? sorted[0].seasonYear)
+      setRetiredNames(new Map(retired.map(r => [r.playerId, r.playerName])))
+    })
+    return () => { cancelled = true }
+  }, [db, state?.currentSeason])
 
   const reporters = useMemo(() => {
     if (!leagueId || !state || teams.length === 0) return []
@@ -138,7 +157,7 @@ export default function AwardsPage() {
   if (loading || !state) {
     return (
       <PageTransition>
-        <div className="text-gray-400 text-center py-20">Loading awards...</div>
+        <LoadingSpinner message="Loading awards..." />
       </PageTransition>
     )
   }
@@ -147,10 +166,12 @@ export default function AwardsPage() {
     ? [
         { id: 'ceremony', label: 'Awards Ceremony' },
         { id: 'races', label: 'Final Standings' },
+        { id: 'archive', label: 'Archive' },
         { id: 'reporters', label: 'Reporters' },
       ]
     : [
         { id: 'races', label: 'Award Races' },
+        { id: 'archive', label: 'Archive' },
         { id: 'reporters', label: 'Reporters' },
       ]
 
@@ -547,6 +568,69 @@ export default function AwardsPage() {
     )
   }
 
+
+  function ArchiveSlate({ awards, year }: { awards: SeasonAwards; year: number }) {
+    const resolve = (id: string | null | undefined): string => {
+      if (!id) return '—'
+      const p = playerMap.get(id)
+      if (p) return pName(p)
+      return retiredNames.get(id) ?? 'Unknown'
+    }
+    const resolveTeam = (id: string): string => {
+      const t = teamMap.get(id)
+      return t ? teamName(t) : '—'
+    }
+
+    const winners: [string, string][] = [
+      ['Most Valuable Player', resolve(awards.mvp)],
+      ['Defensive Player of the Year', resolve(awards.dpoy)],
+      ['Rookie of the Year', resolve(awards.roty)],
+      ['Sixth Man of the Year', resolve(awards.sixthMan)],
+      ['Most Improved Player', resolve(awards.mip)],
+      ['Clutch Player of the Year', resolve(awards.clutchPoy)],
+      ['Finals MVP', resolve(awards.finalsMvp)],
+      ['All-Star MVP', resolve(awards.allStarMvp)],
+      ['Coach of the Year', resolveTeam(awards.coty)],
+      ['Executive of the Year', resolveTeam(awards.eoty)],
+    ]
+
+    const teamLists: [string, string[]][] = [
+      ['All-NBA First Team', awards.allNBA.first],
+      ['All-NBA Second Team', awards.allNBA.second],
+      ['All-NBA Third Team', awards.allNBA.third],
+      ['All-Defensive First Team', awards.allDefensive.first],
+      ['All-Defensive Second Team', awards.allDefensive.second],
+      ['All-Rookie First Team', awards.allRookie.first],
+      ['All-Rookie Second Team', awards.allRookie.second],
+    ]
+
+    return (
+      <div>
+        <h3 className="font-display text-xl text-white mb-4">{year} Award Winners</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8">
+          {winners.map(([label, name]) => (
+            <GlassCard key={label} className="p-4">
+              <div className="text-[9px] uppercase tracking-[2px] text-gray-600 mb-1">{label}</div>
+              <div className={name === '—' ? 'text-gray-600' : 'text-white font-medium'}>{name}</div>
+            </GlassCard>
+          ))}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+          {teamLists.filter(([, ids]) => ids.length > 0).map(([label, ids]) => (
+            <GlassCard key={label} className="p-4">
+              <div className="text-[9px] uppercase tracking-[2px] text-accent mb-2">{label}</div>
+              <div className="space-y-1">
+                {ids.map(id => (
+                  <div key={id} className="text-sm text-gray-300">{resolve(id)}</div>
+                ))}
+              </div>
+            </GlassCard>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   const ceremonyAwards = results
     ? CEREMONY_ORDER.filter(k => results[k]).map(k => [k, results[k]] as const)
     : []
@@ -622,6 +706,38 @@ export default function AwardsPage() {
                 <RaceCard key={a} awardType={a} />
               ))}
             </div>
+          </div>
+        )}
+
+        {tab === 'archive' && (
+          <div>
+            {archives.length === 0 ? (
+              <GlassCard className="p-8 text-center">
+                <p className="text-gray-500 text-sm">No completed seasons yet — award history is recorded when each season ends.</p>
+              </GlassCard>
+            ) : (
+              <>
+                <div className="flex items-center gap-2 mb-6 flex-wrap">
+                  <span className="text-[10px] uppercase tracking-[2px] text-gray-600">Season</span>
+                  {archives.map(a => (
+                    <button
+                      key={a.seasonYear}
+                      onClick={() => setArchiveYear(a.seasonYear)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                        archiveYear === a.seasonYear ? 'text-accent bg-accent/10' : 'text-gray-500 hover:text-white hover:bg-white/[0.04]'
+                      }`}
+                    >
+                      {a.seasonYear}
+                    </button>
+                  ))}
+                </div>
+                {(() => {
+                  const rec = archives.find(a => a.seasonYear === archiveYear)
+                  if (!rec) return null
+                  return <ArchiveSlate awards={rec.awards} year={rec.seasonYear} />
+                })()}
+              </>
+            )}
           </div>
         )}
 

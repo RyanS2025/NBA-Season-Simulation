@@ -1,36 +1,40 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import SiteLayout from './components/layout/SiteLayout'
 import LeagueLayout from './components/layout/LeagueLayout'
 import HomePage from './pages/HomePage'
-import AboutPage from './pages/AboutPage'
-import ContactPage from './pages/ContactPage'
-import CreateLeaguePage from './pages/CreateLeaguePage'
-import LeagueDashboard from './pages/league/LeagueDashboard'
-import StandingsPage from './pages/league/StandingsPage'
-import SchedulePage from './pages/league/SchedulePage'
-import ScoresPage from './pages/league/ScoresPage'
-import TradePage from './pages/league/TradePage'
-import PlayersPage from './pages/league/PlayersPage'
-import MyTeamPage from './pages/league/MyTeamPage'
-import DraftPage from './pages/league/DraftPage'
-import FreeAgencyPage from './pages/league/FreeAgencyPage'
-import AwardsPage from './pages/league/AwardsPage'
-import TransactionsPage from './pages/league/TransactionsPage'
-import LeagueHistoryPage from './pages/league/LeagueHistoryPage'
-import SettingsPage from './pages/league/SettingsPage'
-import PlayerDetailPage from './pages/league/PlayerDetailPage'
-import PlayoffsPage from './pages/league/PlayoffsPage'
-import StaffPage from './pages/league/StaffPage'
-import CoachingPage from './pages/league/CoachingPage'
 import NotFoundPage from './pages/NotFoundPage'
 import ErrorBoundary from './components/common/ErrorBoundary'
-import AllStarPage from './pages/league/AllStarPage'
-import TradeDeadlinePage from './pages/league/TradeDeadlinePage'
+import LoadingSpinner from './components/common/LoadingSpinner'
+
+const AboutPage = lazy(() => import('./pages/AboutPage'))
+const ContactPage = lazy(() => import('./pages/ContactPage'))
+const CreateLeaguePage = lazy(() => import('./pages/CreateLeaguePage'))
+const LeagueDashboard = lazy(() => import('./pages/league/LeagueDashboard'))
+const StandingsPage = lazy(() => import('./pages/league/StandingsPage'))
+const SchedulePage = lazy(() => import('./pages/league/SchedulePage'))
+const ScoresPage = lazy(() => import('./pages/league/ScoresPage'))
+const TradePage = lazy(() => import('./pages/league/TradePage'))
+const PlayersPage = lazy(() => import('./pages/league/PlayersPage'))
+const MyTeamPage = lazy(() => import('./pages/league/MyTeamPage'))
+const DraftPage = lazy(() => import('./pages/league/DraftPage'))
+const FreeAgencyPage = lazy(() => import('./pages/league/FreeAgencyPage'))
+const AwardsPage = lazy(() => import('./pages/league/AwardsPage'))
+const TransactionsPage = lazy(() => import('./pages/league/TransactionsPage'))
+const LeagueHistoryPage = lazy(() => import('./pages/league/LeagueHistoryPage'))
+const SettingsPage = lazy(() => import('./pages/league/SettingsPage'))
+const PlayerDetailPage = lazy(() => import('./pages/league/PlayerDetailPage'))
+const PlayoffsPage = lazy(() => import('./pages/league/PlayoffsPage'))
+const StaffPage = lazy(() => import('./pages/league/StaffPage'))
+const CoachingPage = lazy(() => import('./pages/league/CoachingPage'))
+const AllStarPage = lazy(() => import('./pages/league/AllStarPage'))
+const TradeDeadlinePage = lazy(() => import('./pages/league/TradeDeadlinePage'))
 
 export default function App() {
   return (
     <BrowserRouter>
       <ErrorBoundary>
+      <Suspense fallback={<LoadingSpinner message="Loading..." />}>
       <Routes>
         <Route element={<SiteLayout />}>
           <Route path="/" element={<HomePage />} />
@@ -62,6 +66,7 @@ export default function App() {
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      </Suspense>
       </ErrorBoundary>
     </BrowserRouter>
   )

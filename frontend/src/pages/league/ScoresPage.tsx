@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import PageTransition from '../../components/layout/PageTransition'
+import LoadingSpinner from '../../components/common/LoadingSpinner'
 import GlassCard from '../../components/common/GlassCard'
 import { useLeague } from '../../hooks/useLeague'
 import type { Game, PlayerGameStats } from '../../types'
@@ -185,7 +186,7 @@ export default function ScoresPage() {
   if (loading || !state) {
     return (
       <PageTransition>
-        <div className="text-gray-400 text-center py-20">Loading scores...</div>
+        <LoadingSpinner message="Loading scores..." />
       </PageTransition>
     )
   }

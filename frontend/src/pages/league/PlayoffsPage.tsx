@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
+import LoadingSpinner from '../../components/common/LoadingSpinner'
 import GlassCard from '../../components/common/GlassCard'
 import Button from '../../components/common/Button'
 import { useLeague } from '../../hooks/useLeague'
@@ -294,7 +295,7 @@ export default function PlayoffsPage() {
   if (loading || !state) {
     return (
       <PageTransition>
-        <div className="text-gray-400 text-center py-20">Loading playoffs...</div>
+        <LoadingSpinner message="Loading playoffs..." />
       </PageTransition>
     )
   }
