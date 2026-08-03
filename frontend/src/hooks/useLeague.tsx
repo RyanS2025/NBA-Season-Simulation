@@ -24,7 +24,7 @@ import { quickSimGame } from '../utils/quick-sim'
 import { accumulateGameStats } from '../utils/stat-accumulator'
 import { simulateEntirePlayoffs, type PlayoffResults } from '../utils/playoff-sim'
 import { validateTrade, computeTeamPayroll } from '../utils/cba-engine'
-import { runPlayerDevelopment } from '../utils/offseason-engine'
+import { runPlayerDevelopment, cpuSignFreeAgents } from '../utils/offseason-engine'
 import { generateSeasonSchedule } from '../utils/schedule-generator'
 import type { Team, Game, GameResult, Player, Transaction } from '../types'
 import type { SeasonPhase, LeagueSettings } from '../types'
@@ -883,6 +883,18 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
       }
       const { updatedPlayers, retiredPlayerIds } = runPlayerDevelopment(currentPlayers, staffMap)
 
+      setSimProgress('CPU teams signing free agents...')
+      const offseasonFreeAgents = updatedPlayers.filter(p => !p.teamId)
+      const cpuSignings = cpuSignFreeAgents(offseasonFreeAgents, allTeams, updatedPlayers, state.userTeamId)
+
+      const playersByTeam = new Map<string, Player[]>()
+      for (const p of updatedPlayers) {
+        if (!p.teamId || retiredPlayerIds.includes(p.id)) continue
+        const arr = playersByTeam.get(p.teamId)
+        if (arr) arr.push(p)
+        else playersByTeam.set(p.teamId, [p])
+      }
+
       setSimProgress('Updating player ratings...')
 
       setSimProgress('Recording season history...')
@@ -1026,6 +1038,21 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
           await db.staffMarket.bulkAdd(availableCoaches)
         }
 
+        const notableSignings = cpuSignings.filter(s => s.salary >= 15_000_000)
+        for (const signing of notableSignings) {
+          const team = allTeams.find(t => t.id === signing.teamId)
+          if (!team) continue
+          const tx: Transaction = {
+            id: uuid(),
+            date: state.currentDate,
+            type: 'signing',
+            details: { playerId: signing.playerId, salary: signing.salary, years: signing.years },
+            description: `${team.info.city} ${team.info.name} signed ${signing.playerName} (${signing.years} yr, $${(signing.salary / 1_000_000).toFixed(1)}M/yr)`,
+            seasonYear: state.currentSeason,
+          }
+          await addTransaction(db, tx)
+        }
+
         const refreshedTeams = await db.teams.toArray()
         for (const team of refreshedTeams) {
           const hire = cpuHires.find(h => h.teamId === team.id)
@@ -1035,7 +1062,13 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
               team.staff.headCoach = { ...coach, teamId: team.id, hotSeatLevel: 0 }
             }
           }
-          team.roster = team.roster.filter(r => !retiredPlayerIds.includes(r.playerId))
+          const teamPlayers = playersByTeam.get(team.id) ?? []
+          team.roster = teamPlayers.map((p, i) => ({
+            playerId: p.id,
+            rosterStatus: 'active' as const,
+            lineupPosition: i,
+          }))
+          team.finances.totalPayroll = computeTeamPayroll(teamPlayers)
           team.seasonRecord = {
             wins: 0, losses: 0,
             conferenceWins: 0, conferenceLosses: 0,

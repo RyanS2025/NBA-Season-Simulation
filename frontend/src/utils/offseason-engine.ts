@@ -203,48 +203,171 @@ function computeOverall(ratings: Record<string, number>, position: string): numb
   return Math.min(99, Math.max(60, Math.round(totalScore / totalWeight)))
 }
 
+export interface CpuSigning {
+  playerId: string
+  playerName: string
+  teamId: string
+  salary: number
+  years: number
+}
+
+const MINIMUM_SALARY = 1_100_000
+const CPU_TARGET_ROSTER = 14
+const USER_EMERGENCY_ROSTER = 10
+
+function contractYearsFor(age: number): number {
+  if (age <= 24) return 3 + Math.floor(Math.random() * 2) // 3-4
+  if (age <= 29) return 2 + Math.floor(Math.random() * 3) // 2-4
+  if (age <= 33) return 1 + Math.floor(Math.random() * 3) // 1-3
+  return 1 + Math.floor(Math.random() * 2) // 1-2
+}
+
+function signPlayerTo(player: Player, teamId: string, salary: number, years: number): void {
+  player.teamId = teamId
+  player.status = { ...player.status, isFreeAgent: false, teamId }
+  player.contract = {
+    annualSalary: salary,
+    yearsRemaining: years,
+    totalYears: years,
+    contractType: salary <= MINIMUM_SALARY * 1.05 ? 'minimum' : 'standard',
+    noTradeClause: false,
+    playerOption: false,
+    teamOption: false,
+    guaranteed: true,
+  }
+}
+
+/**
+ * CPU offseason free agency: fills every CPU roster back up to a full
+ * NBA-size rotation after contract expirations, so the league never
+ * drains into an ocean of unsigned players. The user's team is only
+ * emergency-filled to a playable minimum with one-year minimum deals,
+ * leaving real free agency decisions to the user.
+ *
+ * Skill value is computed from raw individual ratings (never the
+ * cosmetic overall field).
+ */
 export function cpuSignFreeAgents(
   freeAgents: Player[],
   teams: Team[],
-): { playerId: string; teamId: string; salary: number }[] {
-  const signings: { playerId: string; teamId: string; salary: number }[] = []
+  allPlayers: Player[],
+  userTeamId: string,
+): CpuSigning[] {
+  const signings: CpuSigning[] = []
 
-  const sorted = [...freeAgents].sort((a, b) => b.ratings.overall - a.ratings.overall)
+  const rosterCounts = new Map<string, number>()
+  const positionCounts = new Map<string, Map<string, number>>()
+  for (const t of teams) {
+    rosterCounts.set(t.id, 0)
+    positionCounts.set(t.id, new Map())
+  }
+  for (const p of allPlayers) {
+    if (!p.teamId || !rosterCounts.has(p.teamId)) continue
+    rosterCounts.set(p.teamId, (rosterCounts.get(p.teamId) ?? 0) + 1)
+    const posMap = positionCounts.get(p.teamId)!
+    posMap.set(p.bio.position, (posMap.get(p.bio.position) ?? 0) + 1)
+  }
 
-  for (const fa of sorted) {
-    const needyTeams = teams.filter(t => {
-      const rosterSize = t.roster.length
-      return rosterSize < 15 && t.finances.totalPayroll < t.finances.salaryCap * 0.95
-    })
+  const payrolls = new Map<string, number>()
+  for (const t of teams) {
+    const teamPlayers = allPlayers.filter(p => p.teamId === t.id)
+    payrolls.set(t.id, teamPlayers.reduce((s, p) => s + (p.contract?.annualSalary ?? 0), 0))
+  }
 
-    if (needyTeams.length === 0) continue
+  const available = [...freeAgents]
+    .filter(p => !p.teamId)
+    .sort((a, b) => skillValue(b) - skillValue(a))
 
-    const bestFit = needyTeams[Math.floor(Math.random() * needyTeams.length)]
-    const salary = estimateMarketSalary(fa)
+  const POSITIONS = ['PG', 'SG', 'SF', 'PF', 'C']
 
+  const takeBestForTeam = (teamId: string): Player | null => {
+    if (available.length === 0) return null
+    const posMap = positionCounts.get(teamId)!
+    // Most under-represented position on the roster
+    const neededPos = POSITIONS.reduce((worst, pos) =>
+      (posMap.get(pos) ?? 0) < (posMap.get(worst) ?? 0) ? pos : worst, POSITIONS[0])
+
+    // Prefer a positional fit among the best remaining players
+    const scanDepth = Math.min(40, available.length)
+    for (let i = 0; i < scanDepth; i++) {
+      const cand = available[i]
+      if (cand.bio.position === neededPos || cand.bio.secondaryPosition === neededPos) {
+        available.splice(i, 1)
+        return cand
+      }
+    }
+    return available.shift() ?? null
+  }
+
+  // Round-robin: the shortest CPU roster signs next, so talent spreads
+  // instead of stacking on whichever team is iterated first.
+  const cpuTeams = teams.filter(t => t.id !== userTeamId)
+  for (;;) {
+    const needy = cpuTeams
+      .filter(t => (rosterCounts.get(t.id) ?? 0) < CPU_TARGET_ROSTER)
+      .sort((a, b) => (rosterCounts.get(a.id) ?? 0) - (rosterCounts.get(b.id) ?? 0))
+    if (needy.length === 0 || available.length === 0) break
+
+    const team = needy[0]
+    const player = takeBestForTeam(team.id)
+    if (!player) break
+
+    const payroll = payrolls.get(team.id) ?? 0
+    const cap = team.finances.salaryCap || 140_000_000
+    let salary = estimateMarketSalary(player)
+    // Rosters must be filled: fall back to a minimum deal when capped out
+    if (payroll + salary > cap * 1.1) salary = MINIMUM_SALARY
+    const years = salary <= MINIMUM_SALARY ? 1 : contractYearsFor(player.bio.age)
+
+    signPlayerTo(player, team.id, salary, years)
     signings.push({
-      playerId: fa.id,
-      teamId: bestFit.id,
+      playerId: player.id,
+      playerName: `${player.bio.firstName} ${player.bio.lastName}`,
+      teamId: team.id,
       salary,
+      years,
     })
 
-    bestFit.roster.push({
-      playerId: fa.id,
-      rosterStatus: 'active',
-      lineupPosition: bestFit.roster.length,
-    })
-    bestFit.finances.totalPayroll += salary
+    rosterCounts.set(team.id, (rosterCounts.get(team.id) ?? 0) + 1)
+    payrolls.set(team.id, payroll + salary)
+    const posMap = positionCounts.get(team.id)!
+    posMap.set(player.bio.position, (posMap.get(player.bio.position) ?? 0) + 1)
+  }
+
+  // Emergency-fill the user team to a playable roster with 1-year
+  // minimum contracts (lowest-value players, so the user's real free
+  // agency choices stay meaningful).
+  const userCount = rosterCounts.get(userTeamId) ?? 0
+  if (userCount < USER_EMERGENCY_ROSTER && available.length > 0) {
+    const cheapest = [...available].sort((a, b) => skillValue(a) - skillValue(b))
+    for (let i = 0; i < USER_EMERGENCY_ROSTER - userCount && i < cheapest.length; i++) {
+      const player = cheapest[i]
+      const idx = available.indexOf(player)
+      if (idx >= 0) available.splice(idx, 1)
+      signPlayerTo(player, userTeamId, MINIMUM_SALARY, 1)
+      signings.push({
+        playerId: player.id,
+        playerName: `${player.bio.firstName} ${player.bio.lastName}`,
+        teamId: userTeamId,
+        salary: MINIMUM_SALARY,
+        years: 1,
+      })
+    }
   }
 
   return signings
 }
 
+function skillValue(player: Player): number {
+  return computeOverall(player.ratings as unknown as Record<string, number>, player.bio.position)
+}
+
 function estimateMarketSalary(player: Player): number {
-  const ovr = player.ratings.overall
-  if (ovr >= 90) return Math.round(35_000_000 + Math.random() * 10_000_000)
-  if (ovr >= 85) return Math.round(25_000_000 + Math.random() * 10_000_000)
-  if (ovr >= 80) return Math.round(15_000_000 + Math.random() * 10_000_000)
-  if (ovr >= 75) return Math.round(8_000_000 + Math.random() * 7_000_000)
-  if (ovr >= 70) return Math.round(3_000_000 + Math.random() * 5_000_000)
-  return Math.round(1_100_000 + Math.random() * 2_000_000)
+  const value = skillValue(player)
+  if (value >= 90) return Math.round(35_000_000 + Math.random() * 10_000_000)
+  if (value >= 85) return Math.round(25_000_000 + Math.random() * 10_000_000)
+  if (value >= 80) return Math.round(15_000_000 + Math.random() * 10_000_000)
+  if (value >= 75) return Math.round(8_000_000 + Math.random() * 7_000_000)
+  if (value >= 70) return Math.round(3_000_000 + Math.random() * 5_000_000)
+  return Math.round(MINIMUM_SALARY + Math.random() * 2_000_000)
 }
