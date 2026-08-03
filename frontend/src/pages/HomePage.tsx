@@ -29,9 +29,11 @@ export default function HomePage() {
 
   useEffect(() => { loadLeagues() }, [])
 
-  const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Delete "${name}"? This cannot be undone.`)) return
+  const [confirmingId, setConfirmingId] = useState<string | null>(null)
+
+  const handleDelete = async (id: string) => {
     await deleteLeague(id)
+    setConfirmingId(null)
     await loadLeagues()
   }
 
@@ -107,13 +109,30 @@ export default function HomePage() {
                         <div className="text-sm font-medium text-white">{league.name}</div>
                         <div className="text-xs text-slate-500">{league.userTeamName} — Season {league.currentSeason}</div>
                       </button>
-                      <button
-                        onClick={() => handleDelete(league.id, league.name)}
-                        aria-label={`Delete ${league.name}`}
-                        className="text-slate-700 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 ml-3 text-xs"
-                      >
-                        Delete
-                      </button>
+                      {confirmingId === league.id ? (
+                        <span className="flex items-center gap-2 ml-3 text-xs">
+                          <button
+                            onClick={() => handleDelete(league.id)}
+                            className="px-2 py-1 rounded bg-red-500/20 text-red-300 border border-red-500/40 hover:bg-red-500/30"
+                          >
+                            Confirm Delete
+                          </button>
+                          <button
+                            onClick={() => setConfirmingId(null)}
+                            className="text-slate-500 hover:text-white"
+                          >
+                            Cancel
+                          </button>
+                        </span>
+                      ) : (
+                        <button
+                          onClick={() => setConfirmingId(league.id)}
+                          aria-label={`Delete ${league.name}`}
+                          className="text-slate-700 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 ml-3 text-xs"
+                        >
+                          Delete
+                        </button>
+                      )}
                     </div>
                   ))}
                 </div>

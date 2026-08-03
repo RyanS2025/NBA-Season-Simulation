@@ -30,40 +30,6 @@ interface RatingCategory {
 }
 
 /** Enriched row for career stats table display with computed per-36 & totals */
-interface DisplayRow {
-  season: string
-  team: string
-  gp: number
-  gs: number
-  mpg: number
-  fg_pct: number
-  three_pct: number
-  ft_pct: number
-  rpg: number
-  apg: number
-  spg: number
-  bpg: number
-  ppg: number
-  p36_pts: number
-  p36_reb: number
-  p36_ast: number
-  p36_stl: number
-  p36_blk: number
-  totalPts: number
-  totalReb: number
-  totalAst: number
-  totalStl: number
-  totalBlk: number
-  totalMin: number
-  totalFGM: number
-  totalFGA: number
-  total3PM: number
-  total3PA: number
-  totalFTM: number
-  totalFTA: number
-  isSimulated?: boolean
-}
-
 /* ------------------------------------------------------------------ */
 /*  Constants                                                          */
 /* ------------------------------------------------------------------ */
@@ -89,7 +55,6 @@ const LEAGUE_AVG: Record<string, number> = {
 /*  Helpers                                                            */
 /* ------------------------------------------------------------------ */
 
-type StatTab = 'perGame' | 'per36' | 'totals' | 'advanced'
 type PageSection = 'overview' | 'playoffs' | 'shooting' | 'ratings'
 
 function formatMoney(n: number): string {
@@ -127,100 +92,6 @@ function awardBadgeColor(cat: Award['category']): string {
 }
 
 /** Enrich a SeasonStats row with computed per-36 and totals */
-function toDisplayRow(s: SeasonStats): DisplayRow {
-  const p36 = s.mpg > 0 ? 36 / s.mpg : 0
-  return {
-    season: s.season,
-    team: s.team,
-    gp: s.gp,
-    gs: s.gs,
-    mpg: s.mpg,
-    fg_pct: s.fg_pct,
-    three_pct: s.three_pct,
-    ft_pct: s.ft_pct,
-    rpg: s.rpg,
-    apg: s.apg,
-    spg: s.spg,
-    bpg: s.bpg,
-    ppg: s.ppg,
-    p36_pts: +(s.ppg * p36).toFixed(1),
-    p36_reb: +(s.rpg * p36).toFixed(1),
-    p36_ast: +(s.apg * p36).toFixed(1),
-    p36_stl: +(s.spg * p36).toFixed(1),
-    p36_blk: +(s.bpg * p36).toFixed(1),
-    totalPts: Math.round(s.ppg * s.gp),
-    totalReb: Math.round(s.rpg * s.gp),
-    totalAst: Math.round(s.apg * s.gp),
-    totalStl: Math.round(s.spg * s.gp),
-    totalBlk: Math.round(s.bpg * s.gp),
-    totalMin: Math.round(s.mpg * s.gp),
-    totalFGM: Math.round(s.fgm * s.gp),
-    totalFGA: Math.round(s.fga * s.gp),
-    total3PM: Math.round(s.three_pm * s.gp),
-    total3PA: Math.round(s.three_pa * s.gp),
-    totalFTM: Math.round(s.ftm * s.gp),
-    totalFTA: Math.round(s.fta * s.gp),
-  }
-}
-
-function computeCareerAverages(rows: DisplayRow[]): DisplayRow {
-  const totalGP = rows.reduce((s, r) => s + r.gp, 0)
-  const totalGS = rows.reduce((s, r) => s + r.gs, 0)
-  const totalMinAll = rows.reduce((s, r) => s + r.totalMin, 0)
-
-  const wAvg = (fn: (r: DisplayRow) => number) =>
-    totalGP > 0 ? rows.reduce((s, r) => s + fn(r) * r.gp, 0) / totalGP : 0
-
-  const totalFGM = rows.reduce((s, r) => s + r.totalFGM, 0)
-  const totalFGA = rows.reduce((s, r) => s + r.totalFGA, 0)
-  const total3PM = rows.reduce((s, r) => s + r.total3PM, 0)
-  const total3PA = rows.reduce((s, r) => s + r.total3PA, 0)
-  const totalFTM = rows.reduce((s, r) => s + r.totalFTM, 0)
-  const totalFTA = rows.reduce((s, r) => s + r.totalFTA, 0)
-  const totalPts = rows.reduce((s, r) => s + r.totalPts, 0)
-  const totalReb = rows.reduce((s, r) => s + r.totalReb, 0)
-  const totalAst = rows.reduce((s, r) => s + r.totalAst, 0)
-  const totalStl = rows.reduce((s, r) => s + r.totalStl, 0)
-  const totalBlk = rows.reduce((s, r) => s + r.totalBlk, 0)
-
-  const avgMpg = totalGP > 0 ? totalMinAll / totalGP : 0
-  const per36Mult = avgMpg > 0 ? 36 / avgMpg : 0
-
-  return {
-    season: 'Career',
-    team: '',
-    gp: totalGP,
-    gs: totalGS,
-    mpg: +avgMpg.toFixed(1),
-    fg_pct: totalFGA > 0 ? +(totalFGM / totalFGA * 100).toFixed(1) : 0,
-    three_pct: total3PA > 0 ? +(total3PM / total3PA * 100).toFixed(1) : 0,
-    ft_pct: totalFTA > 0 ? +(totalFTM / totalFTA * 100).toFixed(1) : 0,
-    rpg: +wAvg(r => r.rpg).toFixed(1),
-    apg: +wAvg(r => r.apg).toFixed(1),
-    spg: +wAvg(r => r.spg).toFixed(1),
-    bpg: +wAvg(r => r.bpg).toFixed(1),
-    ppg: +wAvg(r => r.ppg).toFixed(1),
-    p36_pts: totalGP > 0 ? +(totalPts / totalGP * per36Mult).toFixed(1) : 0,
-    p36_reb: totalGP > 0 ? +(totalReb / totalGP * per36Mult).toFixed(1) : 0,
-    p36_ast: totalGP > 0 ? +(totalAst / totalGP * per36Mult).toFixed(1) : 0,
-    p36_stl: totalGP > 0 ? +(totalStl / totalGP * per36Mult).toFixed(1) : 0,
-    p36_blk: totalGP > 0 ? +(totalBlk / totalGP * per36Mult).toFixed(1) : 0,
-    totalPts,
-    totalReb,
-    totalAst,
-    totalStl,
-    totalBlk,
-    totalMin: totalMinAll,
-    totalFGM,
-    totalFGA,
-    total3PM,
-    total3PA,
-    totalFTM,
-    totalFTA,
-  }
-}
-
-/** Parse award strings (e.g. "2023-24 All-Star") into Award objects */
 function parseAwards(rawAwards: string[]): Award[] {
   return rawAwards.map(a => {
     const match = a.match(/^(\d{4}-\d{2})\s+(.+)$/)
@@ -269,39 +140,6 @@ const ZONE_LABELS: Record<string, string> = {
 /*  Subcomponents                                                      */
 /* ------------------------------------------------------------------ */
 
-function HeaderStatBox({ value, label }: { value: string; label: string }) {
-  return (
-    <div className="text-center px-3 sm:px-5">
-      <div className="font-display text-2xl sm:text-3xl text-white">{value}</div>
-      <div className="text-[10px] uppercase tracking-[2px] text-gray-600">{label}</div>
-    </div>
-  )
-}
-
-function TabButton({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean
-  onClick: () => void
-  children: string
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`px-4 py-2 rounded-lg text-xs font-medium transition-colors ${
-        active
-          ? 'text-[oklch(64.6%_0.222_41.116)] bg-[oklch(64.6%_0.222_41.116)]/10'
-          : 'text-gray-500 hover:text-white hover:bg-white/[0.04]'
-      }`}
-    >
-      {children}
-    </button>
-  )
-}
-
-/** Top-level section navigation button */
 function SectionNavButton({
   active,
   onClick,
@@ -329,198 +167,10 @@ function SectionNavButton({
 /*  Career Stats Table                                                 */
 /* ------------------------------------------------------------------ */
 
-function CareerStatsTable({ stats: rawStats, title }: { stats: SeasonStats[]; title: string }) {
-  const [tab, setTab] = useState<StatTab>('perGame')
-  const stats = rawStats.map(toDisplayRow)
-  const career = computeCareerAverages(stats)
-
-  const tabs: { key: StatTab; label: string }[] = [
-    { key: 'perGame', label: 'Per Game' },
-    { key: 'per36', label: 'Per 36' },
-    { key: 'totals', label: 'Totals' },
-    { key: 'advanced', label: 'Advanced' },
-  ]
-
-  type ColDef = { label: string; key: string; fmt?: (v: number) => string }
-
-  const pctFmt = (v: number) => v.toFixed(1)
-  const intFmt = (v: number) => v.toLocaleString()
-
-  const perGameCols: ColDef[] = [
-    { label: 'Season', key: 'season' },
-    { label: 'Team', key: 'team' },
-    { label: 'GP', key: 'gp' },
-    { label: 'GS', key: 'gs' },
-    { label: 'MPG', key: 'mpg', fmt: pctFmt },
-    { label: 'FG%', key: 'fg_pct', fmt: pctFmt },
-    { label: '3P%', key: 'three_pct', fmt: pctFmt },
-    { label: 'FT%', key: 'ft_pct', fmt: pctFmt },
-    { label: 'RPG', key: 'rpg', fmt: pctFmt },
-    { label: 'APG', key: 'apg', fmt: pctFmt },
-    { label: 'SPG', key: 'spg', fmt: pctFmt },
-    { label: 'BPG', key: 'bpg', fmt: pctFmt },
-    { label: 'PPG', key: 'ppg', fmt: pctFmt },
-  ]
-
-  const per36Cols: ColDef[] = [
-    { label: 'Season', key: 'season' },
-    { label: 'Team', key: 'team' },
-    { label: 'GP', key: 'gp' },
-    { label: 'MPG', key: 'mpg', fmt: pctFmt },
-    { label: 'PTS', key: 'p36_pts', fmt: pctFmt },
-    { label: 'REB', key: 'p36_reb', fmt: pctFmt },
-    { label: 'AST', key: 'p36_ast', fmt: pctFmt },
-    { label: 'STL', key: 'p36_stl', fmt: pctFmt },
-    { label: 'BLK', key: 'p36_blk', fmt: pctFmt },
-    { label: 'FG%', key: 'fg_pct', fmt: pctFmt },
-    { label: '3P%', key: 'three_pct', fmt: pctFmt },
-    { label: 'FT%', key: 'ft_pct', fmt: pctFmt },
-  ]
-
-  const totalsCols: ColDef[] = [
-    { label: 'Season', key: 'season' },
-    { label: 'Team', key: 'team' },
-    { label: 'GP', key: 'gp' },
-    { label: 'MIN', key: 'totalMin', fmt: intFmt },
-    { label: 'PTS', key: 'totalPts', fmt: intFmt },
-    { label: 'REB', key: 'totalReb', fmt: intFmt },
-    { label: 'AST', key: 'totalAst', fmt: intFmt },
-    { label: 'STL', key: 'totalStl', fmt: intFmt },
-    { label: 'BLK', key: 'totalBlk', fmt: intFmt },
-    { label: 'FGM', key: 'totalFGM', fmt: intFmt },
-    { label: 'FGA', key: 'totalFGA', fmt: intFmt },
-    { label: '3PM', key: 'total3PM', fmt: intFmt },
-    { label: '3PA', key: 'total3PA', fmt: intFmt },
-    { label: 'FTM', key: 'totalFTM', fmt: intFmt },
-    { label: 'FTA', key: 'totalFTA', fmt: intFmt },
-  ]
-
-  const advancedCols: ColDef[] = [
-    { label: 'Season', key: 'season' },
-    { label: 'Team', key: 'team' },
-    { label: 'GP', key: 'gp' },
-    { label: 'PER', key: 'per', fmt: pctFmt },
-    { label: 'TS%', key: 'tsPct', fmt: pctFmt },
-    { label: 'WS', key: 'ws', fmt: pctFmt },
-    { label: 'BPM', key: 'bpm', fmt: pctFmt },
-    { label: 'VORP', key: 'vorp', fmt: pctFmt },
-  ]
-
-  const colMap: Record<StatTab, ColDef[]> = {
-    perGame: perGameCols,
-    per36: per36Cols,
-    totals: totalsCols,
-    advanced: advancedCols,
-  }
-
-  const columns = colMap[tab]
-
-  const getCellValue = (row: DisplayRow, col: ColDef): string => {
-    const raw = (row as unknown as Record<string, unknown>)[col.key]
-    if (raw === undefined || raw === null) return '—'
-    if (typeof raw === 'number' && col.fmt) return col.fmt(raw)
-    return String(raw ?? '')
-  }
-
-  return (
-    <div>
-      <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-        <SectionLabel className="!mb-0">{title}</SectionLabel>
-        <div className="flex gap-1">
-          {tabs.map(t => (
-            <TabButton key={t.key} active={tab === t.key} onClick={() => setTab(t.key)}>
-              {t.label}
-            </TabButton>
-          ))}
-        </div>
-      </div>
-
-      <GlassCard className="overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[700px]">
-            <thead>
-              <tr className="border-b border-white/[0.06]">
-                {columns.map((col, ci) => (
-                  <th
-                    key={col.key}
-                    className={`px-3 py-3 text-[10px] uppercase tracking-[2px] font-medium text-gray-600 whitespace-nowrap ${
-                      ci === 0 ? 'text-left sticky left-0 bg-slate-950/90 z-10' : 'text-center'
-                    }`}
-                  >
-                    {col.label}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {stats.map((row, ri) => (
-                <tr
-                  key={row.season}
-                  className={`border-b border-white/[0.03] ${
-                    row.isSimulated
-                      ? 'bg-[oklch(64.6%_0.222_41.116)]/[0.08]'
-                      : ri % 2 === 0
-                        ? 'bg-white/[0.02]'
-                        : ''
-                  }`}
-                >
-                  {columns.map((col, ci) => (
-                    <td
-                      key={col.key}
-                      className={`px-3 py-2.5 text-sm whitespace-nowrap ${
-                        ci === 0
-                          ? 'text-left font-medium sticky left-0 z-10 ' +
-                            (row.isSimulated
-                              ? 'bg-[oklch(64.6%_0.222_41.116)]/[0.08] text-[oklch(64.6%_0.222_41.116)]'
-                              : ri % 2 === 0
-                                ? 'bg-slate-950/95 text-white'
-                                : 'bg-slate-950/90 text-white')
-                          : row.isSimulated && col.key !== 'team'
-                            ? 'text-center text-[oklch(64.6%_0.222_41.116)]'
-                            : 'text-center text-gray-300'
-                      }`}
-                    >
-                      {getCellValue(row, col)}
-                      {row.isSimulated && ci === 0 && (
-                        <span className="ml-1.5 text-[9px] uppercase tracking-wider text-[oklch(64.6%_0.222_41.116)]/70">
-                          SIM
-                        </span>
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-              {/* Career row */}
-              <tr className="border-t-2 border-white/[0.12] bg-white/[0.03]">
-                {columns.map((col, ci) => (
-                  <td
-                    key={col.key}
-                    className={`px-3 py-2.5 text-sm font-bold whitespace-nowrap ${
-                      ci === 0
-                        ? 'text-left sticky left-0 bg-slate-950/95 z-10 text-white'
-                        : 'text-center text-white'
-                    }`}
-                  >
-                    {getCellValue(career, col)}
-                  </td>
-                ))}
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </GlassCard>
-    </div>
-  )
-}
-
-/* ------------------------------------------------------------------ */
-/*  Awards Section                                                     */
-/* ------------------------------------------------------------------ */
-
 interface GroupedAward {
   name: string
   category: Award['category']
-  years: string[]
+  years: Award['year'][]
 }
 
 function groupAwards(awards: Award[]): GroupedAward[] {
@@ -1306,9 +956,261 @@ function ShotChartLegend() {
 /*  Page Component                                                     */
 /* ------------------------------------------------------------------ */
 
+
+/* ── Reference-style (BBGM) components ─────────────────────────── */
+
+function ratingTextColor(v: number): string {
+  if (v >= 80) return 'text-emerald-400'
+  if (v >= 65) return 'text-slate-200'
+  if (v >= 50) return 'text-slate-400'
+  return 'text-slate-500'
+}
+
+function RatingColumn({ title, rows }: { title: string; rows: [string, number][] }) {
+  return (
+    <div className="min-w-[150px]">
+      <div className="text-sm font-semibold text-white border-b border-white/[0.15] pb-1 mb-1.5">{title}</div>
+      {rows.map(([label, value]) => (
+        <div key={label} className="flex items-baseline justify-between gap-3 text-[13px] leading-6">
+          <span className="text-slate-400">{label}:</span>
+          <span className={`tabular-nums font-medium ${ratingTextColor(value)}`}>{value}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+interface StatLine {
+  year: string
+  team: string
+  age: number | null
+  gp: number; gs: number; mpg: number
+  fgm: number; fga: number; fgPct: number
+  tpm: number; tpa: number; tpPct: number
+  twoM: number; twoA: number; twoPct: number
+  efgPct: number
+  ftm: number; fta: number; ftPct: number
+  orb: number; drb: number; trb: number
+  ast: number; tov: number; stl: number; blk: number; pf: number; pts: number
+}
+
+function toStatLine(s: SeasonStats, currentAge: number, currentSeasonYear: number): StatLine {
+  const yearNum = parseInt(s.season, 10)
+  const age = isNaN(yearNum) ? null : currentAge - (currentSeasonYear - yearNum)
+  const twoM = Math.max(0, s.fgm - s.three_pm)
+  const twoA = Math.max(0, s.fga - s.three_pa)
+  // Imported real seasons store percentages as 46.7; sim seasons as 0.467
+  const pct = (v: number) => (v > 1.5 ? v : v * 100)
+  return {
+    year: s.season.replace(' Playoffs', ''),
+    team: s.team,
+    age,
+    gp: s.gp, gs: s.gs, mpg: s.mpg,
+    fgm: s.fgm, fga: s.fga, fgPct: pct(s.fg_pct),
+    tpm: s.three_pm, tpa: s.three_pa, tpPct: pct(s.three_pct),
+    twoM, twoA, twoPct: twoA > 0 ? (twoM / twoA) * 100 : 0,
+    efgPct: s.fga > 0 ? ((s.fgm + 0.5 * s.three_pm) / s.fga) * 100 : 0,
+    ftm: s.ftm, fta: s.fta, ftPct: pct(s.ft_pct),
+    orb: s.orpg, drb: s.drpg, trb: s.rpg,
+    ast: s.apg, tov: s.topg, stl: s.spg, blk: s.bpg, pf: s.pfpg, pts: s.ppg,
+  }
+}
+
+function careerLine(lines: StatLine[]): StatLine | null {
+  const totalGp = lines.reduce((s, l) => s + l.gp, 0)
+  if (totalGp === 0) return null
+  const w = (get: (l: StatLine) => number) =>
+    lines.reduce((s, l) => s + get(l) * l.gp, 0) / totalGp
+  const sumFgm = w(l => l.fgm), sumFga = w(l => l.fga)
+  const sumTpm = w(l => l.tpm), sumTpa = w(l => l.tpa)
+  const sumFtm = w(l => l.ftm), sumFta = w(l => l.fta)
+  const twoM = sumFgm - sumTpm, twoA = sumFga - sumTpa
+  return {
+    year: 'Career', team: '', age: null,
+    gp: totalGp, gs: lines.reduce((s, l) => s + l.gs, 0), mpg: w(l => l.mpg),
+    fgm: sumFgm, fga: sumFga, fgPct: sumFga > 0 ? (sumFgm / sumFga) * 100 : 0,
+    tpm: sumTpm, tpa: sumTpa, tpPct: sumTpa > 0 ? (sumTpm / sumTpa) * 100 : 0,
+    twoM, twoA, twoPct: twoA > 0 ? (twoM / twoA) * 100 : 0,
+    efgPct: sumFga > 0 ? ((sumFgm + 0.5 * sumTpm) / sumFga) * 100 : 0,
+    ftm: sumFtm, fta: sumFta, ftPct: sumFta > 0 ? (sumFtm / sumFta) * 100 : 0,
+    orb: w(l => l.orb), drb: w(l => l.drb), trb: w(l => l.trb),
+    ast: w(l => l.ast), tov: w(l => l.tov), stl: w(l => l.stl),
+    blk: w(l => l.blk), pf: w(l => l.pf), pts: w(l => l.pts),
+  }
+}
+
+const STAT_COLS: { key: keyof StatLine; label: string; fmt: (v: number) => string }[] = [
+  { key: 'gp', label: 'G', fmt: v => String(Math.round(v)) },
+  { key: 'gs', label: 'GS', fmt: v => String(Math.round(v)) },
+  { key: 'mpg', label: 'MP', fmt: v => v.toFixed(1) },
+  { key: 'fgm', label: 'FG', fmt: v => v.toFixed(1) },
+  { key: 'fga', label: 'FGA', fmt: v => v.toFixed(1) },
+  { key: 'fgPct', label: 'FG%', fmt: v => v.toFixed(1) },
+  { key: 'tpm', label: '3P', fmt: v => v.toFixed(1) },
+  { key: 'tpa', label: '3PA', fmt: v => v.toFixed(1) },
+  { key: 'tpPct', label: '3P%', fmt: v => v.toFixed(1) },
+  { key: 'twoM', label: '2P', fmt: v => v.toFixed(1) },
+  { key: 'twoA', label: '2PA', fmt: v => v.toFixed(1) },
+  { key: 'twoPct', label: '2P%', fmt: v => v.toFixed(1) },
+  { key: 'efgPct', label: 'eFG%', fmt: v => v.toFixed(1) },
+  { key: 'ftm', label: 'FT', fmt: v => v.toFixed(1) },
+  { key: 'fta', label: 'FTA', fmt: v => v.toFixed(1) },
+  { key: 'ftPct', label: 'FT%', fmt: v => v.toFixed(1) },
+  { key: 'orb', label: 'ORB', fmt: v => v.toFixed(1) },
+  { key: 'drb', label: 'DRB', fmt: v => v.toFixed(1) },
+  { key: 'trb', label: 'TRB', fmt: v => v.toFixed(1) },
+  { key: 'ast', label: 'AST', fmt: v => v.toFixed(1) },
+  { key: 'tov', label: 'TOV', fmt: v => v.toFixed(1) },
+  { key: 'stl', label: 'STL', fmt: v => v.toFixed(1) },
+  { key: 'blk', label: 'BLK', fmt: v => v.toFixed(1) },
+  { key: 'pf', label: 'PF', fmt: v => v.toFixed(1) },
+  { key: 'pts', label: 'PTS', fmt: v => v.toFixed(1) },
+]
+
+function BBGMStatsTable({
+  stats, currentAge, currentSeasonYear, title,
+}: {
+  stats: SeasonStats[]
+  currentAge: number
+  currentSeasonYear: number
+  title: string
+}) {
+  const [mode, setMode] = useState<'regular' | 'playoffs'>('regular')
+
+  const regular = stats.filter(s => !s.season.includes('Playoffs'))
+  const playoffs = stats.filter(s => s.season.includes('Playoffs'))
+  const active = mode === 'regular' ? regular : playoffs
+  const lines = active.map(s => toStatLine(s, currentAge, currentSeasonYear))
+  const career = careerLine(lines)
+
+  return (
+    <div>
+      <div className="flex items-center gap-4 mb-2">
+        <h2 className="font-display text-2xl tracking-wide text-white">{title}</h2>
+      </div>
+      <div className="panel overflow-hidden">
+        <div className="flex border-b border-white/[0.08]">
+          {(['regular', 'playoffs'] as const).map(m => (
+            <button
+              key={m}
+              onClick={() => setMode(m)}
+              className={`px-5 py-2.5 text-[13px] font-medium transition-colors ${
+                mode === m
+                  ? 'text-white bg-white/[0.05] border-b-2 border-orange-500'
+                  : 'text-orange-400/80 hover:text-orange-300'
+              }`}
+            >
+              {m === 'regular' ? 'Regular Season' : 'Playoffs'}
+            </button>
+          ))}
+        </div>
+        <div className="overflow-x-auto [scrollbar-width:thin]">
+          {lines.length === 0 ? (
+            <div className="px-5 py-8 text-center text-slate-600 text-sm">
+              {mode === 'playoffs' ? 'No playoff appearances yet' : 'No stats recorded yet'}
+            </div>
+          ) : (
+            <table className="w-full text-[12.5px] whitespace-nowrap">
+              <thead>
+                <tr className="border-b border-white/[0.1] text-slate-400">
+                  <th className="text-left font-semibold py-2 pl-4 pr-3 sticky left-0 bg-[#101a2e]">Year</th>
+                  <th className="text-left font-semibold py-2 px-2.5">Team</th>
+                  <th className="text-right font-semibold py-2 px-2.5">Age</th>
+                  {STAT_COLS.map(c => (
+                    <th key={c.label} className="text-right font-semibold py-2 px-2.5">{c.label}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {lines.map((l, i) => (
+                  <tr key={`${l.year}-${i}`} className="border-b border-white/[0.04] hover:bg-white/[0.03]">
+                    <td className="py-1.5 pl-4 pr-3 font-medium text-orange-400 sticky left-0 bg-[#0d1526]">{l.year}</td>
+                    <td className="py-1.5 px-2.5 text-orange-400/90">{l.team}</td>
+                    <td className="py-1.5 px-2.5 text-right text-slate-300 tabular-nums">{l.age ?? ''}</td>
+                    {STAT_COLS.map(c => (
+                      <td key={c.label} className="py-1.5 px-2.5 text-right text-slate-300 tabular-nums">
+                        {c.fmt(l[c.key] as number)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+                {career && (
+                  <tr className="border-t border-white/[0.12] font-semibold">
+                    <td className="py-2 pl-4 pr-3 text-white sticky left-0 bg-[#101a2e]">Career</td>
+                    <td className="py-2 px-2.5" />
+                    <td className="py-2 px-2.5" />
+                    {STAT_COLS.map(c => (
+                      <td key={c.label} className="py-2 px-2.5 text-right text-white tabular-nums">
+                        {c.fmt(career[c.key] as number)}
+                      </td>
+                    ))}
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function SummaryMiniTable({ stats }: { stats: SeasonStats[] }) {
+  const regular = stats.filter(s => !s.season.includes('Playoffs'))
+  const latest = regular[regular.length - 1] ?? null
+  const lines = regular.map(s => toStatLine(s, 0, 0))
+  const career = careerLine(lines)
+  if (!latest && !career) return null
+
+  const ts = (l: { pts: number; fga: number; fta: number } | null) =>
+    l && (l.fga + 0.44 * l.fta) > 0 ? ((l.pts / (2 * (l.fga + 0.44 * l.fta))) * 100).toFixed(1) : '—'
+
+  const latestLine = latest ? toStatLine(latest, 0, 0) : null
+
+  const row = (label: string, l: StatLine | null) => l && (
+    <tr className="text-slate-200">
+      <td className="py-1 pr-5 font-semibold text-white">{label}</td>
+      <td className="py-1 px-2.5 text-right tabular-nums">{Math.round(l.gp)}</td>
+      <td className="py-1 px-2.5 text-right tabular-nums">{l.mpg.toFixed(1)}</td>
+      <td className="py-1 px-2.5 text-right tabular-nums">{l.pts.toFixed(1)}</td>
+      <td className="py-1 px-2.5 text-right tabular-nums">{l.trb.toFixed(1)}</td>
+      <td className="py-1 px-2.5 text-right tabular-nums border-r border-white/[0.1]">{l.ast.toFixed(1)}</td>
+      <td className="py-1 px-2.5 text-right tabular-nums">{l.fgPct.toFixed(1)}</td>
+      <td className="py-1 px-2.5 text-right tabular-nums">{l.tpPct.toFixed(1)}</td>
+      <td className="py-1 px-2.5 text-right tabular-nums">{l.ftPct.toFixed(1)}</td>
+      <td className="py-1 px-2.5 text-right tabular-nums">{ts(l)}</td>
+    </tr>
+  )
+
+  return (
+    <div className="overflow-x-auto">
+      <table className="text-[13px]">
+        <thead>
+          <tr className="text-slate-500 font-semibold">
+            <td className="py-1 pr-5">Summary</td>
+            <td className="py-1 px-2.5 text-right">G</td>
+            <td className="py-1 px-2.5 text-right">MP</td>
+            <td className="py-1 px-2.5 text-right">PTS</td>
+            <td className="py-1 px-2.5 text-right">TRB</td>
+            <td className="py-1 px-2.5 text-right border-r border-white/[0.1]">AST</td>
+            <td className="py-1 px-2.5 text-right">FG%</td>
+            <td className="py-1 px-2.5 text-right">3P%</td>
+            <td className="py-1 px-2.5 text-right">FT%</td>
+            <td className="py-1 px-2.5 text-right">TS%</td>
+          </tr>
+        </thead>
+        <tbody>
+          {latestLine && row(latest!.season, latestLine)}
+          {row('Career', career)}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
 export default function PlayerDetailPage() {
   const { id: leagueId, playerId } = useParams()
-  const { players, teams, loading } = useLeague()
+  const { players, teams, state, loading } = useLeague()
   const [activeSection, setActiveSection] = useState<PageSection>('overview')
 
   const player = useMemo(
@@ -1357,17 +1259,9 @@ export default function PlayerDetailPage() {
   }
 
   // Derived display values
-  const teamColor = teamInfo?.primaryColor ?? '#888'
-  const teamAbbr = teamInfo?.abbreviation ?? '???'
   const teamFullName = teamInfo ? `${teamInfo.city} ${teamInfo.name}` : ''
   const heightIn = player.bio.height
   const heightDisplay = `${Math.floor(heightIn / 12)}'${heightIn % 12}"`
-  const draftInfo = `${player.bio.draftYear} Rd ${player.bio.draftRound}, Pick ${player.bio.draftPick}`
-
-  // Latest season stats for the header
-  const currentSeason = player.careerStats.length > 0
-    ? player.careerStats[player.careerStats.length - 1]
-    : null
 
   // Compute summary rating categories from individual ratings
   const r = player.ratings
@@ -1403,71 +1297,100 @@ export default function PlayerDetailPage() {
           Player Database
         </Link>
 
-        {/* ---- Player Header ---- */}
-        <GlassCard variant="medium" className="p-6 sm:p-8">
-          <div className="flex flex-col sm:flex-row sm:items-start gap-6">
-            {/* Player photo */}
-            <div className="flex-shrink-0">
+        {/* ---- Player Header (reference style) ---- */}
+        <GlassCard variant="medium" className="p-6">
+          <div className="flex flex-col xl:flex-row gap-8">
+            {/* Avatar + bio stack */}
+            <div className="flex gap-5">
               <PlayerAvatar
                 firstName={player.bio.firstName}
                 lastName={player.bio.lastName}
                 size="lg"
                 className="!w-24 !h-24 sm:!w-28 sm:!h-28 !text-3xl"
               />
-            </div>
-
-            {/* Name + bio */}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-3 mb-1">
-                <span
-                  className="text-xs font-medium px-2 py-0.5 rounded"
-                  style={{ background: teamColor + '30', color: teamColor }}
-                  title={teamFullName}
-                >
-                  {teamAbbr}
-                </span>
-                <span className="text-gray-500 text-xs">#{player.bio.jerseyNumber} | {player.bio.position}</span>
-              </div>
-
-              <h1 className="font-display text-5xl sm:text-6xl tracking-wide text-white leading-none">
-                {player.bio.firstName}{' '}
-                <span className="text-[oklch(64.6%_0.222_41.116)]">{player.bio.lastName}</span>
-              </h1>
-
-              {/* Bio row */}
-              <div className="flex flex-wrap gap-x-5 gap-y-1 mt-4 text-sm text-gray-400">
-                <span>{heightDisplay}, {player.bio.weight} lbs</span>
-                <span className="text-gray-700">|</span>
-                <span>Age {player.bio.age}</span>
-                <span className="text-gray-700">|</span>
-                <span>{player.bio.country === 'USA' ? player.bio.college : player.bio.country}</span>
-                <span className="text-gray-700">|</span>
-                <span>{draftInfo}</span>
+              <div className="text-[13px] leading-6 text-slate-300">
+                <div className="font-semibold">
+                  <span className="text-white">{player.bio.position}, </span>
+                  <span className="text-orange-400">{teamFullName || 'Free Agent'}</span>
+                  <span className="text-white">, #{player.bio.jerseyNumber}</span>
+                </div>
+                <h1 className="font-display text-3xl tracking-wide text-white leading-tight my-0.5">
+                  {player.bio.firstName} {player.bio.lastName}
+                </h1>
+                <div>{heightDisplay}, {player.bio.weight} lbs</div>
+                <div>Age: {player.bio.age} — <span className="text-orange-400">{player.bio.country}</span></div>
+                <div>
+                  Draft: <span className="text-orange-400">{player.bio.draftYear}</span>
+                  {' '}- Round {player.bio.draftRound} (Pick {player.bio.draftPick})
+                </div>
+                {player.bio.college && <div>College: <span className="text-orange-400">{player.bio.college}</span></div>}
+                <div>Experience: {player.bio.yearsInLeague} {player.bio.yearsInLeague === 1 ? 'year' : 'years'}</div>
+                {player.contract && state && (
+                  <div>
+                    Contract: {formatMoney(player.contract.annualSalary)}/yr thru {state.currentSeason + player.contract.yearsRemaining}
+                  </div>
+                )}
+                {player.status.currentInjury && (
+                  <div className="mt-1 inline-block px-1.5 py-0.5 rounded text-[10px] uppercase tracking-wider bg-red-500/15 text-red-400 border border-red-500/30">
+                    {player.status.currentInjury.playingThrough ? 'Playing hurt' : `Out ~${player.status.currentInjury.gamesRemaining} gm`} ({player.status.currentInjury.bodyPart})
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Overall rating badge */}
-            <div className="flex-shrink-0 text-center">
-              <div className={`font-display text-6xl leading-none ${ovrColor(player.ratings.overall)}`}>
-                {player.ratings.overall}
+            {/* Overall + rating columns */}
+            <div className="flex-1">
+              <div className="flex flex-wrap gap-x-12 gap-y-4">
+                <div>
+                  <div className="text-xl font-bold text-white mb-3">
+                    Overall: <span className={ovrColor(player.ratings.overall)}>{player.ratings.overall}</span>
+                  </div>
+                  <div className="flex flex-wrap gap-x-10 gap-y-4">
+                    <RatingColumn title="Physical" rows={[
+                      ['Speed', player.ratings.speed],
+                      ['Strength', player.ratings.strength],
+                      ['Jumping', player.ratings.vertical],
+                      ['Lateral', player.ratings.lateralQuickness],
+                      ['Endurance', player.ratings.stamina],
+                    ]} />
+                    <RatingColumn title="Shooting" rows={[
+                      ['Inside', player.ratings.closeRange],
+                      ['Layups/Dunks', player.ratings.finishing],
+                      ['Free Throws', player.ratings.freeThrow],
+                      ['Mid Range', player.ratings.midRange],
+                      ['Three Pointers', player.ratings.threePoint],
+                    ]} />
+                    <RatingColumn title="Skill" rows={[
+                      ['Offensive IQ', player.ratings.offensiveIq],
+                      ['Defensive IQ', player.ratings.defensiveIq],
+                      ['Dribbling', player.ratings.ballHandling],
+                      ['Passing', player.ratings.passingVision],
+                      ['Rebounding', player.ratings.rebounding],
+                    ]} />
+                  </div>
+                </div>
+                <div className="text-xl font-bold text-white">
+                  Potential: <span className={ovrColor(player.ratings.potential)}>{player.ratings.potential}</span>
+                </div>
               </div>
-              <div className="text-[10px] uppercase tracking-[2px] text-gray-600 mt-1">Overall</div>
             </div>
           </div>
 
-          {/* Current season stat line */}
-          {currentSeason && (
-            <div className="mt-6 pt-6 border-t border-white/[0.06]">
-              <div className="flex justify-center divide-x divide-white/[0.08]">
-                <HeaderStatBox value={currentSeason.ppg.toFixed(1)} label="PPG" />
-                <HeaderStatBox value={currentSeason.rpg.toFixed(1)} label="RPG" />
-                <HeaderStatBox value={currentSeason.apg.toFixed(1)} label="APG" />
-                <HeaderStatBox value={`${currentSeason.fg_pct.toFixed(1)}%`} label="FG%" />
-                <HeaderStatBox value={`${currentSeason.three_pct.toFixed(1)}%`} label="3P%" />
+          {/* Summary mini-table + award chips */}
+          <div className="mt-6 pt-5 border-t border-white/[0.08]">
+            <SummaryMiniTable stats={player.careerStats} />
+            {awards.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mt-4">
+                {[...new Set(awards.map(a => a.name.replace(/^\d+ /, '')))].slice(0, 8).map(name => (
+                  <span key={name} className="px-2.5 py-1 rounded-full text-[11px] font-medium bg-white/[0.07] border border-white/[0.12] text-slate-200">
+                    {name}
+                  </span>
+                ))}
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </GlassCard>
+
 
         {/* ---- Section Navigation ---- */}
         <div className="flex border-b border-white/[0.06]">
@@ -1485,7 +1408,7 @@ export default function PlayerDetailPage() {
         {/* ---- OVERVIEW ---- */}
         {activeSection === 'overview' && (
           <div className="space-y-8">
-            <CareerStatsTable stats={player.careerStats} title="Career Statistics" />
+            <BBGMStatsTable stats={player.careerStats} currentAge={player.bio.age} currentSeasonYear={state?.currentSeason ?? new Date().getFullYear()} title="Per Game" />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2 space-y-8">
@@ -1509,9 +1432,12 @@ export default function PlayerDetailPage() {
         {/* ---- PLAYOFFS ---- */}
         {activeSection === 'playoffs' && (
           <div className="space-y-8">
-            <GlassCard className="p-8 text-center">
-              <div className="text-gray-500 text-sm">No playoff data available</div>
-            </GlassCard>
+            <BBGMStatsTable
+              stats={player.careerStats.filter(cs => cs.season.includes('Playoffs'))}
+              currentAge={player.bio.age}
+              currentSeasonYear={state?.currentSeason ?? new Date().getFullYear()}
+              title="Playoff Career"
+            />
           </div>
         )}
 
