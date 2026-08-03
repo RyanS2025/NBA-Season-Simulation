@@ -919,12 +919,12 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
       let topScorerPPG = 0
       let rotyPlayerId: string | null = null
       for (const p of currentPlayers) {
-        const stats = p.careerStats?.[p.careerStats.length - 1]
+        const stats = p.careerStats?.find(cs => cs.season === String(state.currentSeason))
         if (!stats || stats.gp < 5) continue
         const value = stats.ppg + stats.rpg * 0.8 + stats.apg * 1.2 + stats.spg * 2 + stats.bpg * 2
         if (!mvpPlayerId || value > ((): number => {
           const mp = currentPlayers.find(x => x.id === mvpPlayerId)
-          const ms = mp?.careerStats?.[mp.careerStats.length - 1]
+          const ms = mp?.careerStats?.find(cs => cs.season === String(state.currentSeason))
           if (!ms) return 0
           return ms.ppg + ms.rpg * 0.8 + ms.apg * 1.2 + ms.spg * 2 + ms.bpg * 2
         })()) {
@@ -938,7 +938,7 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
           if (!rotyPlayerId) rotyPlayerId = p.id
           else {
             const cur = currentPlayers.find(x => x.id === rotyPlayerId)
-            const cs = cur?.careerStats?.[cur.careerStats.length - 1]
+            const cs = cur?.careerStats?.find(x => x.season === String(state.currentSeason))
             if (cs && stats.ppg + stats.rpg + stats.apg > cs.ppg + cs.rpg + cs.apg) {
               rotyPlayerId = p.id
             }

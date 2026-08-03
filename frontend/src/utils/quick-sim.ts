@@ -362,7 +362,7 @@ function finalizePlayerStats(
   const twoA = fga - tpa
 
   const twoPct = clamp(
-    0.515 + (interiorSkill(player) - 72) * 0.0035 + mods.twoPctAdd + gauss() * 0.05,
+    0.53 + (interiorSkill(player) - 72) * 0.0035 + mods.twoPctAdd + gauss() * 0.05,
     0.35, 0.70,
   )
   const threePct = tpa > 0
@@ -535,7 +535,9 @@ function buildBoxScore(
   const ftaBudget = Math.max(8, Math.round(22 * mods.ftRateMult + gauss() * 4))
   const rebBudget = Math.max(30, Math.round(42 * paceFactor + gauss() * 3))
 
-  const fgaAlloc = allocateBudget(demands.map(d => d.fga), fgaBudget)
+  // Superlinear demand concentrates shots in the best players (shot
+  // hierarchies exist even on rosters where everyone rates well)
+  const fgaAlloc = allocateBudget(demands.map(d => Math.pow(d.fga, 1.45)), fgaBudget)
     .map(v => Math.min(v, 28))
   const ftaAlloc = allocateBudget(demands.map(d => d.fta), ftaBudget)
     .map(v => Math.min(v, 16))

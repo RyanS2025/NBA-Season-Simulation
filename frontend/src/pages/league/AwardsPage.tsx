@@ -21,8 +21,9 @@ function teamName(t: Team): string {
   return `${t.info.city} ${t.info.name}`
 }
 
-function latestStats(p: Player) {
-  return p.careerStats[p.careerStats.length - 1] ?? null
+function seasonStats(p: Player, season: number | undefined) {
+  if (season == null) return null
+  return p.careerStats?.find(s => s.season === String(season)) ?? null
 }
 
 const AWARD_LABELS: Record<string, string> = {
@@ -38,7 +39,7 @@ const AWARD_LABELS: Record<string, string> = {
 
 const RACE_AWARDS: AwardType[] = ['mvp', 'dpoy', 'roy', 'sixth_man', 'mip', 'clutch_poy']
 
-type ScorerFn = (p: Player, t: Team) => number
+type ScorerFn = (p: Player, t: Team, season: string) => number
 const SCORER_MAP: Record<string, ScorerFn> = {
   mvp: scoreMVPCandidate,
   dpoy: scoreDPOYCandidate,
@@ -71,8 +72,8 @@ export default function AwardsPage() {
   }, [players, teams, state])
 
   const results = useMemo(() => {
-    if (players.length === 0 || reporters.length === 0) return null
-    return computeAllAwards(players, teams, reporters, narratives)
+    if (players.length === 0 || reporters.length === 0 || !state) return null
+    return computeAllAwards(players, teams, reporters, narratives, state?.currentSeason ?? 0)
   }, [players, teams, reporters, narratives])
 
   const raceData = useMemo(() => {
@@ -84,9 +85,9 @@ export default function AwardsPage() {
       for (const p of players) {
         const team = teamMap.get(p.teamId)
         if (!team) continue
-        const score = scorer(p, team)
+        const score = scorer(p, team, String(state?.currentSeason ?? ''))
         if (score <= 0) continue
-        const s = latestStats(p)
+        const s = seasonStats(p, state?.currentSeason)
         let statLine = ''
         if (s) {
           if (awardType === 'dpoy') statLine = `${s.bpg.toFixed(1)} BPG / ${s.spg.toFixed(1)} SPG`
@@ -98,7 +99,7 @@ export default function AwardsPage() {
       data[awardType] = candidates.slice(0, 10)
     }
     return data
-  }, [players, teamMap])
+  }, [players, teamMap, state])
 
   if (loading || !state) {
     return (
@@ -202,7 +203,7 @@ export default function AwardsPage() {
           </div>
           {winnerTeam && winner && (
             <div className="text-xs text-gray-500">
-              {teamName(winnerTeam)} — {latestStats(winner)?.ppg.toFixed(1) ?? '—'} PPG
+              {teamName(winnerTeam)} — {seasonStats(winner, state?.currentSeason)?.ppg.toFixed(1) ?? '—'} PPG
             </div>
           )}
           <div className="text-xs text-gray-600 mt-1">

@@ -7,12 +7,15 @@ interface NarrativeContext {
   currentSeason: number
 }
 
-function getCurrentStats(p: Player) {
-  return p.careerStats[p.careerStats.length - 1] ?? null
+function getCurrentStats(p: Player, season: number) {
+  return p.careerStats?.find(s => s.season === String(season)) ?? null
 }
 
-function getPriorStats(p: Player) {
-  return p.careerStats.length >= 2 ? p.careerStats[p.careerStats.length - 2] : null
+function getPriorStats(p: Player, season: number) {
+  if (!p.careerStats) return null
+  const idx = p.careerStats.findIndex(s => s.season === String(season))
+  if (idx > 0) return p.careerStats[idx - 1]
+  return null
 }
 
 function makeNarrative(
@@ -25,7 +28,7 @@ function makeNarrative(
 function checkComeback(p: Player, ctx: NarrativeContext): ActiveNarrative | null {
   if (p.status.health !== 'healthy') return null
   if (!p.status.currentInjury && p.durability.injuryHistory && p.durability.injuryHistory.length > 0) {
-    const stats = getCurrentStats(p)
+    const stats = getCurrentStats(p, ctx.currentSeason)
     if (stats && stats.ppg >= 15 && stats.gp >= 10) {
       return makeNarrative(
         p.id, 'comeback', 0.6 + (stats.ppg - 15) * 0.02, ctx.currentWeek,
@@ -40,7 +43,7 @@ function checkOverdue(p: Player, _ctx: NarrativeContext): ActiveNarrative | null
   const allNbaCount = p.awards.filter(a => a.includes('All-NBA') || a.includes('all_nba')).length
   const mvpCount = p.awards.filter(a => a.includes('MVP') || a.includes('mvp')).length
   if (allNbaCount >= 3 && mvpCount === 0) {
-    const stats = getCurrentStats(p)
+    const stats = getCurrentStats(p, _ctx.currentSeason)
     if (stats && stats.ppg >= 20) {
       return makeNarrative(
         p.id, 'overdue', 0.5 + allNbaCount * 0.08, _ctx.currentWeek,
@@ -53,8 +56,8 @@ function checkOverdue(p: Player, _ctx: NarrativeContext): ActiveNarrative | null
 
 function checkBreakout(p: Player, ctx: NarrativeContext): ActiveNarrative | null {
   if (p.bio.age > 25) return null
-  const stats = getCurrentStats(p)
-  const prior = getPriorStats(p)
+  const stats = getCurrentStats(p, ctx.currentSeason)
+  const prior = getPriorStats(p, ctx.currentSeason)
   if (!stats || stats.gp < 10) return null
 
   if (prior) {
@@ -78,7 +81,7 @@ function checkLegacy(p: Player, ctx: NarrativeContext): ActiveNarrative | null {
   if (p.bio.age < 35) return null
   const totalAwards = p.awards.length
   if (totalAwards < 3) return null
-  const stats = getCurrentStats(p)
+  const stats = getCurrentStats(p, ctx.currentSeason)
   if (stats && stats.ppg >= 15) {
     return makeNarrative(
       p.id, 'legacy', 0.4 + totalAwards * 0.05, ctx.currentWeek,
@@ -105,7 +108,7 @@ function checkVoterFatigue(p: Player, ctx: NarrativeContext): ActiveNarrative | 
 
 function checkUnderdogTeam(p: Player, team: Team, ctx: NarrativeContext): ActiveNarrative | null {
   if (team.info.marketSize > 5) return null
-  const stats = getCurrentStats(p)
+  const stats = getCurrentStats(p, ctx.currentSeason)
   if (!stats || stats.ppg < 22) return null
   const totalGames = team.seasonRecord.wins + team.seasonRecord.losses
   const winPct = totalGames > 0 ? team.seasonRecord.wins / totalGames : 0

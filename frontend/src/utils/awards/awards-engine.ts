@@ -18,8 +18,27 @@ function mulberry32(seed: number) {
 
 // ── Stats Access ────────────────────────────────────────────────
 
-function getCurrentStats(p: Player) {
-  return p.careerStats[p.careerStats.length - 1] ?? null
+/**
+ * Stats for the CURRENT sim season only. Falling back to the last
+ * careerStats entry is a bug: players who haven't logged a game this
+ * season would be judged on stale data from a prior season (or their
+ * imported real-NBA history).
+ */
+function getSeasonStats(p: Player, season: string) {
+  return p.careerStats?.find(s => s.season === season) ?? null
+}
+
+function getPriorSeasonStats(p: Player, season: string) {
+  if (!p.careerStats) return null
+  const idx = p.careerStats.findIndex(s => s.season === season)
+  if (idx > 0) return p.careerStats[idx - 1]
+  return null
+}
+
+/** Games-played floor that scales up as the season progresses. */
+function minGp(team: Team, cap: number): number {
+  const teamGames = team.seasonRecord.wins + team.seasonRecord.losses
+  return Math.min(cap, Math.max(3, Math.floor(teamGames * 0.5)))
 }
 
 // ── Objective Scoring (no bias) ─────────────────────────────────
@@ -37,9 +56,9 @@ function teamWinPct(team: Team): number {
   return total > 0 ? team.seasonRecord.wins / total : 0.5
 }
 
-export function scoreMVPCandidate(p: Player, team: Team): number {
-  const s = getCurrentStats(p)
-  if (!s || s.gp < 20) return 0
+export function scoreMVPCandidate(p: Player, team: Team, season: string): number {
+  const s = getSeasonStats(p, season)
+  if (!s || s.gp < minGp(team, 20)) return 0
   const winPct = teamWinPct(team)
   return (
     s.ppg * 1.5 + s.apg * 1.2 + s.rpg * 0.8 +
@@ -51,9 +70,9 @@ export function scoreMVPCandidate(p: Player, team: Team): number {
   )
 }
 
-export function scoreDPOYCandidate(p: Player, team: Team): number {
-  const s = getCurrentStats(p)
-  if (!s || s.gp < 20) return 0
+export function scoreDPOYCandidate(p: Player, team: Team, season: string): number {
+  const s = getSeasonStats(p, season)
+  if (!s || s.gp < minGp(team, 20)) return 0
   const r = p.ratings
   const winPct = teamWinPct(team)
   return (
@@ -65,24 +84,24 @@ export function scoreDPOYCandidate(p: Player, team: Team): number {
   )
 }
 
-export function scoreROYCandidate(p: Player, _team: Team): number {
+export function scoreROYCandidate(p: Player, team: Team, season: string): number {
   if (!p.status.isRookie && p.bio.yearsInLeague > 1) return 0
-  const s = getCurrentStats(p)
-  if (!s || s.gp < 15) return 0
+  const s = getSeasonStats(p, season)
+  if (!s || s.gp < minGp(team, 15)) return 0
   return s.ppg * 1.5 + s.rpg * 1.0 + s.apg * 1.2 + s.spg * 2.5 + s.bpg * 2.5 - s.topg * 1.0
 }
 
-export function scoreSixthManCandidate(p: Player, _team: Team): number {
-  const s = getCurrentStats(p)
-  if (!s || s.gp < 15) return 0
+export function scoreSixthManCandidate(p: Player, team: Team, season: string): number {
+  const s = getSeasonStats(p, season)
+  if (!s || s.gp < minGp(team, 15)) return 0
   if (s.gs > s.gp * 0.5) return 0
   return s.ppg * 1.5 + s.rpg * 0.8 + s.apg * 1.0 + s.spg * 2.0 + s.bpg * 2.0 + (s.fg_pct ?? 0) * 10
 }
 
-export function scoreMIPCandidate(p: Player, _team: Team): number {
-  const s = getCurrentStats(p)
-  const prior = p.careerStats.length >= 2 ? p.careerStats[p.careerStats.length - 2] : null
-  if (!s || s.gp < 20 || !prior || prior.gp < 20) return 0
+export function scoreMIPCandidate(p: Player, team: Team, season: string): number {
+  const s = getSeasonStats(p, season)
+  const prior = getPriorSeasonStats(p, season)
+  if (!s || s.gp < minGp(team, 20) || !prior || prior.gp < 20) return 0
   const ppgJump = s.ppg - prior.ppg
   const rpgJump = s.rpg - prior.rpg
   const apgJump = s.apg - prior.apg
@@ -90,9 +109,9 @@ export function scoreMIPCandidate(p: Player, _team: Team): number {
   return ppgJump * 3 + rpgJump * 1.5 + apgJump * 1.5 + s.ppg * 0.5
 }
 
-export function scoreClutchPOYCandidate(p: Player, team: Team): number {
-  const s = getCurrentStats(p)
-  if (!s || s.gp < 20) return 0
+export function scoreClutchPOYCandidate(p: Player, team: Team, season: string): number {
+  const s = getSeasonStats(p, season)
+  if (!s || s.gp < minGp(team, 20)) return 0
   const clutch = p.character.clutch
   const winPct = teamWinPct(team)
   return s.ppg * 1.0 + clutch * 0.4 + (s.ft_pct ?? 0) * 15 + winPct * 20
@@ -113,7 +132,7 @@ export function scoreEOTYCandidate(team: Team): number {
   return winPct * 40 + (team.info.marketSize <= 5 ? 10 : 0)
 }
 
-type ScorerFn = (p: Player, t: Team) => number
+type ScorerFn = (p: Player, t: Team, season: string) => number
 
 const PLAYER_SCORERS: Record<string, ScorerFn> = {
   mvp: scoreMVPCandidate,
@@ -285,6 +304,7 @@ function computePlayerAward(
   allTeams: Team[],
   reporters: Reporter[],
   narratives: ActiveNarrative[],
+  season: string,
 ): AwardResult {
   const teamMap = new Map(allTeams.map(t => [t.id, t]))
   const playerMap = new Map(allPlayers.map(p => [p.id, p]))
@@ -293,7 +313,7 @@ function computePlayerAward(
   for (const p of allPlayers) {
     const team = teamMap.get(p.teamId)
     if (!team) continue
-    const score = scorer(p, team)
+    const score = scorer(p, team, season)
     if (score > 0) candidates.push({ playerId: p.id, objectiveScore: score, teamWinPct: teamWinPct(team) })
   }
 
@@ -385,13 +405,15 @@ export function computeAllAwards(
   allTeams: Team[],
   reporters: Reporter[],
   narratives: ActiveNarrative[],
+  seasonYear: number,
 ): Record<string, AwardResult> {
   const results: Record<string, AwardResult> = {}
   const playerMap = new Map(allPlayers.map(p => [p.id, p]))
+  const season = String(seasonYear)
 
   for (const [awardType, scorer] of Object.entries(PLAYER_SCORERS)) {
     results[awardType] = computePlayerAward(
-      awardType as AwardType, scorer, allPlayers, allTeams, reporters, narratives,
+      awardType as AwardType, scorer, allPlayers, allTeams, reporters, narratives, season,
     )
   }
 

@@ -9,7 +9,7 @@ import {
   type CandidateScore,
 } from './awards-engine'
 
-type ScorerFn = (p: Player, t: Team) => number
+type ScorerFn = (p: Player, t: Team, season: string) => number
 
 const RACE_SCORERS: Record<string, ScorerFn> = {
   mvp: scoreMVPCandidate,
@@ -61,6 +61,7 @@ function buildRaceSnapshot(
   narratives: ActiveNarrative[],
   priorSnapshots: AwardRaceSnapshot[],
   week: number,
+  season: string,
 ): AwardRaceSnapshot {
   const teamMap = new Map(teams.map(t => [t.id, t]))
 
@@ -68,7 +69,7 @@ function buildRaceSnapshot(
   for (const p of players) {
     const team = teamMap.get(p.teamId)
     if (!team) continue
-    const score = scorer(p, team)
+    const score = scorer(p, team, season)
     if (score > 0) scored.push({ playerId: p.id, objectiveScore: score, teamWinPct: 0 })
   }
 
@@ -95,6 +96,7 @@ export function generateWeeklySnapshots(
   narratives: ActiveNarrative[],
   priorSnapshots: AwardRaceSnapshot[],
   currentWeek: number,
+  seasonYear: number,
 ): AwardRaceSnapshot[] {
   const snapshots: AwardRaceSnapshot[] = []
 
@@ -102,7 +104,7 @@ export function generateWeeklySnapshots(
     snapshots.push(
       buildRaceSnapshot(
         awardType as AwardType, scorer, players, teams, reporters,
-        narratives, priorSnapshots, currentWeek,
+        narratives, priorSnapshots, currentWeek, String(seasonYear),
       ),
     )
   }
