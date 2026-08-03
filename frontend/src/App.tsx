@@ -21,6 +21,7 @@ import SettingsPage from './pages/league/SettingsPage'
 import PlayerDetailPage from './pages/league/PlayerDetailPage'
 import PlayoffsPage from './pages/league/PlayoffsPage'
 import StaffPage from './pages/league/StaffPage'
+import CoachingPage from './pages/league/CoachingPage'
 import AllStarPage from './pages/league/AllStarPage'
 import TradeDeadlinePage from './pages/league/TradeDeadlinePage'
 
@@ -45,6 +46,7 @@ export default function App() {
           <Route path="players/:playerId" element={<PlayerDetailPage />} />
           <Route path="team" element={<MyTeamPage />} />
           <Route path="staff" element={<StaffPage />} />
+          <Route path="coaching" element={<CoachingPage />} />
           <Route path="draft" element={<DraftPage />} />
           <Route path="free-agency" element={<FreeAgencyPage />} />
           <Route path="transactions" element={<TransactionsPage />} />

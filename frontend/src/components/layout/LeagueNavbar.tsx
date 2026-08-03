@@ -5,6 +5,7 @@ const LEAGUE_LINKS = [
   { path: '', label: 'Dashboard' },
   { path: 'team', label: 'My Team' },
   { path: 'staff', label: 'Staff' },
+  { path: 'coaching', label: 'Coaching' },
   { path: 'standings', label: 'Standings' },
   { path: 'schedule', label: 'Schedule' },
   { path: 'scores', label: 'Scores' },
