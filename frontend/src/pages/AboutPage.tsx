@@ -82,10 +82,12 @@ export default function AboutPage() {
             </p>
             <p>
               Real player names and publicly available statistical information are used
-              solely for the purpose of realistic simulation in a free, non-commercial
-              setting. Player likenesses are loaded from publicly accessible sources and
-              are not stored or redistributed by this project. No claim of ownership is
-              made over any player's name, image, or likeness, nor over any third-party
+              solely for realistic simulation, consistent with U.S. case law holding that
+              athlete names and statistics are publicly available facts (C.B.C.
+              Distribution v. MLB Advanced Media, 8th Cir. 2007; Daniels v. FanDuel,
+              Ind. 2018). No player photographs or likenesses are displayed anywhere in
+              the game — players are represented by generated initials avatars. No claim
+              of ownership is made over any player's name or over any third-party
               trademark referenced descriptively.
             </p>
             <p>

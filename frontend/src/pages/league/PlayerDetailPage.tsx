@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
+import PlayerAvatar from '../../components/common/PlayerAvatar'
 import GlassCard from '../../components/common/GlassCard'
 import SectionLabel from '../../components/common/SectionLabel'
 import { useLeague } from '../../hooks/useLeague'
@@ -1406,15 +1407,14 @@ export default function PlayerDetailPage() {
         <GlassCard variant="medium" className="p-6 sm:p-8">
           <div className="flex flex-col sm:flex-row sm:items-start gap-6">
             {/* Player photo */}
-            {player.headshotUrl && (
-              <div className="flex-shrink-0">
-                <img
-                  src={player.headshotUrl}
-                  alt={`${player.bio.firstName} ${player.bio.lastName}`}
-                  className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl object-cover bg-white/[0.06]"
-                />
-              </div>
-            )}
+            <div className="flex-shrink-0">
+              <PlayerAvatar
+                firstName={player.bio.firstName}
+                lastName={player.bio.lastName}
+                size="lg"
+                className="!w-24 !h-24 sm:!w-28 sm:!h-28 !text-3xl"
+              />
+            </div>
 
             {/* Name + bio */}
             <div className="flex-1 min-w-0">

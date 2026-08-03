@@ -54,27 +54,17 @@ const SCORER_MAP: Record<string, ScorerFn> = {
 }
 
 function Headshot({ player, size = 72 }: { player: Player | null; size?: number }) {
-  const [failed, setFailed] = useState(false)
+  // Initials only — player photographs are copyrighted works and are
+  // deliberately never displayed (names/stats are public facts; photos
+  // are not — the same line Basketball GM draws on legal advice).
   const initials = player ? `${player.bio.firstName[0] ?? ''}${player.bio.lastName[0] ?? ''}` : '—'
-
-  if (!player || !player.headshotUrl || failed) {
-    return (
-      <div
-        className="rounded-full bg-gradient-to-br from-white/[0.1] to-white/[0.02] border border-white/[0.1] flex items-center justify-center font-display text-white/70"
-        style={{ width: size, height: size, fontSize: size * 0.32 }}
-      >
-        {initials}
-      </div>
-    )
-  }
   return (
-    <img
-      src={player.headshotUrl}
-      alt={pName(player)}
-      onError={() => setFailed(true)}
-      className="rounded-full object-cover border border-white/[0.1] bg-white/[0.04]"
-      style={{ width: size, height: size }}
-    />
+    <div
+      className="rounded-full bg-gradient-to-br from-white/[0.1] to-white/[0.02] border border-white/[0.1] flex items-center justify-center font-display text-white/70"
+      style={{ width: size, height: size, fontSize: size * 0.32 }}
+    >
+      {initials}
+    </div>
   )
 }
 

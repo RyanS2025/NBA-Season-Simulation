@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import PageTransition from '../../components/layout/PageTransition'
+import PlayerAvatar from '../../components/common/PlayerAvatar'
 import DataTable from '../../components/common/DataTable'
 import SearchInput from '../../components/common/SearchInput'
 import { useLeague } from '../../hooks/useLeague'
@@ -97,12 +98,7 @@ export default function PlayersPage() {
           to={`/league/${leagueId}/players/${row.id}`}
           className="flex items-center gap-2 text-white font-medium hover:text-[oklch(64.6%_0.222_41.116)] transition-colors"
         >
-          <img
-            src={row.headshotUrl}
-            alt=""
-            className="w-8 h-8 rounded-full object-cover bg-slate-800"
-            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
-          />
+          <PlayerAvatar firstName={row.name.split(' ')[0] ?? ''} lastName={row.name.split(' ').slice(1).join(' ')} size="sm" />
           {row.name}
         </Link>
       ),
