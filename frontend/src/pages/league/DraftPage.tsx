@@ -358,6 +358,7 @@ export default function DraftPage() {
     loading,
     simming,
     draftState,
+    playoffResults,
     startDraft,
     userDraftPick,
     advanceDraftPick,
@@ -385,7 +386,14 @@ export default function DraftPage() {
   const userTeamId = state?.userTeamId ?? ''
   const userTeam = teams.find(t => t.id === userTeamId)
 
-  const isPreDraft = !draftState
+  // Champion must be crowned before the draft opens
+  const DRAFT_OPEN_PHASES = new Set(['draft', 'draft_lottery', 'free_agency', 'offseason'])
+  const championCrowned = !!playoffResults?.championId
+  const draftUnlocked = DRAFT_OPEN_PHASES.has(state?.currentPhase ?? '')
+    || (state?.currentPhase === 'playoffs' && championCrowned)
+    || state?.currentPhase === 'champion'
+  const isPreDraft = !draftState && draftUnlocked
+  const isLocked = !draftState && !draftUnlocked
   const isDraftActive = draftState?.isActive ?? false
   const isDraftComplete = draftState != null && !draftState.isActive && draftState.completedPicks.length > 0
 
@@ -483,6 +491,18 @@ export default function DraftPage() {
             </div>
           </div>
         </div>
+
+        {/* Locked until the offseason */}
+        {isLocked && (
+          <GlassCard className="p-8 mb-6 text-center">
+            <div className="text-3xl mb-3">🔒</div>
+            <h2 className="font-display text-2xl tracking-wide text-white mb-2">Draft Opens in the Offseason</h2>
+            <p className="text-gray-400 text-sm max-w-md mx-auto">
+              The draft becomes available once the season ends and a champion is crowned.
+              Finish the regular season and playoffs first.
+            </p>
+          </GlassCard>
+        )}
 
         {/* Pre-draft: Start Draft button */}
         {isPreDraft && (

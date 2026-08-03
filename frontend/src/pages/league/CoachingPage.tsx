@@ -142,9 +142,9 @@ export default function CoachingPage() {
               <button
                 onClick={toggleManual}
                 aria-label="Toggle manual rotation"
-                className={`relative w-11 h-6 rounded-full transition-colors ${manual ? 'bg-white/[0.1]' : 'bg-accent'}`}
+                className={`relative w-11 h-6 rounded-full shrink-0 transition-colors ${manual ? 'bg-white/[0.1]' : 'bg-accent'}`}
               >
-                <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${manual ? 'translate-x-0.5' : 'translate-x-[22px]'}`} />
+                <span className={`absolute left-0.5 top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${manual ? 'translate-x-0' : 'translate-x-5'}`} />
               </button>
               <span className="text-xs text-gray-400 w-28 text-left">
                 {manual ? 'Manual rotation' : 'Let coach decide'}
@@ -248,7 +248,7 @@ export default function CoachingPage() {
               aria-label="Toggle play through minor injuries"
               className={`relative w-11 h-6 rounded-full transition-colors shrink-0 ${coaching.playThroughMinorInjuries ? 'bg-accent' : 'bg-white/[0.1]'}`}
             >
-              <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${coaching.playThroughMinorInjuries ? 'translate-x-[22px]' : 'translate-x-0.5'}`} />
+              <span className={`absolute left-0.5 top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${coaching.playThroughMinorInjuries ? 'translate-x-5' : 'translate-x-0'}`} />
             </button>
           </div>
         </GlassCard>

@@ -311,7 +311,7 @@ function computeDemands(
   const rebPosMult = pos === 'C' ? 1.0 : pos === 'PF' ? 0.85 : pos === 'SF' ? 0.55 : 0.40
   const boxOutBonus = ((t.boxOutRate ?? 50) - 50) * 0.015
   const reb = minuteFactor
-    * (0.8 + (Math.max(0, r.rebounding - 55) * 0.30 + boxOutBonus) * rebPosMult)
+    * (0.8 + (Math.max(0, r.rebounding - 55) * 0.17 + boxOutBonus) * rebPosMult)
 
   return { fga: Math.max(0.01, fga), fta: Math.max(0, fta), ast: Math.max(0, ast), reb: Math.max(0.01, reb) }
 }
@@ -549,12 +549,12 @@ function buildBoxScore(
 
   // Superlinear demand concentrates shots in the best players (shot
   // hierarchies exist even on rosters where everyone rates well)
-  const fgaAlloc = allocateBudget(demands.map(d => Math.pow(d.fga, 1.45)), fgaBudget)
-    .map(v => Math.min(v, 28))
+  const fgaAlloc = allocateBudget(demands.map(d => Math.pow(d.fga, 1.18)), fgaBudget)
+    .map(v => Math.min(v, 24))
   const ftaAlloc = allocateBudget(demands.map(d => d.fta), ftaBudget)
     .map(v => Math.min(v, 16))
   const rebAlloc = allocateBudget(demands.map(d => d.reb), rebBudget)
-    .map(v => Math.min(v, 22))
+    .map(v => Math.min(v, 15))
 
   // Assists track made baskets (~62% of NBA makes are assisted)
   const provisional = players.map((p, i) =>

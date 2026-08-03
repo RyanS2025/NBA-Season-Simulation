@@ -1068,13 +1068,24 @@ const STAT_COLS: { key: keyof StatLine; label: string; fmt: (v: number) => strin
 ]
 
 function BBGMStatsTable({
-  stats, currentAge, currentSeasonYear, title,
+  stats, currentAge, currentSeasonYear, title, playerAwards = [],
 }: {
   stats: SeasonStats[]
   currentAge: number
   currentSeasonYear: number
   title: string
+  playerAwards?: string[]
 }) {
+  const seasonMarkers = (year: string) => {
+    const allStar = playerAwards.some(a => a.startsWith(year + ' ') && a.includes('All-Star'))
+    const champ = playerAwards.some(a => a.startsWith(year + ' ') && a.includes('Champion'))
+    return (
+      <>
+        {allStar && <span title="All-Star" className="ml-1 text-yellow-400">★</span>}
+        {champ && <span title="Champion" className="ml-1">🏆</span>}
+      </>
+    )
+  }
   const [mode, setMode] = useState<'regular' | 'playoffs'>('regular')
 
   const regular = stats.filter(s => !s.season.includes('Playoffs'))
@@ -1124,7 +1135,7 @@ function BBGMStatsTable({
               <tbody>
                 {lines.map((l, i) => (
                   <tr key={`${l.year}-${i}`} className="border-b border-white/[0.04] hover:bg-white/[0.03]">
-                    <td className="py-1.5 pl-4 pr-3 font-medium text-orange-400 sticky left-0 bg-[#0d1526]">{l.year}</td>
+                    <td className="py-1.5 pl-4 pr-3 font-medium text-orange-400 sticky left-0 bg-[#0d1526] whitespace-nowrap">{l.year}{seasonMarkers(l.year)}</td>
                     <td className="py-1.5 px-2.5 text-orange-400/90">{l.team}</td>
                     <td className="py-1.5 px-2.5 text-right text-slate-300 tabular-nums">{l.age ?? ''}</td>
                     {STAT_COLS.map(c => (
@@ -1408,7 +1419,7 @@ export default function PlayerDetailPage() {
         {/* ---- OVERVIEW ---- */}
         {activeSection === 'overview' && (
           <div className="space-y-8">
-            <BBGMStatsTable stats={player.careerStats} currentAge={player.bio.age} currentSeasonYear={state?.currentSeason ?? new Date().getFullYear()} title="Per Game" />
+            <BBGMStatsTable stats={player.careerStats} currentAge={player.bio.age} currentSeasonYear={state?.currentSeason ?? new Date().getFullYear()} title="Per Game" playerAwards={player.awards} />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2 space-y-8">
@@ -1437,6 +1448,7 @@ export default function PlayerDetailPage() {
               currentAge={player.bio.age}
               currentSeasonYear={state?.currentSeason ?? new Date().getFullYear()}
               title="Playoff Career"
+              playerAwards={player.awards}
             />
           </div>
         )}

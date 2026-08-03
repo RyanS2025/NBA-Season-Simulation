@@ -203,6 +203,12 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
       const teamMap = new Map(teams.map(t => [t.id, t]))
       const statUpdatedPlayers = new Map<string, Player>()
 
+      // The first regular season tip-off ends the preseason
+      if (state.currentPhase === 'preseason' && games.some(g => g.gameType === 'regular_season')) {
+        await updateLeagueState(db, { currentPhase: 'regular_season' })
+        await refreshState()
+      }
+
       for (let i = 0; i < games.length; i++) {
         const game = games[i]
         setSimProgress(`Game ${i + 1}/${games.length}`)
@@ -1319,6 +1325,17 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
         .filter(p => p.teamId === championTeamId)
         .map(p => p.id)
       const accoladeMap = awardStringsForPlayers(seasonAwards, state.currentSeason, championRosterIds)
+      if (allStarRecord) {
+        const allStarIds = [
+          ...(allStarRecord.starters?.east ?? []), ...(allStarRecord.starters?.west ?? []),
+          ...(allStarRecord.reserves?.east ?? []), ...(allStarRecord.reserves?.west ?? []),
+        ]
+        for (const id of allStarIds) {
+          const arr = accoladeMap.get(id) ?? []
+          arr.push(`${state.currentSeason} All-Star`)
+          accoladeMap.set(id, arr)
+        }
+      }
       for (const p of updatedPlayers) {
         const earned = accoladeMap.get(p.id)
         if (earned) p.awards = [...(p.awards ?? []), ...earned]
