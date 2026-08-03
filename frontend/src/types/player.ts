@@ -98,6 +98,8 @@ export interface PlayerRatings {
   hustle: number;
   intangibles: number;
   overall: number;
+  /** Skill-derived overall before form and injury adjustments. */
+  baseOverall?: number;
   potential: number;
   peakAge: number;
 }
@@ -156,6 +158,8 @@ export interface InjuryRecord {
   gamesOut: number;
   seasonYear: number;
   bodyPart: BodyPart;
+  /** True when the injury permanently reduced physical ratings (e.g. an ACL tear). */
+  permanentEffect?: boolean;
 }
 
 export interface DurabilityProfile {
@@ -177,6 +181,8 @@ export interface ActiveInjury {
   severity: "minor" | "moderate" | "severe" | "season_ending";
   gamesRemaining: number;
   dateInjured: string;
+  /** Coach elected to keep the player on the floor at reduced effectiveness. */
+  playingThrough?: boolean;
 }
 
 export interface PlayerStatus {
@@ -188,6 +194,10 @@ export interface PlayerStatus {
   isFreeAgent: boolean;
   isRestrictedFA: boolean;
   teamId: string | null;
+  /** Hot/cold streak adjustment shown in the displayed overall (-2..+2). */
+  form?: number;
+  /** Smoothed performance-vs-norm signal that drives form. */
+  formMomentum?: number;
 }
 
 export interface SeasonStats {

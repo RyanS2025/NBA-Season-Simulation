@@ -45,6 +45,8 @@ export interface CoachingStaff {
   rotationMinutes?: Record<string, number>;
   /** When true the sim uses rotationMinutes instead of auto-assigning by skill. */
   manualRotation?: boolean;
+  /** Coach philosophy: keep players on the floor through minor injuries. */
+  playThroughMinorInjuries?: boolean;
 }
 
 export interface TeamInfo {

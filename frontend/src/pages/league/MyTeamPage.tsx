@@ -33,6 +33,9 @@ interface RosterRow {
   position: string
   age: number
   overall: number
+  form: number
+  injuryLabel: string | null
+  injurySeverity: string | null
   ppg: number
   rpg: number
   apg: number
@@ -42,12 +45,22 @@ interface RosterRow {
 
 function playerToRow(p: Player): RosterRow {
   const { ppg, rpg, apg } = latestStats(p)
+  const inj = p.status.currentInjury
+  let injuryLabel: string | null = null
+  if (inj) {
+    if (inj.playingThrough) injuryLabel = `Playing hurt (${inj.bodyPart})`
+    else if (inj.severity === 'season_ending') injuryLabel = `Out for season (${inj.bodyPart} ${inj.type})`
+    else injuryLabel = `Out ~${inj.gamesRemaining} gm (${inj.bodyPart} ${inj.type})`
+  }
   return {
     id: p.id,
     name: `${p.bio.firstName} ${p.bio.lastName}`,
     position: p.bio.position,
     age: p.bio.age,
     overall: p.ratings.overall,
+    form: p.status.form ?? 0,
+    injuryLabel,
+    injurySeverity: inj?.severity ?? null,
     ppg, rpg, apg,
     salary: p.contract?.annualSalary ?? 0,
     contractYears: p.contract?.yearsRemaining ?? 0,
@@ -99,12 +112,26 @@ export default function MyTeamPage() {
       label: 'Player',
       sortable: true,
       render: (row) => (
-        <Link
-          to={`/league/${leagueId}/players/${row.id}`}
-          className="text-white font-medium hover:text-[oklch(64.6%_0.222_41.116)] transition-colors"
-        >
-          {row.name}
-        </Link>
+        <span className="flex items-center gap-2 flex-wrap">
+          <Link
+            to={`/league/${leagueId}/players/${row.id}`}
+            className="text-white font-medium hover:text-[oklch(64.6%_0.222_41.116)] transition-colors"
+          >
+            {row.name}
+          </Link>
+          {row.injuryLabel && (
+            <span
+              title={row.injuryLabel}
+              className={`px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wider border ${
+                row.injurySeverity === 'season_ending' || row.injurySeverity === 'severe'
+                  ? 'bg-red-500/15 text-red-400 border-red-500/30'
+                  : 'bg-yellow-500/15 text-yellow-400 border-yellow-500/30'
+              }`}
+            >
+              {row.injuryLabel}
+            </span>
+          )}
+        </span>
       ),
     },
     { key: 'position', label: 'Pos', align: 'center' },
@@ -115,8 +142,12 @@ export default function MyTeamPage() {
       sortable: true,
       align: 'center',
       render: (row) => (
-        <span className={row.overall >= 90 ? 'text-[oklch(64.6%_0.222_41.116)] font-semibold' : row.overall >= 80 ? 'text-green-400' : 'text-gray-300'}>
-          {row.overall}
+        <span className="inline-flex items-center gap-1">
+          <span className={row.overall >= 90 ? 'text-[oklch(64.6%_0.222_41.116)] font-semibold' : row.overall >= 80 ? 'text-green-400' : 'text-gray-300'}>
+            {row.overall}
+          </span>
+          {row.form > 0 && <span title={`Hot streak +${row.form}`} className="text-[10px] text-orange-400">{'▲'.repeat(Math.min(2, row.form))}</span>}
+          {row.form < 0 && <span title={`Cold streak ${row.form}`} className="text-[10px] text-sky-400">{'▼'.repeat(Math.min(2, -row.form))}</span>}
         </span>
       ),
     },

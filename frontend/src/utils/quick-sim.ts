@@ -2,6 +2,7 @@ import type { Game, GameResult, PlayerGameStats, TeamBoxScore, TeamGameStats } f
 import type { Player } from '../types/player'
 import type { StaffRoster } from '../types/staff'
 import type { CoachingStaff, OffensiveScheme, DefensiveScheme } from '../types/team'
+import { isAvailable } from './player-condition'
 
 export interface CoachingContext {
   homeStaff: StaffRoster | null
@@ -289,10 +290,12 @@ function computeDemands(
   const isoBoost = role.isTopUsage ? mods.isoTopBoost : 1
   const pnrFgaBoost = mods.pnrBoost && (pos === 'PG' || pos === 'C') ? 1.08 : 1
   const guardBoost = isGuard ? mods.guardFgaMult : 1
+  const formBoost = 1 + (player.status.form ?? 0) * 0.02
+  const hurtPenalty = player.status.currentInjury?.playingThrough ? 0.90 : 1
   const skill = scoringSkill(player)
   const fga = minuteFactor
     * (2 + Math.max(0, skill - 55) * 0.40)
-    * usage * isoBoost * pnrFgaBoost * guardBoost
+    * usage * isoBoost * pnrFgaBoost * guardBoost * formBoost * hurtPenalty
 
   const driveBoost = 1 + ((t.driveFrequency ?? 50) - 50) * 0.004
   const fta = minuteFactor * (0.4 + Math.max(0, r.drawFoul - 55) * 0.14) * driveBoost
@@ -361,12 +364,16 @@ function finalizePlayerStats(
   const tpa = Math.round(fga * threeRate)
   const twoA = fga - tpa
 
+  // Hot/cold streaks and playing hurt nudge shooting efficiency
+  const conditionAdd = (player.status.form ?? 0) * 0.006
+    + (player.status.currentInjury?.playingThrough ? -0.018 : 0)
+
   const twoPct = clamp(
-    0.53 + (interiorSkill(player) - 72) * 0.0035 + mods.twoPctAdd + gauss() * 0.05,
+    0.53 + (interiorSkill(player) - 72) * 0.0035 + mods.twoPctAdd + conditionAdd + gauss() * 0.05,
     0.35, 0.70,
   )
   const threePct = tpa > 0
-    ? clamp(0.34 + (r.threePoint - 74) * 0.003 + mods.threePctAdd + gauss() * 0.07, 0.15, 0.48)
+    ? clamp(0.34 + (r.threePoint - 74) * 0.003 + mods.threePctAdd + conditionAdd + gauss() * 0.07, 0.15, 0.48)
     : 0
 
   const twoM = Math.round(twoA * twoPct)
@@ -425,9 +432,11 @@ function finalizePlayerStats(
 }
 
 function generateMinutes(players: Player[], coaching?: CoachingStaff | null): number[] {
+  const available = players.map(isAvailable)
+
   // User-managed rotation: use the saved minutes map when enabled.
   if (coaching?.manualRotation && coaching.rotationMinutes) {
-    const manual = players.map(p => coaching.rotationMinutes![p.id] ?? 0)
+    const manual = players.map((p, i) => available[i] ? (coaching.rotationMinutes![p.id] ?? 0) : 0)
     const total = manual.reduce((s, m) => s + m, 0)
     if (total > 0) {
       const scale = 240 / total
@@ -435,8 +444,9 @@ function generateMinutes(players: Player[], coaching?: CoachingStaff | null): nu
     }
   }
 
-  const sorted = [...players]
+  const sorted = players
     .map((p, i) => ({ score: playerComposite(p), idx: i }))
+    .filter(x => available[x.idx])
     .sort((a, b) => b.score - a.score)
 
   const targets = [34, 32, 31, 30, 28, 20, 16, 12, 8, 4, 2, 1, 1, 0, 0]

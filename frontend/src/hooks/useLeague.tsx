@@ -22,6 +22,10 @@ import {
 } from '../db/league-manager'
 import { quickSimGame } from '../utils/quick-sim'
 import { accumulateGameStats } from '../utils/stat-accumulator'
+import {
+  rollForInjury, canPlayThrough, isCareerAltering, applyPermanentEffects,
+  advanceInjuryRecovery, updateForm, refreshDisplayedOverall, rebaseOverall,
+} from '../utils/player-condition'
 import { simulateEntirePlayoffs, type PlayoffResults } from '../utils/playoff-sim'
 import { validateTrade, computeTeamPayroll } from '../utils/cba-engine'
 import { runPlayerDevelopment, cpuSignFreeAgents } from '../utils/offseason-engine'
@@ -216,6 +220,84 @@ export function LeagueProvider({ children }: { children: ReactNode }) {
           )
           for (const p of homeModified) statUpdatedPlayers.set(p.id, p)
           for (const p of awayModified) statUpdatedPlayers.set(p.id, p)
+
+          // Injuries, recovery, and hot/cold form after every game
+          const sides: Array<[Player[], typeof result.homeBoxScore, Team | undefined]> = [
+            [homePlayers, result.homeBoxScore, homeTeamData],
+            [awayPlayers, result.awayBoxScore, awayTeamData],
+          ]
+          for (const [sidePlayers, box, team] of sides) {
+            const trainers = team?.staff?.trainers ?? []
+            const trainerPrev = trainers.length > 0
+              ? trainers.reduce((s, t) => s + t.skills.injuryPrevention, 0) / trainers.length : 50
+            const trainerRehab = trainers.length > 0
+              ? trainers.reduce((s, t) => s + t.skills.rehabilitation, 0) / trainers.length : 50
+            const statsById = new Map(box.playerStats.map(ps => [ps.playerId, ps]))
+
+            for (const p of sidePlayers) {
+              let touched = false
+
+              if (p.status.currentInjury) {
+                advanceInjuryRecovery(p, trainerRehab, state.currentSeason)
+                touched = true
+              }
+
+              const gameStats = statsById.get(p.id)
+              if (gameStats && gameStats.minutes > 0) {
+                const entry = p.careerStats?.find(s => s.season === String(state.currentSeason)) ?? null
+                updateForm(p, gameStats.points, entry)
+                touched = true
+
+                if (!p.status.currentInjury && state.settings.injuriesEnabled) {
+                  const injury = rollForInjury(p, gameStats.minutes, trainerPrev, state.settings.injuryFrequency)
+                  if (injury) {
+                    injury.dateInjured = game.date
+                    const coachPlaysThrough = team?.coaching?.playThroughMinorInjuries
+                      ?? ((team?.staff?.headCoach?.personality.temperament ?? 50) < 45)
+                    if (canPlayThrough(injury) && coachPlaysThrough) {
+                      injury.playingThrough = true
+                      p.status.health = 'day_to_day'
+                    } else {
+                      p.status.health = injury.severity === 'severe' || injury.severity === 'season_ending'
+                        ? 'injured_reserve' : 'out'
+                    }
+                    p.status.currentInjury = injury
+
+                    let permanent = false
+                    if (isCareerAltering(injury)) {
+                      permanent = true
+                      applyPermanentEffects(p, injury)
+                      rebaseOverall(p, (p.ratings.baseOverall ?? p.ratings.overall) - (injury.severity === 'season_ending' ? 4 : 3))
+                    }
+
+                    const teamLabel = team ? `${team.info.city} ${team.info.name}` : ''
+                    const outlook = injury.playingThrough
+                      ? 'will play through it'
+                      : injury.severity === 'season_ending'
+                        ? 'is out for the season'
+                        : `is out ~${injury.gamesRemaining} games`
+                    const tx: Transaction = {
+                      id: uuid(),
+                      date: game.date,
+                      type: 'injury',
+                      details: {
+                        playerId: p.id, bodyPart: injury.bodyPart, injuryType: injury.type,
+                        severity: injury.severity, gamesOut: injury.gamesRemaining, permanent,
+                      },
+                      description: `${p.bio.firstName} ${p.bio.lastName} (${teamLabel}) suffered a ${injury.bodyPart} ${injury.type} and ${outlook}${permanent ? ' — a career-altering injury' : ''}`,
+                      seasonYear: state.currentSeason,
+                    }
+                    await addTransaction(db, tx)
+                  }
+                }
+              }
+
+              if (touched) {
+                refreshDisplayedOverall(p)
+                statUpdatedPlayers.set(p.id, p)
+              }
+            }
+          }
         }
 
         const homeTeam = teamMap.get(game.homeTeamId)

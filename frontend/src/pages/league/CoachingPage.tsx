@@ -232,6 +232,26 @@ export default function CoachingPage() {
           </GlassCard>
         </div>
 
+        {/* Injury Philosophy */}
+        <GlassCard className="p-6 mb-6">
+          <SectionLabel>Injury Management</SectionLabel>
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <div className="text-sm text-white">Play through minor injuries</div>
+              <div className="text-xs text-gray-500 mt-0.5">
+                Keep banged-up players on the floor at reduced effectiveness — risks aggravating the injury. Off means they rest until fully healthy.
+              </div>
+            </div>
+            <button
+              onClick={() => persist({ ...coaching, playThroughMinorInjuries: !(coaching.playThroughMinorInjuries ?? false) })}
+              aria-label="Toggle play through minor injuries"
+              className={`relative w-11 h-6 rounded-full transition-colors shrink-0 ${coaching.playThroughMinorInjuries ? 'bg-accent' : 'bg-white/[0.1]'}`}
+            >
+              <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${coaching.playThroughMinorInjuries ? 'translate-x-[22px]' : 'translate-x-0.5'}`} />
+            </button>
+          </div>
+        </GlassCard>
+
         {/* Play Style */}
         <GlassCard className="p-6 mb-8">
           <SectionLabel>Play Style</SectionLabel>

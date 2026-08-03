@@ -122,9 +122,21 @@ export function runPlayerDevelopment(players: Player[], staffMap?: Map<string, S
       ;(updated.ratings as Record<string, number>)[key] = newVal
     }
 
-    // Recalculate overall (simple average of key ratings)
+    // Recalculate overall (simple average of key ratings) and rebase it —
+    // in-season form/injury adjustments start fresh from this value
     const pos = p.bio.position
     updated.ratings.overall = computeOverall(updated.ratings, pos)
+    updated.ratings.baseOverall = updated.ratings.overall
+
+    // Offseason heals active injuries and resets streaks (permanent
+    // rating losses from career-altering injuries are already baked in)
+    updated.status = {
+      ...p.status,
+      health: 'healthy',
+      currentInjury: null,
+      form: 0,
+      formMomentum: 0,
+    }
 
     // Age up
     updated.bio = { ...p.bio, age: age + 1, yearsInLeague: p.bio.yearsInLeague + 1 }
@@ -145,7 +157,7 @@ export function runPlayerDevelopment(players: Player[], staffMap?: Map<string, S
 
     // Check contract expiration
     if (p.contract && p.contract.yearsRemaining <= 1) {
-      updated.status = { ...p.status, isFreeAgent: true }
+      updated.status = { ...updated.status, isFreeAgent: true }
       updated.teamId = ''
       freeAgentIds.push(p.id)
     } else if (p.contract) {
@@ -167,7 +179,7 @@ export function runPlayerDevelopment(players: Player[], staffMap?: Map<string, S
   return { updatedPlayers, retiredPlayerIds, freeAgentIds, developmentLog }
 }
 
-function computeOverall(ratings: Record<string, number>, position: string): number {
+export function computeOverall(ratings: Record<string, number>, position: string): number {
   const weights: Record<string, Record<string, number>> = {
     PG: {
       ballHandling: 1.5, passingVision: 1.3, speed: 1.2, threePoint: 1.0,
